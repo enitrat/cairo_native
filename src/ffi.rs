@@ -229,11 +229,21 @@ pub fn module_to_object(module: &Module<'_>, opt_level: OptLevel) -> Result<Vec<
 pub fn object_to_shared_lib(object: &[u8], output_filename: &Path) -> Result<()> {
     // linker seems to need a file and doesn't accept stdin
     let mut file = NamedTempFile::new()?;
+    println!("[DEBUG] Created temp file for object at: {:?}", file.path());
+    println!("[DEBUG] Temp object file exists?: {}", file.path().exists());
+
     file.write_all(object)?;
     let file = file.into_temp_path();
+    println!("[DEBUG] Converted to temp path: {:?}", file);
+    println!("[DEBUG] File exists after conversion?: {}", file.exists());
 
     let file_path = file.display().to_string();
     let output_path = output_filename.display().to_string();
+
+    println!("[DEBUG] Object file path: {}", file_path);
+    println!("[DEBUG] Output library path: {}", output_path);
+    println!("[DEBUG] Output path exists?: {}", output_filename.exists());
+
     if let Ok(x) = std::env::var("NATIVE_DEBUG_DUMP") {
         if x == "1" || x == "true" {
             // forget so the temp file is not deleted and the debugger can load it.
@@ -246,10 +256,15 @@ pub fn object_to_shared_lib(object: &[u8], output_filename: &Path) -> Result<()>
     let runtime_library_path = if let Ok(extra_dir) = std::env::var("CAIRO_NATIVE_RUNTIME_LIBRARY")
     {
         let path = Path::new(&extra_dir);
+        println!("[DEBUG] Runtime library 'path': {}", extra_dir);
         if path.is_absolute() {
             extra_dir
         } else {
+            println!("[DEBUG] Runtime library 'path' is not absolute, converting to absolute path");
+            println!("[DEBUG] Current working directory: {:?}", env::current_dir()?);
+            println!("[DEBUG] Joined path: {:?}", env::current_dir()?.join(path));
             let absolute_path = env::current_dir()?.join(path).canonicalize()?;
+            println!("[DEBUG] Converted runtime library path to: {:?}", absolute_path);
             absolute_path
                 .to_str()
                 .to_native_assert_error("absolute path should not contain non-utf8 characters")?
@@ -258,6 +273,9 @@ pub fn object_to_shared_lib(object: &[u8], output_filename: &Path) -> Result<()>
     } else {
         String::from("libcairo_native_runtime.a")
     };
+
+    println!("[DEBUG] Runtime library path: {}", runtime_library_path);
+    let file_path_clone = file_path.clone();
 
     let args: Vec<Cow<'static, str>> = {
         #[cfg(target_os = "macos")]
@@ -309,6 +327,7 @@ pub fn object_to_shared_lib(object: &[u8], output_filename: &Path) -> Result<()>
     };
 
     let mut linker = std::process::Command::new("ld");
+    println!("[DEBUG] Linker command: ld {}", args.join(" "));
 
     trace!("starting linking");
     let pre_linking_instant = Instant::now();
@@ -317,9 +336,13 @@ pub fn object_to_shared_lib(object: &[u8], output_filename: &Path) -> Result<()>
     trace!(time = linking_time, "linking finished");
 
     if proc.status.success() {
+        println!("[DEBUG] Linking completed successfully");
         Ok(())
     } else {
         let msg = String::from_utf8_lossy(&proc.stderr);
+        println!("[ERROR] Linking failed with stderr: {}", msg);
+        println!("[DEBUG] Object file still exists?: {}", Path::new(&file_path_clone).exists());
+        println!("[DEBUG] Output path exists?: {}", output_filename.exists());
         Err(Error::LinkError(msg.to_string()))
     }
 }

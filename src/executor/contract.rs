@@ -240,16 +240,90 @@ impl AotContractExecutor {
             infos.insert(x.id.id, EntryPointInfo { builtins });
         }
 
-        let library_path = NamedTempFile::new()?
-            .into_temp_path()
-            .keep()
-            .to_native_assert_error("can only fail on windows")?;
+        let library_path = {
+            let temp_path = NamedTempFile::new()
+                .map_err(|e| {
+                    println!("[ERROR] Failed to create temp file: {e}");
+                    e
+                })?;
 
-        let object_data = crate::module_to_object(&module, opt_level)?;
-        crate::object_to_shared_lib(&object_data, &library_path)?;
+            println!("[DEBUG] Initial temp file path: {:?}", temp_path.path());
+            println!("[DEBUG] Initial file exists?: {}", temp_path.path().exists());
+
+            let temp_path = temp_path.into_temp_path();
+            println!("[DEBUG] After into_temp_path: {:?}", temp_path.to_path_buf());
+            println!("[DEBUG] File exists after into_temp_path?: {}", temp_path.exists());
+
+            let path = temp_path.keep()
+                .map_err(|e| {
+                    println!("[ERROR] Failed to keep temp path: {e}");
+                    e
+                }).to_native_assert_error("can only fail on windows")?;
+
+            println!("[DEBUG] Created temporary library path: {:?}", path);
+            println!("[DEBUG] File exists after keep?: {}", path.exists());
+
+            // Try to write a small test file to check permissions
+            if let Err(e) = std::fs::write(&path, "test") {
+                println!("[DEBUG] Failed to write test content: {e}");
+            } else {
+                println!("[DEBUG] Successfully wrote test content");
+            }
+
+            // Check file permissions
+            match std::fs::metadata(&path) {
+                Ok(metadata) => println!("[DEBUG] File permissions: {:?}", metadata.permissions()),
+                Err(e) => println!("[DEBUG] Failed to get file metadata: {e}")
+            }
+
+            path
+        };
+
+        let object_data = crate::module_to_object(&module, opt_level)
+            .map_err(|e| {
+                println!("[ERROR] Failed to convert module to object: {e}");
+                e
+            })?;
+
+        println!("[DEBUG] Generated object data of size: {}", object_data.len());
+        println!("[DEBUG] File exists before shared lib creation?: {}", library_path.exists());
+
+        // Check directory contents
+        if let Ok(entries) = std::fs::read_dir("/tmp") {
+            println!("[DEBUG] /tmp directory contents:");
+            for entry in entries {
+                if let Ok(entry) = entry {
+                    println!("[DEBUG]   {:?}", entry.path());
+                }
+            }
+        }
+
+        crate::object_to_shared_lib(&object_data, &library_path)
+            .map_err(|e| {
+                println!(
+                    "[ERROR] Failed to create shared library at {:?}: {e}",
+                    library_path
+                );
+                e
+            })?;
+
+        println!("[DEBUG] Successfully wrote shared library to {:?}", library_path);
+
+        let library = unsafe {
+            Library::new(&library_path)
+                .map_err(|e| {
+                    println!(
+                        "[ERROR] Failed to load library from {:?}: {e}",
+                        library_path
+                    );
+                    e
+                })?
+        };
+
+        println!("[DEBUG] Successfully loaded library from {:?}", library_path);
 
         Ok(Self {
-            library: Arc::new(unsafe { Library::new(&library_path)? }),
+            library: Arc::new(library),
             path: library_path,
             is_temp_path: true,
             contract_info: NativeContractInfo {
