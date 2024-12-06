@@ -418,6 +418,24 @@
 <a href="#418" id="418">418</a>
 <a href="#419" id="419">419</a>
 <a href="#420" id="420">420</a>
+<a href="#421" id="421">421</a>
+<a href="#422" id="422">422</a>
+<a href="#423" id="423">423</a>
+<a href="#424" id="424">424</a>
+<a href="#425" id="425">425</a>
+<a href="#426" id="426">426</a>
+<a href="#427" id="427">427</a>
+<a href="#428" id="428">428</a>
+<a href="#429" id="429">429</a>
+<a href="#430" id="430">430</a>
+<a href="#431" id="431">431</a>
+<a href="#432" id="432">432</a>
+<a href="#433" id="433">433</a>
+<a href="#434" id="434">434</a>
+<a href="#435" id="435">435</a>
+<a href="#436" id="436">436</a>
+<a href="#437" id="437">437</a>
+<a href="#438" id="438">438</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! # FFI Wrappers
 //!
 //! This is a "hotfix" for missing Rust interfaces to the C/C++ libraries we use, namely LLVM/MLIR
@@ -649,11 +667,21 @@
 </span><span class="kw">pub fn </span>object_to_shared_lib(object: <span class="kw-2">&amp;</span>[u8], output_filename: <span class="kw-2">&amp;</span>Path) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
     <span class="comment">// linker seems to need a file and doesn't accept stdin
     </span><span class="kw">let </span><span class="kw-2">mut </span>file = NamedTempFile::new()<span class="question-mark">?</span>;
+    <span class="macro">println!</span>(<span class="string">"[DEBUG] Created temp file for object at: {:?}"</span>, file.path());
+    <span class="macro">println!</span>(<span class="string">"[DEBUG] Temp object file exists?: {}"</span>, file.path().exists());
+
     file.write_all(object)<span class="question-mark">?</span>;
     <span class="kw">let </span>file = file.into_temp_path();
+    <span class="macro">println!</span>(<span class="string">"[DEBUG] Converted to temp path: {:?}"</span>, file);
+    <span class="macro">println!</span>(<span class="string">"[DEBUG] File exists after conversion?: {}"</span>, file.exists());
 
     <span class="kw">let </span>file_path = file.display().to_string();
     <span class="kw">let </span>output_path = output_filename.display().to_string();
+
+    <span class="macro">println!</span>(<span class="string">"[DEBUG] Object file path: {}"</span>, file_path);
+    <span class="macro">println!</span>(<span class="string">"[DEBUG] Output library path: {}"</span>, output_path);
+    <span class="macro">println!</span>(<span class="string">"[DEBUG] Output path exists?: {}"</span>, output_filename.exists());
+
     <span class="kw">if let </span><span class="prelude-val">Ok</span>(x) = std::env::var(<span class="string">"NATIVE_DEBUG_DUMP"</span>) {
         <span class="kw">if </span>x == <span class="string">"1" </span>|| x == <span class="string">"true" </span>{
             <span class="comment">// forget so the temp file is not deleted and the debugger can load it.
@@ -678,6 +706,9 @@
     } <span class="kw">else </span>{
         String::from(<span class="string">"libcairo_native_runtime.a"</span>)
     };
+
+    <span class="macro">println!</span>(<span class="string">"[DEBUG] Runtime library path: {}"</span>, runtime_library_path);
+    <span class="kw">let </span>file_path_clone = file_path.clone();
 
     <span class="kw">let </span>args: Vec&lt;Cow&lt;<span class="lifetime">'static</span>, str&gt;&gt; = {
         <span class="attr">#[cfg(target_os = <span class="string">"macos"</span>)]
@@ -729,6 +760,7 @@
     };
 
     <span class="kw">let </span><span class="kw-2">mut </span>linker = std::process::Command::new(<span class="string">"ld"</span>);
+    <span class="macro">println!</span>(<span class="string">"[DEBUG] Linker command: ld {}"</span>, args.join(<span class="string">" "</span>));
 
     <span class="macro">trace!</span>(<span class="string">"starting linking"</span>);
     <span class="kw">let </span>pre_linking_instant = Instant::now();
@@ -737,9 +769,13 @@
     <span class="macro">trace!</span>(time = linking_time, <span class="string">"linking finished"</span>);
 
     <span class="kw">if </span>proc.status.success() {
+        <span class="macro">println!</span>(<span class="string">"[DEBUG] Linking completed successfully"</span>);
         <span class="prelude-val">Ok</span>(())
     } <span class="kw">else </span>{
         <span class="kw">let </span>msg = String::from_utf8_lossy(<span class="kw-2">&amp;</span>proc.stderr);
+        <span class="macro">println!</span>(<span class="string">"[ERROR] Linking failed with stderr: {}"</span>, msg);
+        <span class="macro">println!</span>(<span class="string">"[DEBUG] Object file still exists?: {}"</span>, Path::new(<span class="kw-2">&amp;</span>file_path_clone).exists());
+        <span class="macro">println!</span>(<span class="string">"[DEBUG] Output path exists?: {}"</span>, output_filename.exists());
         <span class="prelude-val">Err</span>(Error::LinkError(msg.to_string()))
     }
 }
