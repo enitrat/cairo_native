@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/starknet.rs`."><title>starknet.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-c5d6553a23f1e5a6.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="cairo_native" data-themes="" data-resource-suffix="" data-rustdoc-version="1.81.0 (eeb90cda1 2024-09-04)" data-channel="1.81.0" data-search-js="search-d234aafac6c221dd.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-118b08c4c78b968e.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-d2fab2bf619172d3.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-df360f571f6edeae.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/starknet.rs`."><title>starknet.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-492a78a4a87dcc01.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="cairo_native" data-themes="" data-resource-suffix="" data-rustdoc-version="1.82.0 (f6e511eec 2024-10-15)" data-channel="1.82.0" data-search-js="search-a99f1315e7cc5121.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-118b08c4c78b968e.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-921df33f47b8780c.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-3b12f09e550e0385.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1703,42 +1703,10 @@
 <a href="#1703" id="1703">1703</a>
 <a href="#1704" id="1704">1704</a>
 <a href="#1705" id="1705">1705</a>
-<a href="#1706" id="1706">1706</a>
-<a href="#1707" id="1707">1707</a>
-<a href="#1708" id="1708">1708</a>
-<a href="#1709" id="1709">1709</a>
-<a href="#1710" id="1710">1710</a>
-<a href="#1711" id="1711">1711</a>
-<a href="#1712" id="1712">1712</a>
-<a href="#1713" id="1713">1713</a>
-<a href="#1714" id="1714">1714</a>
-<a href="#1715" id="1715">1715</a>
-<a href="#1716" id="1716">1716</a>
-<a href="#1717" id="1717">1717</a>
-<a href="#1718" id="1718">1718</a>
-<a href="#1719" id="1719">1719</a>
-<a href="#1720" id="1720">1720</a>
-<a href="#1721" id="1721">1721</a>
-<a href="#1722" id="1722">1722</a>
-<a href="#1723" id="1723">1723</a>
-<a href="#1724" id="1724">1724</a>
-<a href="#1725" id="1725">1725</a>
-<a href="#1726" id="1726">1726</a>
-<a href="#1727" id="1727">1727</a>
-<a href="#1728" id="1728">1728</a>
-<a href="#1729" id="1729">1729</a>
-<a href="#1730" id="1730">1730</a>
-<a href="#1731" id="1731">1731</a>
-<a href="#1732" id="1732">1732</a>
-<a href="#1733" id="1733">1733</a>
-<a href="#1734" id="1734">1734</a>
-<a href="#1735" id="1735">1735</a>
-<a href="#1736" id="1736">1736</a>
-<a href="#1737" id="1737">1737</a>
-<a href="#1738" id="1738">1738</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! Starknet related code for `cairo_native`
 
-</span><span class="kw">use </span>starknet_types_core::felt::Felt;
+</span><span class="kw">use </span>serde::{Deserialize, Serialize};
+<span class="kw">use </span>starknet_types_core::felt::Felt;
 
 <span class="kw">pub type </span>SyscallResult&lt;T&gt; = std::result::Result&lt;T, Vec&lt;Felt&gt;&gt;;
 
@@ -1751,14 +1719,58 @@
     <span class="kw">pub </span>capacity: u32,
 }
 
+<span class="kw">impl </span>From&lt;<span class="kw-2">&amp;</span>ArrayAbi&lt;Felt252Abi&gt;&gt; <span class="kw">for </span>Vec&lt;Felt&gt; {
+    <span class="kw">fn </span>from(value: <span class="kw-2">&amp;</span>ArrayAbi&lt;Felt252Abi&gt;) -&gt; <span class="self">Self </span>{
+        <span class="kw">unsafe </span>{
+            <span class="kw">let </span>since_offset = value.since <span class="kw">as </span>usize;
+            <span class="kw">let </span>until_offset = value.until <span class="kw">as </span>usize;
+            <span class="macro">debug_assert!</span>(since_offset &lt;= until_offset);
+            <span class="kw">let </span>len = until_offset - since_offset;
+            <span class="kw">match </span>len {
+                <span class="number">0 </span>=&gt; <span class="kw-2">&amp;</span>[],
+                <span class="kw">_ </span>=&gt; std::slice::from_raw_parts(value.ptr.add(since_offset), len),
+            }
+        }
+        .iter()
+        .map(Felt::from)
+        .collect()
+    }
+}
+
 <span class="doccomment">/// Binary representation of a `Felt` (in MLIR).
-</span><span class="attr">#[derive(Debug, Clone)]
+</span><span class="attr">#[derive(Debug, Clone, Copy)]
 #[repr(C, align(<span class="number">16</span>))]
 </span><span class="kw">pub struct </span>Felt252Abi(<span class="kw">pub </span>[u8; <span class="number">32</span>]);
+
+<span class="kw">impl </span>From&lt;Felt252Abi&gt; <span class="kw">for </span>Felt {
+    <span class="kw">fn </span>from(<span class="kw-2">mut </span>value: Felt252Abi) -&gt; Felt {
+        value.<span class="number">0</span>[<span class="number">31</span>] &amp;= <span class="number">0x0F</span>;
+        Felt::from_bytes_le(<span class="kw-2">&amp;</span>value.<span class="number">0</span>)
+    }
+}
+
+<span class="kw">impl </span>From&lt;<span class="kw-2">&amp;</span>Felt252Abi&gt; <span class="kw">for </span>Felt {
+    <span class="kw">fn </span>from(value: <span class="kw-2">&amp;</span>Felt252Abi) -&gt; Felt {
+        <span class="kw">let </span><span class="kw-2">mut </span>value = <span class="kw-2">*</span>value;
+        value.<span class="number">0</span>[<span class="number">31</span>] &amp;= <span class="number">0x0F</span>;
+        Felt::from_bytes_le(<span class="kw-2">&amp;</span>value.<span class="number">0</span>)
+    }
+}
+
 <span class="doccomment">/// Binary representation of a `u256` (in MLIR).
 </span><span class="comment">// TODO: This shouldn't need to be public.
 </span><span class="attr">#[derive(
-    Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, serde::Serialize, serde::Deserialize,
+    Debug,
+    Clone,
+    Copy,
+    PartialEq,
+    Eq,
+    PartialOrd,
+    Ord,
+    Hash,
+    serde::Serialize,
+    serde::Deserialize,
+    Default,
 )]
 #[repr(C, align(<span class="number">16</span>))]
 </span><span class="kw">pub struct </span>U256 {
@@ -1838,29 +1850,49 @@
     <span class="kw">pub </span>nonce: Felt,
 }
 
-<span class="attr">#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
+<span class="attr">#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq, Deserialize, Serialize, Default)]
+#[repr(C, align(<span class="number">16</span>))]
 </span><span class="kw">pub struct </span>Secp256k1Point {
     <span class="kw">pub </span>x: U256,
     <span class="kw">pub </span>y: U256,
+    <span class="kw">pub </span>is_infinity: bool,
 }
 
-<span class="attr">#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
+<span class="kw">impl </span>Secp256k1Point {
+    <span class="kw">pub const fn </span>new(x_lo: u128, x_hi: u128, y_lo: u128, y_hi: u128, is_infinity: bool) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            x: U256 { lo: x_lo, hi: x_hi },
+            y: U256 { lo: y_lo, hi: y_hi },
+            is_infinity,
+        }
+    }
+}
+
+<span class="attr">#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq, Deserialize, Serialize, Default)]
+#[repr(C, align(<span class="number">16</span>))]
 </span><span class="kw">pub struct </span>Secp256r1Point {
     <span class="kw">pub </span>x: U256,
     <span class="kw">pub </span>y: U256,
+    <span class="kw">pub </span>is_infinity: bool,
+}
+
+<span class="kw">impl </span>Secp256r1Point {
+    <span class="kw">pub const fn </span>new(x_lo: u128, x_hi: u128, y_lo: u128, y_hi: u128, is_infinity: bool) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            x: U256 { lo: x_lo, hi: x_hi },
+            y: U256 { lo: y_lo, hi: y_hi },
+            is_infinity,
+        }
+    }
 }
 
 <span class="kw">pub trait </span>StarknetSyscallHandler {
-    <span class="kw">fn </span>get_block_hash(
-        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
-        block_number: u64,
-        remaining_gas: <span class="kw-2">&amp;mut </span>u128,
-    ) -&gt; SyscallResult&lt;Felt&gt;;
+    <span class="kw">fn </span>get_block_hash(<span class="kw-2">&amp;mut </span><span class="self">self</span>, block_number: u64, remaining_gas: <span class="kw-2">&amp;mut </span>u64)
+        -&gt; SyscallResult&lt;Felt&gt;;
 
-    <span class="kw">fn </span>get_execution_info(<span class="kw-2">&amp;mut </span><span class="self">self</span>, remaining_gas: <span class="kw-2">&amp;mut </span>u128) -&gt; SyscallResult&lt;ExecutionInfo&gt;;
+    <span class="kw">fn </span>get_execution_info(<span class="kw-2">&amp;mut </span><span class="self">self</span>, remaining_gas: <span class="kw-2">&amp;mut </span>u64) -&gt; SyscallResult&lt;ExecutionInfo&gt;;
 
-    <span class="kw">fn </span>get_execution_info_v2(<span class="kw-2">&amp;mut </span><span class="self">self</span>, remaining_gas: <span class="kw-2">&amp;mut </span>u128)
-        -&gt; SyscallResult&lt;ExecutionInfoV2&gt;;
+    <span class="kw">fn </span>get_execution_info_v2(<span class="kw-2">&amp;mut </span><span class="self">self</span>, remaining_gas: <span class="kw-2">&amp;mut </span>u64) -&gt; SyscallResult&lt;ExecutionInfoV2&gt;;
 
     <span class="kw">fn </span>deploy(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
@@ -1868,16 +1900,16 @@
         contract_address_salt: Felt,
         calldata: <span class="kw-2">&amp;</span>[Felt],
         deploy_from_zero: bool,
-        remaining_gas: <span class="kw-2">&amp;mut </span>u128,
+        remaining_gas: <span class="kw-2">&amp;mut </span>u64,
     ) -&gt; SyscallResult&lt;(Felt, Vec&lt;Felt&gt;)&gt;;
-    <span class="kw">fn </span>replace_class(<span class="kw-2">&amp;mut </span><span class="self">self</span>, class_hash: Felt, remaining_gas: <span class="kw-2">&amp;mut </span>u128) -&gt; SyscallResult&lt;()&gt;;
+    <span class="kw">fn </span>replace_class(<span class="kw-2">&amp;mut </span><span class="self">self</span>, class_hash: Felt, remaining_gas: <span class="kw-2">&amp;mut </span>u64) -&gt; SyscallResult&lt;()&gt;;
 
     <span class="kw">fn </span>library_call(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         class_hash: Felt,
         function_selector: Felt,
         calldata: <span class="kw-2">&amp;</span>[Felt],
-        remaining_gas: <span class="kw-2">&amp;mut </span>u128,
+        remaining_gas: <span class="kw-2">&amp;mut </span>u64,
     ) -&gt; SyscallResult&lt;Vec&lt;Felt&gt;&gt;;
 
     <span class="kw">fn </span>call_contract(
@@ -1885,14 +1917,14 @@
         address: Felt,
         entry_point_selector: Felt,
         calldata: <span class="kw-2">&amp;</span>[Felt],
-        remaining_gas: <span class="kw-2">&amp;mut </span>u128,
+        remaining_gas: <span class="kw-2">&amp;mut </span>u64,
     ) -&gt; SyscallResult&lt;Vec&lt;Felt&gt;&gt;;
 
     <span class="kw">fn </span>storage_read(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         address_domain: u32,
         address: Felt,
-        remaining_gas: <span class="kw-2">&amp;mut </span>u128,
+        remaining_gas: <span class="kw-2">&amp;mut </span>u64,
     ) -&gt; SyscallResult&lt;Felt&gt;;
 
     <span class="kw">fn </span>storage_write(
@@ -1900,99 +1932,105 @@
         address_domain: u32,
         address: Felt,
         value: Felt,
-        remaining_gas: <span class="kw-2">&amp;mut </span>u128,
+        remaining_gas: <span class="kw-2">&amp;mut </span>u64,
     ) -&gt; SyscallResult&lt;()&gt;;
 
     <span class="kw">fn </span>emit_event(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         keys: <span class="kw-2">&amp;</span>[Felt],
         data: <span class="kw-2">&amp;</span>[Felt],
-        remaining_gas: <span class="kw-2">&amp;mut </span>u128,
+        remaining_gas: <span class="kw-2">&amp;mut </span>u64,
     ) -&gt; SyscallResult&lt;()&gt;;
 
     <span class="kw">fn </span>send_message_to_l1(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         to_address: Felt,
         payload: <span class="kw-2">&amp;</span>[Felt],
-        remaining_gas: <span class="kw-2">&amp;mut </span>u128,
+        remaining_gas: <span class="kw-2">&amp;mut </span>u64,
     ) -&gt; SyscallResult&lt;()&gt;;
 
-    <span class="kw">fn </span>keccak(<span class="kw-2">&amp;mut </span><span class="self">self</span>, input: <span class="kw-2">&amp;</span>[u64], remaining_gas: <span class="kw-2">&amp;mut </span>u128) -&gt; SyscallResult&lt;U256&gt;;
+    <span class="kw">fn </span>keccak(<span class="kw-2">&amp;mut </span><span class="self">self</span>, input: <span class="kw-2">&amp;</span>[u64], remaining_gas: <span class="kw-2">&amp;mut </span>u64) -&gt; SyscallResult&lt;U256&gt;;
 
     <span class="kw">fn </span>secp256k1_new(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         x: U256,
         y: U256,
-        remaining_gas: <span class="kw-2">&amp;mut </span>u128,
+        remaining_gas: <span class="kw-2">&amp;mut </span>u64,
     ) -&gt; SyscallResult&lt;<span class="prelude-ty">Option</span>&lt;Secp256k1Point&gt;&gt;;
 
     <span class="kw">fn </span>secp256k1_add(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         p0: Secp256k1Point,
         p1: Secp256k1Point,
-        remaining_gas: <span class="kw-2">&amp;mut </span>u128,
+        remaining_gas: <span class="kw-2">&amp;mut </span>u64,
     ) -&gt; SyscallResult&lt;Secp256k1Point&gt;;
 
     <span class="kw">fn </span>secp256k1_mul(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         p: Secp256k1Point,
         m: U256,
-        remaining_gas: <span class="kw-2">&amp;mut </span>u128,
+        remaining_gas: <span class="kw-2">&amp;mut </span>u64,
     ) -&gt; SyscallResult&lt;Secp256k1Point&gt;;
 
     <span class="kw">fn </span>secp256k1_get_point_from_x(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         x: U256,
         y_parity: bool,
-        remaining_gas: <span class="kw-2">&amp;mut </span>u128,
+        remaining_gas: <span class="kw-2">&amp;mut </span>u64,
     ) -&gt; SyscallResult&lt;<span class="prelude-ty">Option</span>&lt;Secp256k1Point&gt;&gt;;
 
     <span class="kw">fn </span>secp256k1_get_xy(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         p: Secp256k1Point,
-        remaining_gas: <span class="kw-2">&amp;mut </span>u128,
+        remaining_gas: <span class="kw-2">&amp;mut </span>u64,
     ) -&gt; SyscallResult&lt;(U256, U256)&gt;;
 
     <span class="kw">fn </span>secp256r1_new(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         x: U256,
         y: U256,
-        remaining_gas: <span class="kw-2">&amp;mut </span>u128,
+        remaining_gas: <span class="kw-2">&amp;mut </span>u64,
     ) -&gt; SyscallResult&lt;<span class="prelude-ty">Option</span>&lt;Secp256r1Point&gt;&gt;;
 
     <span class="kw">fn </span>secp256r1_add(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         p0: Secp256r1Point,
         p1: Secp256r1Point,
-        remaining_gas: <span class="kw-2">&amp;mut </span>u128,
+        remaining_gas: <span class="kw-2">&amp;mut </span>u64,
     ) -&gt; SyscallResult&lt;Secp256r1Point&gt;;
 
     <span class="kw">fn </span>secp256r1_mul(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         p: Secp256r1Point,
         m: U256,
-        remaining_gas: <span class="kw-2">&amp;mut </span>u128,
+        remaining_gas: <span class="kw-2">&amp;mut </span>u64,
     ) -&gt; SyscallResult&lt;Secp256r1Point&gt;;
 
     <span class="kw">fn </span>secp256r1_get_point_from_x(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         x: U256,
         y_parity: bool,
-        remaining_gas: <span class="kw-2">&amp;mut </span>u128,
+        remaining_gas: <span class="kw-2">&amp;mut </span>u64,
     ) -&gt; SyscallResult&lt;<span class="prelude-ty">Option</span>&lt;Secp256r1Point&gt;&gt;;
 
     <span class="kw">fn </span>secp256r1_get_xy(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         p: Secp256r1Point,
-        remaining_gas: <span class="kw-2">&amp;mut </span>u128,
+        remaining_gas: <span class="kw-2">&amp;mut </span>u64,
     ) -&gt; SyscallResult&lt;(U256, U256)&gt;;
 
     <span class="kw">fn </span>sha256_process_block(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
-        prev_state: <span class="kw-2">&amp;</span>[u32; <span class="number">8</span>],
-        current_block: <span class="kw-2">&amp;</span>[u32; <span class="number">16</span>],
-        remaining_gas: <span class="kw-2">&amp;mut </span>u128,
-    ) -&gt; SyscallResult&lt;[u32; <span class="number">8</span>]&gt;;
+        state: <span class="kw-2">&amp;mut </span>[u32; <span class="number">8</span>],
+        block: <span class="kw-2">&amp;</span>[u32; <span class="number">16</span>],
+        remaining_gas: <span class="kw-2">&amp;mut </span>u64,
+    ) -&gt; SyscallResult&lt;()&gt;;
+
+    <span class="kw">fn </span>get_class_hash_at(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        contract_address: Felt,
+        remaining_gas: <span class="kw-2">&amp;mut </span>u64,
+    ) -&gt; SyscallResult&lt;Felt&gt;;
 
     <span class="attr">#[cfg(feature = <span class="string">"with-cheatcode"</span>)]
     </span><span class="kw">fn </span>cheatcode(<span class="kw-2">&amp;mut </span><span class="self">self</span>, _selector: Felt, _input: <span class="kw-2">&amp;</span>[Felt]) -&gt; Vec&lt;Felt&gt; {
@@ -2006,18 +2044,18 @@
     <span class="kw">fn </span>get_block_hash(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         _block_number: u64,
-        _remaining_gas: <span class="kw-2">&amp;mut </span>u128,
+        _remaining_gas: <span class="kw-2">&amp;mut </span>u64,
     ) -&gt; SyscallResult&lt;Felt&gt; {
         <span class="macro">unimplemented!</span>()
     }
 
-    <span class="kw">fn </span>get_execution_info(<span class="kw-2">&amp;mut </span><span class="self">self</span>, _remaining_gas: <span class="kw-2">&amp;mut </span>u128) -&gt; SyscallResult&lt;ExecutionInfo&gt; {
+    <span class="kw">fn </span>get_execution_info(<span class="kw-2">&amp;mut </span><span class="self">self</span>, _remaining_gas: <span class="kw-2">&amp;mut </span>u64) -&gt; SyscallResult&lt;ExecutionInfo&gt; {
         <span class="macro">unimplemented!</span>()
     }
 
     <span class="kw">fn </span>get_execution_info_v2(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
-        _remaining_gas: <span class="kw-2">&amp;mut </span>u128,
+        _remaining_gas: <span class="kw-2">&amp;mut </span>u64,
     ) -&gt; SyscallResult&lt;ExecutionInfoV2&gt; {
         <span class="macro">unimplemented!</span>()
     }
@@ -2028,12 +2066,12 @@
         _contract_address_salt: Felt,
         _calldata: <span class="kw-2">&amp;</span>[Felt],
         _deploy_from_zero: bool,
-        _remaining_gas: <span class="kw-2">&amp;mut </span>u128,
+        _remaining_gas: <span class="kw-2">&amp;mut </span>u64,
     ) -&gt; SyscallResult&lt;(Felt, Vec&lt;Felt&gt;)&gt; {
         <span class="macro">unimplemented!</span>()
     }
 
-    <span class="kw">fn </span>replace_class(<span class="kw-2">&amp;mut </span><span class="self">self</span>, _class_hash: Felt, _remaining_gas: <span class="kw-2">&amp;mut </span>u128) -&gt; SyscallResult&lt;()&gt; {
+    <span class="kw">fn </span>replace_class(<span class="kw-2">&amp;mut </span><span class="self">self</span>, _class_hash: Felt, _remaining_gas: <span class="kw-2">&amp;mut </span>u64) -&gt; SyscallResult&lt;()&gt; {
         <span class="macro">unimplemented!</span>()
     }
 
@@ -2042,7 +2080,7 @@
         _class_hash: Felt,
         _function_selector: Felt,
         _calldata: <span class="kw-2">&amp;</span>[Felt],
-        _remaining_gas: <span class="kw-2">&amp;mut </span>u128,
+        _remaining_gas: <span class="kw-2">&amp;mut </span>u64,
     ) -&gt; SyscallResult&lt;Vec&lt;Felt&gt;&gt; {
         <span class="macro">unimplemented!</span>()
     }
@@ -2052,7 +2090,7 @@
         _address: Felt,
         _entry_point_selector: Felt,
         _calldata: <span class="kw-2">&amp;</span>[Felt],
-        _remaining_gas: <span class="kw-2">&amp;mut </span>u128,
+        _remaining_gas: <span class="kw-2">&amp;mut </span>u64,
     ) -&gt; SyscallResult&lt;Vec&lt;Felt&gt;&gt; {
         <span class="macro">unimplemented!</span>()
     }
@@ -2061,7 +2099,7 @@
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         _address_domain: u32,
         _address: Felt,
-        _remaining_gas: <span class="kw-2">&amp;mut </span>u128,
+        _remaining_gas: <span class="kw-2">&amp;mut </span>u64,
     ) -&gt; SyscallResult&lt;Felt&gt; {
         <span class="macro">unimplemented!</span>()
     }
@@ -2071,7 +2109,7 @@
         _address_domain: u32,
         _address: Felt,
         _value: Felt,
-        _remaining_gas: <span class="kw-2">&amp;mut </span>u128,
+        _remaining_gas: <span class="kw-2">&amp;mut </span>u64,
     ) -&gt; SyscallResult&lt;()&gt; {
         <span class="macro">unimplemented!</span>()
     }
@@ -2080,7 +2118,7 @@
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         _keys: <span class="kw-2">&amp;</span>[Felt],
         _data: <span class="kw-2">&amp;</span>[Felt],
-        _remaining_gas: <span class="kw-2">&amp;mut </span>u128,
+        _remaining_gas: <span class="kw-2">&amp;mut </span>u64,
     ) -&gt; SyscallResult&lt;()&gt; {
         <span class="macro">unimplemented!</span>()
     }
@@ -2089,12 +2127,12 @@
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         _to_address: Felt,
         _payload: <span class="kw-2">&amp;</span>[Felt],
-        _remaining_gas: <span class="kw-2">&amp;mut </span>u128,
+        _remaining_gas: <span class="kw-2">&amp;mut </span>u64,
     ) -&gt; SyscallResult&lt;()&gt; {
         <span class="macro">unimplemented!</span>()
     }
 
-    <span class="kw">fn </span>keccak(<span class="kw-2">&amp;mut </span><span class="self">self</span>, _input: <span class="kw-2">&amp;</span>[u64], _remaining_gas: <span class="kw-2">&amp;mut </span>u128) -&gt; SyscallResult&lt;U256&gt; {
+    <span class="kw">fn </span>keccak(<span class="kw-2">&amp;mut </span><span class="self">self</span>, _input: <span class="kw-2">&amp;</span>[u64], _remaining_gas: <span class="kw-2">&amp;mut </span>u64) -&gt; SyscallResult&lt;U256&gt; {
         <span class="macro">unimplemented!</span>()
     }
 
@@ -2102,7 +2140,7 @@
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         _x: U256,
         _y: U256,
-        _remaining_gas: <span class="kw-2">&amp;mut </span>u128,
+        _remaining_gas: <span class="kw-2">&amp;mut </span>u64,
     ) -&gt; SyscallResult&lt;<span class="prelude-ty">Option</span>&lt;Secp256k1Point&gt;&gt; {
         <span class="macro">unimplemented!</span>()
     }
@@ -2111,7 +2149,7 @@
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         _p0: Secp256k1Point,
         _p1: Secp256k1Point,
-        _remaining_gas: <span class="kw-2">&amp;mut </span>u128,
+        _remaining_gas: <span class="kw-2">&amp;mut </span>u64,
     ) -&gt; SyscallResult&lt;Secp256k1Point&gt; {
         <span class="macro">unimplemented!</span>()
     }
@@ -2120,7 +2158,7 @@
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         _p: Secp256k1Point,
         _m: U256,
-        _remaining_gas: <span class="kw-2">&amp;mut </span>u128,
+        _remaining_gas: <span class="kw-2">&amp;mut </span>u64,
     ) -&gt; SyscallResult&lt;Secp256k1Point&gt; {
         <span class="macro">unimplemented!</span>()
     }
@@ -2129,7 +2167,7 @@
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         _x: U256,
         _y_parity: bool,
-        _remaining_gas: <span class="kw-2">&amp;mut </span>u128,
+        _remaining_gas: <span class="kw-2">&amp;mut </span>u64,
     ) -&gt; SyscallResult&lt;<span class="prelude-ty">Option</span>&lt;Secp256k1Point&gt;&gt; {
         <span class="macro">unimplemented!</span>()
     }
@@ -2137,7 +2175,7 @@
     <span class="kw">fn </span>secp256k1_get_xy(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         _p: Secp256k1Point,
-        _remaining_gas: <span class="kw-2">&amp;mut </span>u128,
+        _remaining_gas: <span class="kw-2">&amp;mut </span>u64,
     ) -&gt; SyscallResult&lt;(U256, U256)&gt; {
         <span class="macro">unimplemented!</span>()
     }
@@ -2146,7 +2184,7 @@
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         _x: U256,
         _y: U256,
-        _remaining_gas: <span class="kw-2">&amp;mut </span>u128,
+        _remaining_gas: <span class="kw-2">&amp;mut </span>u64,
     ) -&gt; SyscallResult&lt;<span class="prelude-ty">Option</span>&lt;Secp256r1Point&gt;&gt; {
         <span class="macro">unimplemented!</span>()
     }
@@ -2155,7 +2193,7 @@
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         _p0: Secp256r1Point,
         _p1: Secp256r1Point,
-        _remaining_gas: <span class="kw-2">&amp;mut </span>u128,
+        _remaining_gas: <span class="kw-2">&amp;mut </span>u64,
     ) -&gt; SyscallResult&lt;Secp256r1Point&gt; {
         <span class="macro">unimplemented!</span>()
     }
@@ -2164,7 +2202,7 @@
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         _p: Secp256r1Point,
         _m: U256,
-        _remaining_gas: <span class="kw-2">&amp;mut </span>u128,
+        _remaining_gas: <span class="kw-2">&amp;mut </span>u64,
     ) -&gt; SyscallResult&lt;Secp256r1Point&gt; {
         <span class="macro">unimplemented!</span>()
     }
@@ -2173,7 +2211,7 @@
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         _x: U256,
         _y_parity: bool,
-        _remaining_gas: <span class="kw-2">&amp;mut </span>u128,
+        _remaining_gas: <span class="kw-2">&amp;mut </span>u64,
     ) -&gt; SyscallResult&lt;<span class="prelude-ty">Option</span>&lt;Secp256r1Point&gt;&gt; {
         <span class="macro">unimplemented!</span>()
     }
@@ -2181,17 +2219,25 @@
     <span class="kw">fn </span>secp256r1_get_xy(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         _p: Secp256r1Point,
-        _remaining_gas: <span class="kw-2">&amp;mut </span>u128,
+        _remaining_gas: <span class="kw-2">&amp;mut </span>u64,
     ) -&gt; SyscallResult&lt;(U256, U256)&gt; {
         <span class="macro">unimplemented!</span>()
     }
 
     <span class="kw">fn </span>sha256_process_block(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
-        _prev_state: <span class="kw-2">&amp;</span>[u32; <span class="number">8</span>],
-        _current_block: <span class="kw-2">&amp;</span>[u32; <span class="number">16</span>],
-        _remaining_gas: <span class="kw-2">&amp;mut </span>u128,
-    ) -&gt; SyscallResult&lt;[u32; <span class="number">8</span>]&gt; {
+        _state: <span class="kw-2">&amp;mut </span>[u32; <span class="number">8</span>],
+        _block: <span class="kw-2">&amp;</span>[u32; <span class="number">16</span>],
+        _remaining_gas: <span class="kw-2">&amp;mut </span>u64,
+    ) -&gt; SyscallResult&lt;()&gt; {
+        <span class="macro">unimplemented!</span>()
+    }
+
+    <span class="kw">fn </span>get_class_hash_at(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        _contract_address: Felt,
+        _remaining_gas: <span class="kw-2">&amp;mut </span>u64,
+    ) -&gt; SyscallResult&lt;Felt&gt; {
         <span class="macro">unimplemented!</span>()
     }
 }
@@ -2199,8 +2245,10 @@
 <span class="comment">// TODO: Move to the correct place or remove if unused.
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod </span>handler {
     <span class="kw">use super</span>::<span class="kw-2">*</span>;
+    <span class="kw">use </span><span class="kw">crate</span>::utils::{libc_free, libc_malloc};
     <span class="kw">use </span>std::{
         alloc::Layout,
+        ffi::c_void,
         fmt::Debug,
         mem::{size_of, ManuallyDrop, MaybeUninit},
         ptr::{null_mut, NonNull},
@@ -2217,21 +2265,21 @@
     }
 
     <span class="attr">#[repr(C)]
-    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">union </span>SyscallResultAbi&lt;T&gt; {
+    </span><span class="kw">pub union </span>SyscallResultAbi&lt;T&gt; {
         <span class="kw">pub </span>ok: ManuallyDrop&lt;SyscallResultAbiOk&lt;T&gt;&gt;,
         <span class="kw">pub </span>err: ManuallyDrop&lt;SyscallResultAbiErr&gt;,
     }
 
     <span class="attr">#[repr(C)]
     #[derive(Debug)]
-    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>SyscallResultAbiOk&lt;T&gt; {
+    </span><span class="kw">pub struct </span>SyscallResultAbiOk&lt;T&gt; {
         <span class="kw">pub </span>tag: u8,
         <span class="kw">pub </span>payload: ManuallyDrop&lt;T&gt;,
     }
 
     <span class="attr">#[repr(C)]
     #[derive(Debug)]
-    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>SyscallResultAbiErr {
+    </span><span class="kw">pub struct </span>SyscallResultAbiErr {
         <span class="kw">pub </span>tag: u8,
         <span class="kw">pub </span>payload: ArrayAbi&lt;Felt252Abi&gt;,
     }
@@ -2312,23 +2360,23 @@
         get_block_hash: <span class="kw">extern </span><span class="string">"C" </span><span class="kw">fn</span>(
             result_ptr: <span class="kw-2">&amp;mut </span>SyscallResultAbi&lt;Felt252Abi&gt;,
             ptr: <span class="kw-2">&amp;mut </span>T,
-            gas: <span class="kw-2">&amp;mut </span>u128,
+            gas: <span class="kw-2">&amp;mut </span>u64,
             block_number: u64,
         ),
         get_execution_info: <span class="kw">extern </span><span class="string">"C" </span><span class="kw">fn</span>(
             result_ptr: <span class="kw-2">&amp;mut </span>SyscallResultAbi&lt;NonNull&lt;ExecutionInfoAbi&gt;&gt;,
             ptr: <span class="kw-2">&amp;mut </span>T,
-            gas: <span class="kw-2">&amp;mut </span>u128,
+            gas: <span class="kw-2">&amp;mut </span>u64,
         ),
         get_execution_info_v2: <span class="kw">extern </span><span class="string">"C" </span><span class="kw">fn</span>(
             result_ptr: <span class="kw-2">&amp;mut </span>SyscallResultAbi&lt;NonNull&lt;ExecutionInfoV2Abi&gt;&gt;,
             ptr: <span class="kw-2">&amp;mut </span>T,
-            gas: <span class="kw-2">&amp;mut </span>u128,
+            gas: <span class="kw-2">&amp;mut </span>u64,
         ),
         deploy: <span class="kw">extern </span><span class="string">"C" </span><span class="kw">fn</span>(
             result_ptr: <span class="kw-2">&amp;mut </span>SyscallResultAbi&lt;(Felt252Abi, ArrayAbi&lt;Felt252Abi&gt;)&gt;,
             ptr: <span class="kw-2">&amp;mut </span>T,
-            gas: <span class="kw-2">&amp;mut </span>u128,
+            gas: <span class="kw-2">&amp;mut </span>u64,
             class_hash: <span class="kw-2">&amp;</span>Felt252Abi,
             contract_address_salt: <span class="kw-2">&amp;</span>Felt252Abi,
             calldata: <span class="kw-2">&amp;</span>ArrayAbi&lt;Felt252Abi&gt;,
@@ -2337,13 +2385,13 @@
         replace_class: <span class="kw">extern </span><span class="string">"C" </span><span class="kw">fn</span>(
             result_ptr: <span class="kw-2">&amp;mut </span>SyscallResultAbi&lt;()&gt;,
             ptr: <span class="kw-2">&amp;mut </span>T,
-            _gas: <span class="kw-2">&amp;mut </span>u128,
+            _gas: <span class="kw-2">&amp;mut </span>u64,
             class_hash: <span class="kw-2">&amp;</span>Felt252Abi,
         ),
         library_call: <span class="kw">extern </span><span class="string">"C" </span><span class="kw">fn</span>(
             result_ptr: <span class="kw-2">&amp;mut </span>SyscallResultAbi&lt;ArrayAbi&lt;Felt252Abi&gt;&gt;,
             ptr: <span class="kw-2">&amp;mut </span>T,
-            gas: <span class="kw-2">&amp;mut </span>u128,
+            gas: <span class="kw-2">&amp;mut </span>u64,
             class_hash: <span class="kw-2">&amp;</span>Felt252Abi,
             function_selector: <span class="kw-2">&amp;</span>Felt252Abi,
             calldata: <span class="kw-2">&amp;</span>ArrayAbi&lt;Felt252Abi&gt;,
@@ -2351,7 +2399,7 @@
         call_contract: <span class="kw">extern </span><span class="string">"C" </span><span class="kw">fn</span>(
             result_ptr: <span class="kw-2">&amp;mut </span>SyscallResultAbi&lt;ArrayAbi&lt;Felt252Abi&gt;&gt;,
             ptr: <span class="kw-2">&amp;mut </span>T,
-            gas: <span class="kw-2">&amp;mut </span>u128,
+            gas: <span class="kw-2">&amp;mut </span>u64,
             address: <span class="kw-2">&amp;</span>Felt252Abi,
             entry_point_selector: <span class="kw-2">&amp;</span>Felt252Abi,
             calldata: <span class="kw-2">&amp;</span>ArrayAbi&lt;Felt252Abi&gt;,
@@ -2359,14 +2407,14 @@
         storage_read: <span class="kw">extern </span><span class="string">"C" </span><span class="kw">fn</span>(
             result_ptr: <span class="kw-2">&amp;mut </span>SyscallResultAbi&lt;Felt252Abi&gt;,
             ptr: <span class="kw-2">&amp;mut </span>T,
-            gas: <span class="kw-2">&amp;mut </span>u128,
+            gas: <span class="kw-2">&amp;mut </span>u64,
             address_domain: u32,
             address: <span class="kw-2">&amp;</span>Felt252Abi,
         ),
         storage_write: <span class="kw">extern </span><span class="string">"C" </span><span class="kw">fn</span>(
             result_ptr: <span class="kw-2">&amp;mut </span>SyscallResultAbi&lt;()&gt;,
             ptr: <span class="kw-2">&amp;mut </span>T,
-            gas: <span class="kw-2">&amp;mut </span>u128,
+            gas: <span class="kw-2">&amp;mut </span>u64,
             address_domain: u32,
             address: <span class="kw-2">&amp;</span>Felt252Abi,
             value: <span class="kw-2">&amp;</span>Felt252Abi,
@@ -2374,99 +2422,105 @@
         emit_event: <span class="kw">extern </span><span class="string">"C" </span><span class="kw">fn</span>(
             result_ptr: <span class="kw-2">&amp;mut </span>SyscallResultAbi&lt;()&gt;,
             ptr: <span class="kw-2">&amp;mut </span>T,
-            gas: <span class="kw-2">&amp;mut </span>u128,
+            gas: <span class="kw-2">&amp;mut </span>u64,
             keys: <span class="kw-2">&amp;</span>ArrayAbi&lt;Felt252Abi&gt;,
             data: <span class="kw-2">&amp;</span>ArrayAbi&lt;Felt252Abi&gt;,
         ),
         send_message_to_l1: <span class="kw">extern </span><span class="string">"C" </span><span class="kw">fn</span>(
             result_ptr: <span class="kw-2">&amp;mut </span>SyscallResultAbi&lt;()&gt;,
             ptr: <span class="kw-2">&amp;mut </span>T,
-            gas: <span class="kw-2">&amp;mut </span>u128,
+            gas: <span class="kw-2">&amp;mut </span>u64,
             to_address: <span class="kw-2">&amp;</span>Felt252Abi,
             data: <span class="kw-2">&amp;</span>ArrayAbi&lt;Felt252Abi&gt;,
         ),
         keccak: <span class="kw">extern </span><span class="string">"C" </span><span class="kw">fn</span>(
             result_ptr: <span class="kw-2">&amp;mut </span>SyscallResultAbi&lt;U256&gt;,
             ptr: <span class="kw-2">&amp;mut </span>T,
-            gas: <span class="kw-2">&amp;mut </span>u128,
+            gas: <span class="kw-2">&amp;mut </span>u64,
             input: <span class="kw-2">&amp;</span>ArrayAbi&lt;u64&gt;,
         ),
 
         secp256k1_new: <span class="kw">extern </span><span class="string">"C" </span><span class="kw">fn</span>(
             result_ptr: <span class="kw-2">&amp;mut </span>SyscallResultAbi&lt;(u8, MaybeUninit&lt;Secp256k1Point&gt;)&gt;,
             ptr: <span class="kw-2">&amp;mut </span>T,
-            gas: <span class="kw-2">&amp;mut </span>u128,
+            gas: <span class="kw-2">&amp;mut </span>u64,
             x: <span class="kw-2">&amp;</span>U256,
             y: <span class="kw-2">&amp;</span>U256,
         ),
         secp256k1_add: <span class="kw">extern </span><span class="string">"C" </span><span class="kw">fn</span>(
             result_ptr: <span class="kw-2">&amp;mut </span>SyscallResultAbi&lt;Secp256k1Point&gt;,
             ptr: <span class="kw-2">&amp;mut </span>T,
-            gas: <span class="kw-2">&amp;mut </span>u128,
+            gas: <span class="kw-2">&amp;mut </span>u64,
             p0: <span class="kw-2">&amp;</span>Secp256k1Point,
             p1: <span class="kw-2">&amp;</span>Secp256k1Point,
         ),
         secp256k1_mul: <span class="kw">extern </span><span class="string">"C" </span><span class="kw">fn</span>(
             result_ptr: <span class="kw-2">&amp;mut </span>SyscallResultAbi&lt;Secp256k1Point&gt;,
             ptr: <span class="kw-2">&amp;mut </span>T,
-            gas: <span class="kw-2">&amp;mut </span>u128,
+            gas: <span class="kw-2">&amp;mut </span>u64,
             p: <span class="kw-2">&amp;</span>Secp256k1Point,
             scalar: <span class="kw-2">&amp;</span>U256,
         ),
         secp256k1_get_point_from_x: <span class="kw">extern </span><span class="string">"C" </span><span class="kw">fn</span>(
             result_ptr: <span class="kw-2">&amp;mut </span>SyscallResultAbi&lt;(u8, MaybeUninit&lt;Secp256k1Point&gt;)&gt;,
             ptr: <span class="kw-2">&amp;mut </span>T,
-            gas: <span class="kw-2">&amp;mut </span>u128,
+            gas: <span class="kw-2">&amp;mut </span>u64,
             x: <span class="kw-2">&amp;</span>U256,
             y_parity: <span class="kw-2">&amp;</span>bool,
         ),
         secp256k1_get_xy: <span class="kw">extern </span><span class="string">"C" </span><span class="kw">fn</span>(
             result_ptr: <span class="kw-2">&amp;mut </span>SyscallResultAbi&lt;(U256, U256)&gt;,
             ptr: <span class="kw-2">&amp;mut </span>T,
-            gas: <span class="kw-2">&amp;mut </span>u128,
+            gas: <span class="kw-2">&amp;mut </span>u64,
             p: <span class="kw-2">&amp;</span>Secp256k1Point,
         ),
 
         secp256r1_new: <span class="kw">extern </span><span class="string">"C" </span><span class="kw">fn</span>(
             result_ptr: <span class="kw-2">&amp;mut </span>SyscallResultAbi&lt;(u8, MaybeUninit&lt;Secp256r1Point&gt;)&gt;,
             ptr: <span class="kw-2">&amp;mut </span>T,
-            gas: <span class="kw-2">&amp;mut </span>u128,
+            gas: <span class="kw-2">&amp;mut </span>u64,
             x: <span class="kw-2">&amp;</span>U256,
             y: <span class="kw-2">&amp;</span>U256,
         ),
         secp256r1_add: <span class="kw">extern </span><span class="string">"C" </span><span class="kw">fn</span>(
             result_ptr: <span class="kw-2">&amp;mut </span>SyscallResultAbi&lt;Secp256r1Point&gt;,
             ptr: <span class="kw-2">&amp;mut </span>T,
-            gas: <span class="kw-2">&amp;mut </span>u128,
+            gas: <span class="kw-2">&amp;mut </span>u64,
             p0: <span class="kw-2">&amp;</span>Secp256r1Point,
             p1: <span class="kw-2">&amp;</span>Secp256r1Point,
         ),
         secp256r1_mul: <span class="kw">extern </span><span class="string">"C" </span><span class="kw">fn</span>(
             result_ptr: <span class="kw-2">&amp;mut </span>SyscallResultAbi&lt;Secp256r1Point&gt;,
             ptr: <span class="kw-2">&amp;mut </span>T,
-            gas: <span class="kw-2">&amp;mut </span>u128,
+            gas: <span class="kw-2">&amp;mut </span>u64,
             p: <span class="kw-2">&amp;</span>Secp256r1Point,
             scalar: <span class="kw-2">&amp;</span>U256,
         ),
         secp256r1_get_point_from_x: <span class="kw">extern </span><span class="string">"C" </span><span class="kw">fn</span>(
             result_ptr: <span class="kw-2">&amp;mut </span>SyscallResultAbi&lt;(u8, MaybeUninit&lt;Secp256r1Point&gt;)&gt;,
             ptr: <span class="kw-2">&amp;mut </span>T,
-            gas: <span class="kw-2">&amp;mut </span>u128,
+            gas: <span class="kw-2">&amp;mut </span>u64,
             x: <span class="kw-2">&amp;</span>U256,
             y_parity: <span class="kw-2">&amp;</span>bool,
         ),
         secp256r1_get_xy: <span class="kw">extern </span><span class="string">"C" </span><span class="kw">fn</span>(
             result_ptr: <span class="kw-2">&amp;mut </span>SyscallResultAbi&lt;(U256, U256)&gt;,
             ptr: <span class="kw-2">&amp;mut </span>T,
-            gas: <span class="kw-2">&amp;mut </span>u128,
+            gas: <span class="kw-2">&amp;mut </span>u64,
             p: <span class="kw-2">&amp;</span>Secp256r1Point,
         ),
         sha256_process_block: <span class="kw">extern </span><span class="string">"C" </span><span class="kw">fn</span>(
             result_ptr: <span class="kw-2">&amp;mut </span>SyscallResultAbi&lt;<span class="kw-2">*mut </span>[u32; <span class="number">8</span>]&gt;,
             ptr: <span class="kw-2">&amp;mut </span>T,
-            gas: <span class="kw-2">&amp;mut </span>u128,
-            prev_state: <span class="kw-2">&amp;</span>[u32; <span class="number">8</span>],
-            current_block: <span class="kw-2">&amp;</span>[u32; <span class="number">16</span>],
+            gas: <span class="kw-2">&amp;mut </span>u64,
+            state: <span class="kw-2">*mut </span>[u32; <span class="number">8</span>],
+            block: <span class="kw-2">&amp;</span>[u32; <span class="number">16</span>],
+        ),
+        get_class_hash_at: <span class="kw">extern </span><span class="string">"C" </span><span class="kw">fn</span>(
+            result_ptr: <span class="kw-2">&amp;mut </span>SyscallResultAbi&lt;Felt252Abi&gt;,
+            ptr: <span class="kw-2">&amp;mut </span>T,
+            gas: <span class="kw-2">&amp;mut </span>u64,
+            contract_address: <span class="kw-2">&amp;</span>Felt252Abi,
         ),
         <span class="comment">// testing syscalls
         </span><span class="attr">#[cfg(feature = <span class="string">"with-cheatcode"</span>)]
@@ -2508,7 +2562,10 @@
         <span class="kw">pub const </span>SECP256R1_GET_POINT_FROM_X: usize =
             <span class="macro">field_offset!</span>(<span class="self">Self</span>, secp256r1_get_point_from_x) &gt;&gt; <span class="number">3</span>;
         <span class="kw">pub const </span>SECP256R1_GET_XY: usize = <span class="macro">field_offset!</span>(<span class="self">Self</span>, secp256r1_get_xy) &gt;&gt; <span class="number">3</span>;
+
         <span class="kw">pub const </span>SHA256_PROCESS_BLOCK: usize = <span class="macro">field_offset!</span>(<span class="self">Self</span>, sha256_process_block) &gt;&gt; <span class="number">3</span>;
+
+        <span class="kw">pub const </span>GET_CLASS_HASH_AT: usize = <span class="macro">field_offset!</span>(<span class="self">Self</span>, get_class_hash_at) &gt;&gt; <span class="number">3</span>;
     }
 
     <span class="attr">#[allow(unused_variables)]
@@ -2542,6 +2599,7 @@
                 secp256r1_get_point_from_x: <span class="self">Self</span>::wrap_secp256r1_get_point_from_x,
                 secp256r1_get_xy: <span class="self">Self</span>::wrap_secp256r1_get_xy,
                 sha256_process_block: <span class="self">Self</span>::wrap_sha256_process_block,
+                get_class_hash_at: <span class="self">Self</span>::wrap_get_class_hash_at,
                 <span class="attr">#[cfg(feature = <span class="string">"with-cheatcode"</span>)]
                 </span>cheatcode: <span class="self">Self</span>::wrap_cheatcode,
             }
@@ -2556,8 +2614,7 @@
                     capacity: <span class="number">0</span>,
                 },
                 <span class="kw">_ </span>=&gt; {
-                    <span class="kw">let </span>ptr =
-                        libc::malloc(Layout::array::&lt;E&gt;(data.len()).unwrap().size()) <span class="kw">as </span><span class="kw-2">*mut </span>E;
+                    <span class="kw">let </span>ptr = libc_malloc(Layout::array::&lt;E&gt;(data.len()).unwrap().size()) <span class="kw">as </span><span class="kw-2">*mut </span>E;
 
                     <span class="kw">let </span>len: u32 = data.len().try_into().unwrap();
                     <span class="kw">for </span>(i, val) <span class="kw">in </span>data.iter().enumerate() {
@@ -2589,7 +2646,7 @@
         <span class="kw">extern </span><span class="string">"C" </span><span class="kw">fn </span>wrap_get_block_hash(
             result_ptr: <span class="kw-2">&amp;mut </span>SyscallResultAbi&lt;Felt252Abi&gt;,
             ptr: <span class="kw-2">&amp;mut </span>T,
-            gas: <span class="kw-2">&amp;mut </span>u128,
+            gas: <span class="kw-2">&amp;mut </span>u64,
             block_number: u64,
         ) {
             <span class="kw">let </span>result = ptr.get_block_hash(block_number, gas);
@@ -2612,20 +2669,15 @@
             selector: <span class="kw-2">&amp;</span>Felt252Abi,
             input: <span class="kw-2">&amp;</span>ArrayAbi&lt;Felt252Abi&gt;,
         ) {
-            <span class="kw">let </span>input: Vec&lt;<span class="kw">_</span>&gt; = <span class="kw">unsafe </span>{
-                <span class="kw">let </span>since_offset = input.since <span class="kw">as </span>usize;
-                <span class="kw">let </span>until_offset = input.until <span class="kw">as </span>usize;
-                <span class="macro">debug_assert!</span>(since_offset &lt;= until_offset);
-                <span class="kw">let </span>len = until_offset - since_offset;
-                std::slice::from_raw_parts(input.ptr.add(since_offset), len)
+            <span class="kw">let </span>selector = Felt::from(selector);
+            <span class="kw">let </span>input_vec: Vec&lt;<span class="kw">_</span>&gt; = input.into();
+
+            <span class="kw">unsafe </span>{
+                libc_free(input.ptr <span class="kw">as </span><span class="kw-2">*mut </span>c_void);
             }
-            .iter()
-            .map(|x| Felt::from_bytes_le(<span class="kw-2">&amp;</span>x.<span class="number">0</span>))
-            .collect();
-            <span class="kw">let </span>selector = Felt::from_bytes_le(<span class="kw-2">&amp;</span>selector.<span class="number">0</span>);
 
             <span class="kw">let </span>result = ptr
-                .cheatcode(selector, <span class="kw-2">&amp;</span>input)
+                .cheatcode(selector, <span class="kw-2">&amp;</span>input_vec)
                 .into_iter()
                 .map(|x| Felt252Abi(x.to_bytes_le()))
                 .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
@@ -2636,7 +2688,7 @@
         <span class="kw">extern </span><span class="string">"C" </span><span class="kw">fn </span>wrap_get_execution_info(
             result_ptr: <span class="kw-2">&amp;mut </span>SyscallResultAbi&lt;NonNull&lt;ExecutionInfoAbi&gt;&gt;,
             ptr: <span class="kw-2">&amp;mut </span>T,
-            gas: <span class="kw-2">&amp;mut </span>u128,
+            gas: <span class="kw-2">&amp;mut </span>u64,
         ) {
             <span class="kw">let </span>result = ptr.get_execution_info(gas);
 
@@ -2645,20 +2697,19 @@
                     ok: ManuallyDrop::new(SyscallResultAbiOk {
                         tag: <span class="number">0u8</span>,
                         payload: <span class="kw">unsafe </span>{
-                            <span class="kw">let </span><span class="kw-2">mut </span>block_info_ptr =
-                                NonNull::new(
-                                    libc::malloc(size_of::&lt;BlockInfoAbi&gt;()) <span class="kw">as </span><span class="kw-2">*mut </span>BlockInfoAbi
-                                )
-                                .unwrap();
+                            <span class="kw">let </span><span class="kw-2">mut </span>block_info_ptr = NonNull::new(libc_malloc(
+                                size_of::&lt;BlockInfoAbi&gt;(),
+                            )
+                                <span class="kw">as </span><span class="kw-2">*mut </span>BlockInfoAbi)
+                            .unwrap();
                             block_info_ptr.as_mut().block_number = x.block_info.block_number;
                             block_info_ptr.as_mut().block_timestamp = x.block_info.block_timestamp;
                             block_info_ptr.as_mut().sequencer_address =
                                 Felt252Abi(x.block_info.sequencer_address.to_bytes_le());
 
-                            <span class="kw">let </span><span class="kw-2">mut </span>tx_info_ptr = NonNull::new(
-                                libc::malloc(size_of::&lt;TxInfoAbi&gt;()) <span class="kw">as </span><span class="kw-2">*mut </span>TxInfoAbi,
-                            )
-                            .unwrap();
+                            <span class="kw">let </span><span class="kw-2">mut </span>tx_info_ptr =
+                                NonNull::new(libc_malloc(size_of::&lt;TxInfoAbi&gt;()) <span class="kw">as </span><span class="kw-2">*mut </span>TxInfoAbi)
+                                    .unwrap();
                             tx_info_ptr.as_mut().version =
                                 Felt252Abi(x.tx_info.version.to_bytes_le());
                             tx_info_ptr.as_mut().account_contract_address =
@@ -2678,7 +2729,7 @@
                             tx_info_ptr.as_mut().nonce = Felt252Abi(x.tx_info.nonce.to_bytes_le());
 
                             <span class="kw">let </span><span class="kw-2">mut </span>execution_info_ptr =
-                                NonNull::new(libc::malloc(size_of::&lt;ExecutionInfoAbi&gt;())
+                                NonNull::new(libc_malloc(size_of::&lt;ExecutionInfoAbi&gt;())
                                     <span class="kw">as </span><span class="kw-2">*mut </span>ExecutionInfoAbi)
                                 .unwrap();
                             execution_info_ptr.as_mut().block_info = block_info_ptr;
@@ -2701,7 +2752,7 @@
         <span class="kw">extern </span><span class="string">"C" </span><span class="kw">fn </span>wrap_get_execution_info_v2(
             result_ptr: <span class="kw-2">&amp;mut </span>SyscallResultAbi&lt;NonNull&lt;ExecutionInfoV2Abi&gt;&gt;,
             ptr: <span class="kw-2">&amp;mut </span>T,
-            gas: <span class="kw-2">&amp;mut </span>u128,
+            gas: <span class="kw-2">&amp;mut </span>u64,
         ) {
             <span class="kw">let </span>result = ptr.get_execution_info_v2(gas);
 
@@ -2711,22 +2762,22 @@
                         tag: <span class="number">0u8</span>,
                         payload: <span class="kw">unsafe </span>{
                             <span class="kw">let </span><span class="kw-2">mut </span>execution_info_ptr =
-                                NonNull::new(libc::malloc(size_of::&lt;ExecutionInfoV2Abi&gt;())
+                                NonNull::new(libc_malloc(size_of::&lt;ExecutionInfoV2Abi&gt;())
                                     <span class="kw">as </span><span class="kw-2">*mut </span>ExecutionInfoV2Abi)
                                 .unwrap();
 
-                            <span class="kw">let </span><span class="kw-2">mut </span>block_info_ptr =
-                                NonNull::new(
-                                    libc::malloc(size_of::&lt;BlockInfoAbi&gt;()) <span class="kw">as </span><span class="kw-2">*mut </span>BlockInfoAbi
-                                )
-                                .unwrap();
+                            <span class="kw">let </span><span class="kw-2">mut </span>block_info_ptr = NonNull::new(libc_malloc(
+                                size_of::&lt;BlockInfoAbi&gt;(),
+                            )
+                                <span class="kw">as </span><span class="kw-2">*mut </span>BlockInfoAbi)
+                            .unwrap();
                             block_info_ptr.as_mut().block_number = x.block_info.block_number;
                             block_info_ptr.as_mut().block_timestamp = x.block_info.block_timestamp;
                             block_info_ptr.as_mut().sequencer_address =
                                 Felt252Abi(x.block_info.sequencer_address.to_bytes_le());
 
                             <span class="kw">let </span><span class="kw-2">mut </span>tx_info_ptr = NonNull::new(
-                                libc::malloc(size_of::&lt;TxInfoV2Abi&gt;()) <span class="kw">as </span><span class="kw-2">*mut </span>TxInfoV2Abi,
+                                libc_malloc(size_of::&lt;TxInfoV2Abi&gt;()) <span class="kw">as </span><span class="kw-2">*mut </span>TxInfoV2Abi,
                             )
                             .unwrap();
                             tx_info_ptr.as_mut().version =
@@ -2794,52 +2845,28 @@
             };
         }
 
-        <span class="comment">// TODO: change all from_bytes_be to from_bytes_ne when added and undo byte swapping.
-
-        </span><span class="kw">extern </span><span class="string">"C" </span><span class="kw">fn </span>wrap_deploy(
+        <span class="kw">extern </span><span class="string">"C" </span><span class="kw">fn </span>wrap_deploy(
             result_ptr: <span class="kw-2">&amp;mut </span>SyscallResultAbi&lt;(Felt252Abi, ArrayAbi&lt;Felt252Abi&gt;)&gt;,
             ptr: <span class="kw-2">&amp;mut </span>T,
-            gas: <span class="kw-2">&amp;mut </span>u128,
+            gas: <span class="kw-2">&amp;mut </span>u64,
             class_hash: <span class="kw-2">&amp;</span>Felt252Abi,
             contract_address_salt: <span class="kw-2">&amp;</span>Felt252Abi,
             calldata: <span class="kw-2">&amp;</span>ArrayAbi&lt;Felt252Abi&gt;,
             deploy_from_zero: bool,
         ) {
-            <span class="kw">let </span>class_hash = Felt::from_bytes_be(<span class="kw-2">&amp;</span>{
-                <span class="kw">let </span><span class="kw-2">mut </span>data = class_hash.<span class="number">0</span>;
-                data.reverse();
-                data
-            });
-            <span class="kw">let </span>contract_address_salt = Felt::from_bytes_be(<span class="kw-2">&amp;</span>{
-                <span class="kw">let </span><span class="kw-2">mut </span>data = contract_address_salt.<span class="number">0</span>;
-                data.reverse();
-                data
-            });
+            <span class="kw">let </span>class_hash = Felt::from(class_hash);
+            <span class="kw">let </span>contract_address_salt = Felt::from(contract_address_salt);
 
-            <span class="kw">let </span>calldata: Vec&lt;<span class="kw">_</span>&gt; = <span class="kw">unsafe </span>{
-                <span class="kw">let </span>since_offset = calldata.since <span class="kw">as </span>usize;
-                <span class="kw">let </span>until_offset = calldata.until <span class="kw">as </span>usize;
-                <span class="macro">debug_assert!</span>(since_offset &lt;= until_offset);
-                <span class="kw">let </span>len = until_offset - since_offset;
-                <span class="kw">match </span>len {
-                    <span class="number">0 </span>=&gt; <span class="kw-2">&amp;</span>[],
-                    <span class="kw">_ </span>=&gt; std::slice::from_raw_parts(calldata.ptr.add(since_offset), len),
-                }
+            <span class="kw">let </span>calldata_vec: Vec&lt;<span class="kw">_</span>&gt; = calldata.into();
+
+            <span class="kw">unsafe </span>{
+                libc_free(calldata.ptr <span class="kw">as </span><span class="kw-2">*mut </span>c_void);
             }
-            .iter()
-            .map(|x| {
-                Felt::from_bytes_be(<span class="kw-2">&amp;</span>{
-                    <span class="kw">let </span><span class="kw-2">mut </span>data = x.<span class="number">0</span>;
-                    data.reverse();
-                    data
-                })
-            })
-            .collect();
 
             <span class="kw">let </span>result = ptr.deploy(
                 class_hash,
                 contract_address_salt,
-                <span class="kw-2">&amp;</span>calldata,
+                <span class="kw-2">&amp;</span>calldata_vec,
                 deploy_from_zero,
                 gas,
             );
@@ -2862,14 +2889,10 @@
         <span class="kw">extern </span><span class="string">"C" </span><span class="kw">fn </span>wrap_replace_class(
             result_ptr: <span class="kw-2">&amp;mut </span>SyscallResultAbi&lt;()&gt;,
             ptr: <span class="kw-2">&amp;mut </span>T,
-            gas: <span class="kw-2">&amp;mut </span>u128,
+            gas: <span class="kw-2">&amp;mut </span>u64,
             class_hash: <span class="kw-2">&amp;</span>Felt252Abi,
         ) {
-            <span class="kw">let </span>class_hash = Felt::from_bytes_be(<span class="kw-2">&amp;</span>{
-                <span class="kw">let </span><span class="kw-2">mut </span>data = class_hash.<span class="number">0</span>;
-                data.reverse();
-                data
-            });
+            <span class="kw">let </span>class_hash = Felt::from(class_hash);
             <span class="kw">let </span>result = ptr.replace_class(class_hash, gas);
 
             <span class="kw-2">*</span>result_ptr = <span class="kw">match </span>result {
@@ -2886,43 +2909,21 @@
         <span class="kw">extern </span><span class="string">"C" </span><span class="kw">fn </span>wrap_library_call(
             result_ptr: <span class="kw-2">&amp;mut </span>SyscallResultAbi&lt;ArrayAbi&lt;Felt252Abi&gt;&gt;,
             ptr: <span class="kw-2">&amp;mut </span>T,
-            gas: <span class="kw-2">&amp;mut </span>u128,
+            gas: <span class="kw-2">&amp;mut </span>u64,
             class_hash: <span class="kw-2">&amp;</span>Felt252Abi,
             function_selector: <span class="kw-2">&amp;</span>Felt252Abi,
             calldata: <span class="kw-2">&amp;</span>ArrayAbi&lt;Felt252Abi&gt;,
         ) {
-            <span class="kw">let </span>class_hash = Felt::from_bytes_be(<span class="kw-2">&amp;</span>{
-                <span class="kw">let </span><span class="kw-2">mut </span>data = class_hash.<span class="number">0</span>;
-                data.reverse();
-                data
-            });
-            <span class="kw">let </span>function_selector = Felt::from_bytes_be(<span class="kw-2">&amp;</span>{
-                <span class="kw">let </span><span class="kw-2">mut </span>data = function_selector.<span class="number">0</span>;
-                data.reverse();
-                data
-            });
+            <span class="kw">let </span>class_hash = Felt::from(class_hash);
+            <span class="kw">let </span>function_selector = Felt::from(function_selector);
 
-            <span class="kw">let </span>calldata: Vec&lt;<span class="kw">_</span>&gt; = <span class="kw">unsafe </span>{
-                <span class="kw">let </span>since_offset = calldata.since <span class="kw">as </span>usize;
-                <span class="kw">let </span>until_offset = calldata.until <span class="kw">as </span>usize;
-                <span class="macro">debug_assert!</span>(since_offset &lt;= until_offset);
-                <span class="kw">let </span>len = until_offset - since_offset;
-                <span class="kw">match </span>len {
-                    <span class="number">0 </span>=&gt; <span class="kw-2">&amp;</span>[],
-                    <span class="kw">_ </span>=&gt; std::slice::from_raw_parts(calldata.ptr.add(since_offset), len),
-                }
+            <span class="kw">let </span>calldata_vec: Vec&lt;Felt&gt; = calldata.into();
+
+            <span class="kw">unsafe </span>{
+                libc_free(calldata.ptr <span class="kw">as </span><span class="kw-2">*mut </span>c_void);
             }
-            .iter()
-            .map(|x| {
-                Felt::from_bytes_be(<span class="kw-2">&amp;</span>{
-                    <span class="kw">let </span><span class="kw-2">mut </span>data = x.<span class="number">0</span>;
-                    data.reverse();
-                    data
-                })
-            })
-            .collect();
 
-            <span class="kw">let </span>result = ptr.library_call(class_hash, function_selector, <span class="kw-2">&amp;</span>calldata, gas);
+            <span class="kw">let </span>result = ptr.library_call(class_hash, function_selector, <span class="kw-2">&amp;</span>calldata_vec, gas);
 
             <span class="kw-2">*</span>result_ptr = <span class="kw">match </span>result {
                 <span class="prelude-val">Ok</span>(x) =&gt; {
@@ -2942,43 +2943,21 @@
         <span class="kw">extern </span><span class="string">"C" </span><span class="kw">fn </span>wrap_call_contract(
             result_ptr: <span class="kw-2">&amp;mut </span>SyscallResultAbi&lt;ArrayAbi&lt;Felt252Abi&gt;&gt;,
             ptr: <span class="kw-2">&amp;mut </span>T,
-            gas: <span class="kw-2">&amp;mut </span>u128,
+            gas: <span class="kw-2">&amp;mut </span>u64,
             address: <span class="kw-2">&amp;</span>Felt252Abi,
             entry_point_selector: <span class="kw-2">&amp;</span>Felt252Abi,
             calldata: <span class="kw-2">&amp;</span>ArrayAbi&lt;Felt252Abi&gt;,
         ) {
-            <span class="kw">let </span>address = Felt::from_bytes_be(<span class="kw-2">&amp;</span>{
-                <span class="kw">let </span><span class="kw-2">mut </span>data = address.<span class="number">0</span>;
-                data.reverse();
-                data
-            });
-            <span class="kw">let </span>entry_point_selector = Felt::from_bytes_be(<span class="kw-2">&amp;</span>{
-                <span class="kw">let </span><span class="kw-2">mut </span>data = entry_point_selector.<span class="number">0</span>;
-                data.reverse();
-                data
-            });
+            <span class="kw">let </span>address = Felt::from(address);
+            <span class="kw">let </span>entry_point_selector = Felt::from(entry_point_selector);
 
-            <span class="kw">let </span>calldata: Vec&lt;<span class="kw">_</span>&gt; = <span class="kw">unsafe </span>{
-                <span class="kw">let </span>since_offset = calldata.since <span class="kw">as </span>usize;
-                <span class="kw">let </span>until_offset = calldata.until <span class="kw">as </span>usize;
-                <span class="macro">debug_assert!</span>(since_offset &lt;= until_offset);
-                <span class="kw">let </span>len = until_offset - since_offset;
-                <span class="kw">match </span>len {
-                    <span class="number">0 </span>=&gt; <span class="kw-2">&amp;</span>[],
-                    <span class="kw">_ </span>=&gt; std::slice::from_raw_parts(calldata.ptr.add(since_offset), len),
-                }
+            <span class="kw">let </span>calldata_vec: Vec&lt;Felt&gt; = calldata.into();
+
+            <span class="kw">unsafe </span>{
+                libc_free(calldata.ptr <span class="kw">as </span><span class="kw-2">*mut </span>c_void);
             }
-            .iter()
-            .map(|x| {
-                Felt::from_bytes_be(<span class="kw-2">&amp;</span>{
-                    <span class="kw">let </span><span class="kw-2">mut </span>data = x.<span class="number">0</span>;
-                    data.reverse();
-                    data
-                })
-            })
-            .collect();
 
-            <span class="kw">let </span>result = ptr.call_contract(address, entry_point_selector, <span class="kw-2">&amp;</span>calldata, gas);
+            <span class="kw">let </span>result = ptr.call_contract(address, entry_point_selector, <span class="kw-2">&amp;</span>calldata_vec, gas);
 
             <span class="kw-2">*</span>result_ptr = <span class="kw">match </span>result {
                 <span class="prelude-val">Ok</span>(x) =&gt; {
@@ -2998,15 +2977,11 @@
         <span class="kw">extern </span><span class="string">"C" </span><span class="kw">fn </span>wrap_storage_read(
             result_ptr: <span class="kw-2">&amp;mut </span>SyscallResultAbi&lt;Felt252Abi&gt;,
             ptr: <span class="kw-2">&amp;mut </span>T,
-            gas: <span class="kw-2">&amp;mut </span>u128,
+            gas: <span class="kw-2">&amp;mut </span>u64,
             address_domain: u32,
             address: <span class="kw-2">&amp;</span>Felt252Abi,
         ) {
-            <span class="kw">let </span>address = Felt::from_bytes_be(<span class="kw-2">&amp;</span>{
-                <span class="kw">let </span><span class="kw-2">mut </span>data = address.<span class="number">0</span>;
-                data.reverse();
-                data
-            });
+            <span class="kw">let </span>address = Felt::from(address);
             <span class="kw">let </span>result = ptr.storage_read(address_domain, address, gas);
 
             <span class="kw-2">*</span>result_ptr = <span class="kw">match </span>result {
@@ -3023,21 +2998,13 @@
         <span class="kw">extern </span><span class="string">"C" </span><span class="kw">fn </span>wrap_storage_write(
             result_ptr: <span class="kw-2">&amp;mut </span>SyscallResultAbi&lt;()&gt;,
             ptr: <span class="kw-2">&amp;mut </span>T,
-            gas: <span class="kw-2">&amp;mut </span>u128,
+            gas: <span class="kw-2">&amp;mut </span>u64,
             address_domain: u32,
             address: <span class="kw-2">&amp;</span>Felt252Abi,
             value: <span class="kw-2">&amp;</span>Felt252Abi,
         ) {
-            <span class="kw">let </span>address = Felt::from_bytes_be(<span class="kw-2">&amp;</span>{
-                <span class="kw">let </span><span class="kw-2">mut </span>data = address.<span class="number">0</span>;
-                data.reverse();
-                data
-            });
-            <span class="kw">let </span>value = Felt::from_bytes_be(<span class="kw-2">&amp;</span>{
-                <span class="kw">let </span><span class="kw-2">mut </span>data = value.<span class="number">0</span>;
-                data.reverse();
-                data
-            });
+            <span class="kw">let </span>address = Felt::from(address);
+            <span class="kw">let </span>value = Felt::from(value);
             <span class="kw">let </span>result = ptr.storage_write(address_domain, address, value, gas);
 
             <span class="kw-2">*</span>result_ptr = <span class="kw">match </span>result {
@@ -3054,51 +3021,23 @@
         <span class="kw">extern </span><span class="string">"C" </span><span class="kw">fn </span>wrap_emit_event(
             result_ptr: <span class="kw-2">&amp;mut </span>SyscallResultAbi&lt;()&gt;,
             ptr: <span class="kw-2">&amp;mut </span>T,
-            gas: <span class="kw-2">&amp;mut </span>u128,
+            gas: <span class="kw-2">&amp;mut </span>u64,
             keys: <span class="kw-2">&amp;</span>ArrayAbi&lt;Felt252Abi&gt;,
             data: <span class="kw-2">&amp;</span>ArrayAbi&lt;Felt252Abi&gt;,
         ) {
-            <span class="kw">let </span>keys: Vec&lt;<span class="kw">_</span>&gt; = <span class="kw">unsafe </span>{
-                <span class="kw">let </span>since_offset = keys.since <span class="kw">as </span>usize;
-                <span class="kw">let </span>until_offset = keys.until <span class="kw">as </span>usize;
-                <span class="macro">debug_assert!</span>(since_offset &lt;= until_offset);
-                <span class="kw">let </span>len = until_offset - since_offset;
-                <span class="kw">match </span>len {
-                    <span class="number">0 </span>=&gt; <span class="kw-2">&amp;</span>[],
-                    <span class="kw">_ </span>=&gt; std::slice::from_raw_parts(keys.ptr.add(since_offset), len),
-                }
-            }
-            .iter()
-            .map(|x| {
-                Felt::from_bytes_be(<span class="kw-2">&amp;</span>{
-                    <span class="kw">let </span><span class="kw-2">mut </span>data = x.<span class="number">0</span>;
-                    data.reverse();
-                    data
-                })
-            })
-            .collect();
+            <span class="kw">let </span>keys_vec: Vec&lt;<span class="kw">_</span>&gt; = keys.into();
 
-            <span class="kw">let </span>data: Vec&lt;<span class="kw">_</span>&gt; = <span class="kw">unsafe </span>{
-                <span class="kw">let </span>since_offset = data.since <span class="kw">as </span>usize;
-                <span class="kw">let </span>until_offset = data.until <span class="kw">as </span>usize;
-                <span class="macro">debug_assert!</span>(since_offset &lt;= until_offset);
-                <span class="kw">let </span>len = until_offset - since_offset;
-                <span class="kw">match </span>len {
-                    <span class="number">0 </span>=&gt; <span class="kw-2">&amp;</span>[],
-                    <span class="kw">_ </span>=&gt; std::slice::from_raw_parts(data.ptr.add(since_offset), len),
-                }
+            <span class="kw">unsafe </span>{
+                libc_free(keys.ptr <span class="kw">as </span><span class="kw-2">*mut </span>c_void);
             }
-            .iter()
-            .map(|x| {
-                Felt::from_bytes_be(<span class="kw-2">&amp;</span>{
-                    <span class="kw">let </span><span class="kw-2">mut </span>data = x.<span class="number">0</span>;
-                    data.reverse();
-                    data
-                })
-            })
-            .collect();
 
-            <span class="kw">let </span>result = ptr.emit_event(<span class="kw-2">&amp;</span>keys, <span class="kw-2">&amp;</span>data, gas);
+            <span class="kw">let </span>data_vec: Vec&lt;<span class="kw">_</span>&gt; = data.into();
+
+            <span class="kw">unsafe </span>{
+                libc_free(data.ptr <span class="kw">as </span><span class="kw-2">*mut </span>c_void);
+            }
+
+            <span class="kw">let </span>result = ptr.emit_event(<span class="kw-2">&amp;</span>keys_vec, <span class="kw-2">&amp;</span>data_vec, gas);
 
             <span class="kw-2">*</span>result_ptr = <span class="kw">match </span>result {
                 <span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; SyscallResultAbi {
@@ -3114,36 +3053,18 @@
         <span class="kw">extern </span><span class="string">"C" </span><span class="kw">fn </span>wrap_send_message_to_l1(
             result_ptr: <span class="kw-2">&amp;mut </span>SyscallResultAbi&lt;()&gt;,
             ptr: <span class="kw-2">&amp;mut </span>T,
-            gas: <span class="kw-2">&amp;mut </span>u128,
+            gas: <span class="kw-2">&amp;mut </span>u64,
             to_address: <span class="kw-2">&amp;</span>Felt252Abi,
             payload: <span class="kw-2">&amp;</span>ArrayAbi&lt;Felt252Abi&gt;,
         ) {
-            <span class="kw">let </span>to_address = Felt::from_bytes_be(<span class="kw-2">&amp;</span>{
-                <span class="kw">let </span><span class="kw-2">mut </span>data = to_address.<span class="number">0</span>;
-                data.reverse();
-                data
-            });
-            <span class="kw">let </span>payload: Vec&lt;<span class="kw">_</span>&gt; = <span class="kw">unsafe </span>{
-                <span class="kw">let </span>since_offset = payload.since <span class="kw">as </span>usize;
-                <span class="kw">let </span>until_offset = payload.until <span class="kw">as </span>usize;
-                <span class="macro">debug_assert!</span>(since_offset &lt;= until_offset);
-                <span class="kw">let </span>len = until_offset - since_offset;
-                <span class="kw">match </span>len {
-                    <span class="number">0 </span>=&gt; <span class="kw-2">&amp;</span>[],
-                    <span class="kw">_ </span>=&gt; std::slice::from_raw_parts(payload.ptr.add(since_offset), len),
-                }
-            }
-            .iter()
-            .map(|x| {
-                Felt::from_bytes_be(<span class="kw-2">&amp;</span>{
-                    <span class="kw">let </span><span class="kw-2">mut </span>data = x.<span class="number">0</span>;
-                    data.reverse();
-                    data
-                })
-            })
-            .collect();
+            <span class="kw">let </span>to_address = Felt::from(to_address);
+            <span class="kw">let </span>payload_vec: Vec&lt;<span class="kw">_</span>&gt; = payload.into();
 
-            <span class="kw">let </span>result = ptr.send_message_to_l1(to_address, <span class="kw-2">&amp;</span>payload, gas);
+            <span class="kw">unsafe </span>{
+                libc_free(payload.ptr <span class="kw">as </span><span class="kw-2">*mut </span>c_void);
+            }
+
+            <span class="kw">let </span>result = ptr.send_message_to_l1(to_address, <span class="kw-2">&amp;</span>payload_vec, gas);
 
             <span class="kw-2">*</span>result_ptr = <span class="kw">match </span>result {
                 <span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; SyscallResultAbi {
@@ -3159,10 +3080,10 @@
         <span class="kw">extern </span><span class="string">"C" </span><span class="kw">fn </span>wrap_keccak(
             result_ptr: <span class="kw-2">&amp;mut </span>SyscallResultAbi&lt;U256&gt;,
             ptr: <span class="kw-2">&amp;mut </span>T,
-            gas: <span class="kw-2">&amp;mut </span>u128,
+            gas: <span class="kw-2">&amp;mut </span>u64,
             input: <span class="kw-2">&amp;</span>ArrayAbi&lt;u64&gt;,
         ) {
-            <span class="kw">let </span>input = <span class="kw">unsafe </span>{
+            <span class="kw">let </span>input_vec = <span class="kw">unsafe </span>{
                 <span class="kw">let </span>since_offset = input.since <span class="kw">as </span>usize;
                 <span class="kw">let </span>until_offset = input.until <span class="kw">as </span>usize;
                 <span class="macro">debug_assert!</span>(since_offset &lt;= until_offset);
@@ -3173,7 +3094,10 @@
                 }
             };
 
-            <span class="kw">let </span>result = ptr.keccak(input, gas);
+            <span class="kw">let </span>result = ptr.keccak(input_vec, gas);
+            <span class="kw">unsafe </span>{
+                libc_free(input.ptr <span class="kw">as </span><span class="kw-2">*mut </span>c_void);
+            }
 
             <span class="kw-2">*</span>result_ptr = <span class="kw">match </span>result {
                 <span class="prelude-val">Ok</span>(x) =&gt; SyscallResultAbi {
@@ -3189,7 +3113,7 @@
         <span class="kw">extern </span><span class="string">"C" </span><span class="kw">fn </span>wrap_secp256k1_new(
             result_ptr: <span class="kw-2">&amp;mut </span>SyscallResultAbi&lt;(u8, MaybeUninit&lt;Secp256k1Point&gt;)&gt;,
             ptr: <span class="kw-2">&amp;mut </span>T,
-            gas: <span class="kw-2">&amp;mut </span>u128,
+            gas: <span class="kw-2">&amp;mut </span>u64,
             x: <span class="kw-2">&amp;</span>U256,
             y: <span class="kw-2">&amp;</span>U256,
         ) {
@@ -3214,7 +3138,7 @@
         <span class="kw">extern </span><span class="string">"C" </span><span class="kw">fn </span>wrap_secp256k1_add(
             result_ptr: <span class="kw-2">&amp;mut </span>SyscallResultAbi&lt;Secp256k1Point&gt;,
             ptr: <span class="kw-2">&amp;mut </span>T,
-            gas: <span class="kw-2">&amp;mut </span>u128,
+            gas: <span class="kw-2">&amp;mut </span>u64,
             p0: <span class="kw-2">&amp;</span>Secp256k1Point,
             p1: <span class="kw-2">&amp;</span>Secp256k1Point,
         ) {
@@ -3236,7 +3160,7 @@
         <span class="kw">extern </span><span class="string">"C" </span><span class="kw">fn </span>wrap_secp256k1_mul(
             result_ptr: <span class="kw-2">&amp;mut </span>SyscallResultAbi&lt;Secp256k1Point&gt;,
             ptr: <span class="kw-2">&amp;mut </span>T,
-            gas: <span class="kw-2">&amp;mut </span>u128,
+            gas: <span class="kw-2">&amp;mut </span>u64,
             p: <span class="kw-2">&amp;</span>Secp256k1Point,
             scalar: <span class="kw-2">&amp;</span>U256,
         ) {
@@ -3259,7 +3183,7 @@
         <span class="kw">extern </span><span class="string">"C" </span><span class="kw">fn </span>wrap_secp256k1_get_point_from_x(
             result_ptr: <span class="kw-2">&amp;mut </span>SyscallResultAbi&lt;(u8, MaybeUninit&lt;Secp256k1Point&gt;)&gt;,
             ptr: <span class="kw-2">&amp;mut </span>T,
-            gas: <span class="kw-2">&amp;mut </span>u128,
+            gas: <span class="kw-2">&amp;mut </span>u64,
             x: <span class="kw-2">&amp;</span>U256,
             y_parity: <span class="kw-2">&amp;</span>bool,
         ) {
@@ -3284,7 +3208,7 @@
         <span class="kw">extern </span><span class="string">"C" </span><span class="kw">fn </span>wrap_secp256k1_get_xy(
             result_ptr: <span class="kw-2">&amp;mut </span>SyscallResultAbi&lt;(U256, U256)&gt;,
             ptr: <span class="kw-2">&amp;mut </span>T,
-            gas: <span class="kw-2">&amp;mut </span>u128,
+            gas: <span class="kw-2">&amp;mut </span>u64,
             p: <span class="kw-2">&amp;</span>Secp256k1Point,
         ) {
             <span class="kw">let </span>p = <span class="kw-2">*</span>p;
@@ -3304,7 +3228,7 @@
         <span class="kw">extern </span><span class="string">"C" </span><span class="kw">fn </span>wrap_secp256r1_new(
             result_ptr: <span class="kw-2">&amp;mut </span>SyscallResultAbi&lt;(u8, MaybeUninit&lt;Secp256r1Point&gt;)&gt;,
             ptr: <span class="kw-2">&amp;mut </span>T,
-            gas: <span class="kw-2">&amp;mut </span>u128,
+            gas: <span class="kw-2">&amp;mut </span>u64,
             x: <span class="kw-2">&amp;</span>U256,
             y: <span class="kw-2">&amp;</span>U256,
         ) {
@@ -3329,7 +3253,7 @@
         <span class="kw">extern </span><span class="string">"C" </span><span class="kw">fn </span>wrap_secp256r1_add(
             result_ptr: <span class="kw-2">&amp;mut </span>SyscallResultAbi&lt;Secp256r1Point&gt;,
             ptr: <span class="kw-2">&amp;mut </span>T,
-            gas: <span class="kw-2">&amp;mut </span>u128,
+            gas: <span class="kw-2">&amp;mut </span>u64,
             p0: <span class="kw-2">&amp;</span>Secp256r1Point,
             p1: <span class="kw-2">&amp;</span>Secp256r1Point,
         ) {
@@ -3351,7 +3275,7 @@
         <span class="kw">extern </span><span class="string">"C" </span><span class="kw">fn </span>wrap_secp256r1_mul(
             result_ptr: <span class="kw-2">&amp;mut </span>SyscallResultAbi&lt;Secp256r1Point&gt;,
             ptr: <span class="kw-2">&amp;mut </span>T,
-            gas: <span class="kw-2">&amp;mut </span>u128,
+            gas: <span class="kw-2">&amp;mut </span>u64,
             p: <span class="kw-2">&amp;</span>Secp256r1Point,
             scalar: <span class="kw-2">&amp;</span>U256,
         ) {
@@ -3373,7 +3297,7 @@
         <span class="kw">extern </span><span class="string">"C" </span><span class="kw">fn </span>wrap_secp256r1_get_point_from_x(
             result_ptr: <span class="kw-2">&amp;mut </span>SyscallResultAbi&lt;(u8, MaybeUninit&lt;Secp256r1Point&gt;)&gt;,
             ptr: <span class="kw-2">&amp;mut </span>T,
-            gas: <span class="kw-2">&amp;mut </span>u128,
+            gas: <span class="kw-2">&amp;mut </span>u64,
             x: <span class="kw-2">&amp;</span>U256,
             y_parity: <span class="kw-2">&amp;</span>bool,
         ) {
@@ -3398,7 +3322,7 @@
         <span class="kw">extern </span><span class="string">"C" </span><span class="kw">fn </span>wrap_secp256r1_get_xy(
             result_ptr: <span class="kw-2">&amp;mut </span>SyscallResultAbi&lt;(U256, U256)&gt;,
             ptr: <span class="kw-2">&amp;mut </span>T,
-            gas: <span class="kw-2">&amp;mut </span>u128,
+            gas: <span class="kw-2">&amp;mut </span>u64,
             p: <span class="kw-2">&amp;</span>Secp256r1Point,
         ) {
             <span class="kw">let </span>p = <span class="kw-2">*</span>p;
@@ -3418,27 +3342,37 @@
         <span class="kw">extern </span><span class="string">"C" </span><span class="kw">fn </span>wrap_sha256_process_block(
             result_ptr: <span class="kw-2">&amp;mut </span>SyscallResultAbi&lt;<span class="kw-2">*mut </span>[u32; <span class="number">8</span>]&gt;,
             ptr: <span class="kw-2">&amp;mut </span>T,
-            gas: <span class="kw-2">&amp;mut </span>u128,
-            prev_state: <span class="kw-2">&amp;</span>[u32; <span class="number">8</span>],
-            current_block: <span class="kw-2">&amp;</span>[u32; <span class="number">16</span>],
+            gas: <span class="kw-2">&amp;mut </span>u64,
+            state: <span class="kw-2">*mut </span>[u32; <span class="number">8</span>],
+            block: <span class="kw-2">&amp;</span>[u32; <span class="number">16</span>],
         ) {
-            <span class="kw">let </span>result = ptr.sha256_process_block(prev_state, current_block, gas);
+            <span class="kw">let </span>state_ref = <span class="kw">unsafe </span>{ state.as_mut().unwrap() };
+            <span class="kw">let </span>result = ptr.sha256_process_block(state_ref, block, gas);
 
             <span class="kw-2">*</span>result_ptr = <span class="kw">match </span>result {
                 <span class="prelude-val">Ok</span>(x) =&gt; SyscallResultAbi {
                     ok: ManuallyDrop::new(SyscallResultAbiOk {
                         tag: <span class="number">0u8</span>,
-                        payload: ManuallyDrop::new({
-                            <span class="kw">unsafe </span>{
-                                <span class="kw">let </span>data = libc::malloc(std::mem::size_of_val(<span class="kw-2">&amp;</span>x)).cast();
-                                std::ptr::copy_nonoverlapping::&lt;u32&gt;(
-                                    x.as_ptr().cast(),
-                                    data,
-                                    x.len(),
-                                );
-                                data.cast()
-                            }
-                        }),
+                        payload: ManuallyDrop::new(state),
+                    }),
+                },
+                <span class="prelude-val">Err</span>(e) =&gt; <span class="self">Self</span>::wrap_error(<span class="kw-2">&amp;</span>e),
+            };
+        }
+
+        <span class="kw">extern </span><span class="string">"C" </span><span class="kw">fn </span>wrap_get_class_hash_at(
+            result_ptr: <span class="kw-2">&amp;mut </span>SyscallResultAbi&lt;Felt252Abi&gt;,
+            ptr: <span class="kw-2">&amp;mut </span>T,
+            gas: <span class="kw-2">&amp;mut </span>u64,
+            contract_address: <span class="kw-2">&amp;</span>Felt252Abi,
+        ) {
+            <span class="kw">let </span>result = ptr.get_class_hash_at(contract_address.into(), gas);
+
+            <span class="kw-2">*</span>result_ptr = <span class="kw">match </span>result {
+                <span class="prelude-val">Ok</span>(x) =&gt; SyscallResultAbi {
+                    ok: ManuallyDrop::new(SyscallResultAbiOk {
+                        tag: <span class="number">0u8</span>,
+                        payload: ManuallyDrop::new(Felt252Abi(x.to_bytes_le())),
                     }),
                 },
                 <span class="prelude-val">Err</span>(e) =&gt; <span class="self">Self</span>::wrap_error(<span class="kw-2">&amp;</span>e),

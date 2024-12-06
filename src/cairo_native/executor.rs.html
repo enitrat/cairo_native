@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/executor.rs`."><title>executor.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-c5d6553a23f1e5a6.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="cairo_native" data-themes="" data-resource-suffix="" data-rustdoc-version="1.81.0 (eeb90cda1 2024-09-04)" data-channel="1.81.0" data-search-js="search-d234aafac6c221dd.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-118b08c4c78b968e.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-d2fab2bf619172d3.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-df360f571f6edeae.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/executor.rs`."><title>executor.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-492a78a4a87dcc01.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="cairo_native" data-themes="" data-resource-suffix="" data-rustdoc-version="1.82.0 (f6e511eec 2024-10-15)" data-channel="1.82.0" data-search-js="search-a99f1315e7cc5121.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-118b08c4c78b968e.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-921df33f47b8780c.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-3b12f09e550e0385.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -707,6 +707,65 @@
 <a href="#707" id="707">707</a>
 <a href="#708" id="708">708</a>
 <a href="#709" id="709">709</a>
+<a href="#710" id="710">710</a>
+<a href="#711" id="711">711</a>
+<a href="#712" id="712">712</a>
+<a href="#713" id="713">713</a>
+<a href="#714" id="714">714</a>
+<a href="#715" id="715">715</a>
+<a href="#716" id="716">716</a>
+<a href="#717" id="717">717</a>
+<a href="#718" id="718">718</a>
+<a href="#719" id="719">719</a>
+<a href="#720" id="720">720</a>
+<a href="#721" id="721">721</a>
+<a href="#722" id="722">722</a>
+<a href="#723" id="723">723</a>
+<a href="#724" id="724">724</a>
+<a href="#725" id="725">725</a>
+<a href="#726" id="726">726</a>
+<a href="#727" id="727">727</a>
+<a href="#728" id="728">728</a>
+<a href="#729" id="729">729</a>
+<a href="#730" id="730">730</a>
+<a href="#731" id="731">731</a>
+<a href="#732" id="732">732</a>
+<a href="#733" id="733">733</a>
+<a href="#734" id="734">734</a>
+<a href="#735" id="735">735</a>
+<a href="#736" id="736">736</a>
+<a href="#737" id="737">737</a>
+<a href="#738" id="738">738</a>
+<a href="#739" id="739">739</a>
+<a href="#740" id="740">740</a>
+<a href="#741" id="741">741</a>
+<a href="#742" id="742">742</a>
+<a href="#743" id="743">743</a>
+<a href="#744" id="744">744</a>
+<a href="#745" id="745">745</a>
+<a href="#746" id="746">746</a>
+<a href="#747" id="747">747</a>
+<a href="#748" id="748">748</a>
+<a href="#749" id="749">749</a>
+<a href="#750" id="750">750</a>
+<a href="#751" id="751">751</a>
+<a href="#752" id="752">752</a>
+<a href="#753" id="753">753</a>
+<a href="#754" id="754">754</a>
+<a href="#755" id="755">755</a>
+<a href="#756" id="756">756</a>
+<a href="#757" id="757">757</a>
+<a href="#758" id="758">758</a>
+<a href="#759" id="759">759</a>
+<a href="#760" id="760">760</a>
+<a href="#761" id="761">761</a>
+<a href="#762" id="762">762</a>
+<a href="#763" id="763">763</a>
+<a href="#764" id="764">764</a>
+<a href="#765" id="765">765</a>
+<a href="#766" id="766">766</a>
+<a href="#767" id="767">767</a>
+<a href="#768" id="768">768</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! # Executors
 //!
 //! This module provides methods to execute the programs, either via JIT or compiled ahead
@@ -714,12 +773,13 @@
 
 </span><span class="kw">pub use </span><span class="self">self</span>::{aot::AotNativeExecutor, contract::AotContractExecutor, jit::JitNativeExecutor};
 <span class="kw">use crate</span>::{
-    arch::{AbiArgument, JitValueWithInfoWrapper},
-    error::Error,
+    arch::{AbiArgument, ValueWithInfoWrapper},
+    error::{panic::ToNativeAssertError, Error},
     execution_result::{BuiltinStats, ExecutionResult},
+    native_panic,
     starknet::{handler::StarknetSyscallHandlerCallbacks, StarknetSyscallHandler},
     types::TypeBuilder,
-    utils::RangeExt,
+    utils::{libc_free, BuiltinCosts, RangeExt},
     values::Value,
 };
 <span class="kw">use </span>bumpalo::Bump;
@@ -737,11 +797,7 @@
 <span class="kw">use </span>libc::c_void;
 <span class="kw">use </span>num_bigint::BigInt;
 <span class="kw">use </span>num_traits::One;
-<span class="kw">use </span>std::{
-    alloc::Layout,
-    arch::global_asm,
-    ptr::{addr_of_mut, NonNull},
-};
+<span class="kw">use </span>std::{alloc::Layout, arch::global_asm, ptr::NonNull};
 
 <span class="kw">mod </span>aot;
 <span class="kw">mod </span>contract;
@@ -778,9 +834,10 @@
 </span><span class="kw">fn </span>invoke_dynamic(
     registry: <span class="kw-2">&amp;</span>ProgramRegistry&lt;CoreType, CoreLibfunc&gt;,
     function_ptr: <span class="kw-2">*const </span>c_void,
+    set_builtin_costs_fnptr: <span class="kw">extern </span><span class="string">"C" </span><span class="kw">fn</span>(<span class="kw-2">*const </span>u64) -&gt; <span class="kw-2">*const </span>u64,
     function_signature: <span class="kw-2">&amp;</span>FunctionSignature,
     args: <span class="kw-2">&amp;</span>[Value],
-    gas: u128,
+    gas: u64,
     <span class="kw-2">mut </span>syscall_handler: <span class="prelude-ty">Option</span>&lt;<span class="kw">impl </span>StarknetSyscallHandler&gt;,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;ExecutionResult, Error&gt; {
     <span class="macro">tracing::info!</span>(<span class="string">"Invoking function with signature: {function_signature:?}."</span>);
@@ -850,6 +907,15 @@
         previous_syscall_handler
     });
 
+    <span class="comment">// Order matters, for the libfunc impl
+    </span><span class="kw">let </span>builtin_costs_stack: [u64; <span class="number">7</span>] = BuiltinCosts::default().into();
+    <span class="comment">// Note: the ptr into a slice is valid, it can be used with cast()
+    // Care should be taken if you dereference it and take the .as_ptr() of the slice, since when you
+    // deref it, it will be a copy on the stack, so you will get the ptr of the value in the stack.
+    </span><span class="kw">let </span>builtin_costs: <span class="kw-2">*mut </span>[u64; <span class="number">7</span>] = Box::into_raw(Box::new(builtin_costs_stack));
+    <span class="comment">// We may be inside a recursive contract, save the possible saved builtin costs to restore it after our call.
+    </span><span class="kw">let </span>old_builtincosts_ptr = set_builtin_costs_fnptr(builtin_costs.cast());
+
     <span class="comment">// Generate argument list.
     </span><span class="kw">let </span><span class="kw-2">mut </span>iter = args.iter();
     <span class="kw">for </span>item <span class="kw">in </span>function_signature.param_types.iter().filter_map(|type_id| {
@@ -870,14 +936,19 @@
             CoreTypeConcrete::StarkNet(StarkNetTypeConcrete::System(<span class="kw">_</span>)) =&gt; {
                 <span class="kw">let </span>syscall_handler = syscall_handler
                     .as_mut()
-                    .expect(<span class="string">"syscall handler is required"</span>);
+                    .to_native_assert_error(<span class="string">"syscall handler should be available"</span>)<span class="question-mark">?</span>;
 
                 (syscall_handler <span class="kw">as </span><span class="kw-2">*mut </span>StarknetSyscallHandlerCallbacks&lt;<span class="kw">_</span>&gt;)
                     .to_bytes(<span class="kw-2">&amp;mut </span>invoke_data)<span class="question-mark">?</span>;
             }
+            CoreTypeConcrete::BuiltinCosts(<span class="kw">_</span>) =&gt; {
+                builtin_costs.to_bytes(<span class="kw-2">&amp;mut </span>invoke_data)<span class="question-mark">?</span>;
+            }
             type_info <span class="kw">if </span>type_info.is_builtin() =&gt; <span class="number">0u64</span>.to_bytes(<span class="kw-2">&amp;mut </span>invoke_data)<span class="question-mark">?</span>,
-            type_info =&gt; JitValueWithInfoWrapper {
-                value: iter.next().unwrap(),
+            type_info =&gt; ValueWithInfoWrapper {
+                value: iter
+                    .next()
+                    .to_native_assert_error(<span class="string">"entrypoint argument is missing"</span>)<span class="question-mark">?</span>,
                 type_id,
                 info: type_info,
 
@@ -941,43 +1012,56 @@
         <span class="kw">match </span>type_info {
             CoreTypeConcrete::GasBuiltin(<span class="kw">_</span>) =&gt; {
                 remaining_gas = <span class="prelude-val">Some</span>(<span class="kw">match </span><span class="kw-2">&amp;mut </span>return_ptr {
-                    <span class="prelude-val">Some</span>(return_ptr) =&gt; <span class="kw">unsafe </span>{ <span class="kw-2">*</span>read_value::&lt;u128&gt;(return_ptr) },
+                    <span class="prelude-val">Some</span>(return_ptr) =&gt; <span class="kw">unsafe </span>{ <span class="kw-2">*</span>read_value::&lt;u64&gt;(return_ptr) },
                     <span class="prelude-val">None </span>=&gt; {
                         <span class="comment">// If there's no return ptr then the function only returned the gas. We don't
                         // need to bother with the syscall handler builtin.
-                        </span>((ret_registers[<span class="number">1</span>] <span class="kw">as </span>u128) &lt;&lt; <span class="number">64</span>) | ret_registers[<span class="number">0</span>] <span class="kw">as </span>u128
+                        </span>ret_registers[<span class="number">0</span>]
                     }
                 });
             }
-            CoreTypeConcrete::StarkNet(StarkNetTypeConcrete::System(<span class="kw">_</span>)) =&gt; <span class="kw">match </span><span class="kw-2">&amp;mut </span>return_ptr {
-                <span class="prelude-val">Some</span>(return_ptr) =&gt; <span class="kw">unsafe </span>{
-                    <span class="kw">let </span>ptr = return_ptr.cast::&lt;<span class="kw-2">*mut </span>()&gt;();
-                    <span class="kw-2">*</span>return_ptr = NonNull::new_unchecked(ptr.as_ptr().add(<span class="number">1</span>)).cast();
-                },
-                <span class="prelude-val">None </span>=&gt; {}
-            },
+            CoreTypeConcrete::StarkNet(StarkNetTypeConcrete::System(<span class="kw">_</span>)) =&gt; {
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(return_ptr) = <span class="kw-2">&amp;mut </span>return_ptr {
+                    <span class="kw">unsafe </span>{
+                        <span class="kw">let </span>ptr = return_ptr.cast::&lt;<span class="kw-2">*mut </span>()&gt;();
+                        <span class="kw-2">*</span>return_ptr = NonNull::new_unchecked(ptr.as_ptr().add(<span class="number">1</span>)).cast();
+                    }
+                }
+            }
             <span class="kw">_ if </span>type_info.is_builtin() =&gt; {
                 <span class="kw">if </span>!type_info.is_zst(registry)<span class="question-mark">? </span>{
-                    <span class="kw">let </span>value = <span class="kw">match </span><span class="kw-2">&amp;mut </span>return_ptr {
-                        <span class="prelude-val">Some</span>(return_ptr) =&gt; <span class="kw">unsafe </span>{ <span class="kw-2">*</span>read_value::&lt;u64&gt;(return_ptr) },
-                        <span class="prelude-val">None </span>=&gt; ret_registers[<span class="number">0</span>],
-                    } <span class="kw">as </span>usize;
+                    <span class="kw">if let </span>CoreTypeConcrete::BuiltinCosts(<span class="kw">_</span>) = type_info {
+                        <span class="comment">// todo: should we use this value?
+                        </span><span class="kw">let </span>_value = <span class="kw">match </span><span class="kw-2">&amp;mut </span>return_ptr {
+                            <span class="prelude-val">Some</span>(return_ptr) =&gt; <span class="kw">unsafe </span>{ <span class="kw-2">*</span>read_value::&lt;<span class="kw-2">*mut </span>u64&gt;(return_ptr) },
+                            <span class="prelude-val">None </span>=&gt; ret_registers[<span class="number">0</span>] <span class="kw">as </span><span class="kw-2">*mut </span>u64,
+                        };
+                    } <span class="kw">else </span>{
+                        <span class="kw">let </span>value = <span class="kw">match </span><span class="kw-2">&amp;mut </span>return_ptr {
+                            <span class="prelude-val">Some</span>(return_ptr) =&gt; <span class="kw">unsafe </span>{ <span class="kw-2">*</span>read_value::&lt;u64&gt;(return_ptr) },
+                            <span class="prelude-val">None </span>=&gt; ret_registers[<span class="number">0</span>],
+                        } <span class="kw">as </span>usize;
 
-                    <span class="kw">match </span>type_info {
-                        CoreTypeConcrete::Bitwise(<span class="kw">_</span>) =&gt; builtin_stats.bitwise = value,
-                        CoreTypeConcrete::EcOp(<span class="kw">_</span>) =&gt; builtin_stats.ec_op = value,
-                        CoreTypeConcrete::RangeCheck(<span class="kw">_</span>) =&gt; builtin_stats.range_check = value,
-                        CoreTypeConcrete::Pedersen(<span class="kw">_</span>) =&gt; builtin_stats.pedersen = value,
-                        CoreTypeConcrete::Poseidon(<span class="kw">_</span>) =&gt; builtin_stats.poseidon = value,
-                        CoreTypeConcrete::SegmentArena(<span class="kw">_</span>) =&gt; builtin_stats.segment_arena = value,
-                        CoreTypeConcrete::RangeCheck96(<span class="kw">_</span>) =&gt; builtin_stats.range_check_96 = value,
-                        CoreTypeConcrete::Circuit(CircuitTypeConcrete::AddMod(<span class="kw">_</span>)) =&gt; {
-                            builtin_stats.circuit_add = value
+                        <span class="kw">match </span>type_info {
+                            CoreTypeConcrete::Bitwise(<span class="kw">_</span>) =&gt; builtin_stats.bitwise = value,
+                            CoreTypeConcrete::EcOp(<span class="kw">_</span>) =&gt; builtin_stats.ec_op = value,
+                            CoreTypeConcrete::RangeCheck(<span class="kw">_</span>) =&gt; builtin_stats.range_check = value,
+                            CoreTypeConcrete::Pedersen(<span class="kw">_</span>) =&gt; builtin_stats.pedersen = value,
+                            CoreTypeConcrete::Poseidon(<span class="kw">_</span>) =&gt; builtin_stats.poseidon = value,
+                            CoreTypeConcrete::SegmentArena(<span class="kw">_</span>) =&gt; {
+                                builtin_stats.segment_arena = value
+                            }
+                            CoreTypeConcrete::RangeCheck96(<span class="kw">_</span>) =&gt; {
+                                builtin_stats.range_check_96 = value
+                            }
+                            CoreTypeConcrete::Circuit(CircuitTypeConcrete::AddMod(<span class="kw">_</span>)) =&gt; {
+                                builtin_stats.circuit_add = value
+                            }
+                            CoreTypeConcrete::Circuit(CircuitTypeConcrete::MulMod(<span class="kw">_</span>)) =&gt; {
+                                builtin_stats.circuit_mul = value
+                            }
+                            <span class="kw">_ </span>=&gt; <span class="macro">native_panic!</span>(<span class="string">"given type should be a builtin: {type_id:?}"</span>),
                         }
-                        CoreTypeConcrete::Circuit(CircuitTypeConcrete::MulMod(<span class="kw">_</span>)) =&gt; {
-                            builtin_stats.circuit_mul = value
-                        }
-                        <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(<span class="string">"{type_id:?}"</span>),
                     }
                 }
             }
@@ -1007,6 +1091,18 @@
             debug_name: <span class="prelude-val">None</span>,
         });
 
+    <span class="comment">// Restore the old ptr and get back our builtincost box and free it.
+    </span><span class="kw">let </span>our_builtincosts_ptr = set_builtin_costs_fnptr(old_builtincosts_ptr);
+
+    <span class="kw">if </span>!our_builtincosts_ptr.is_null() &amp;&amp; old_builtincosts_ptr.is_aligned() {
+        <span class="kw">unsafe </span>{
+            <span class="kw">let _ </span>= Box::&lt;[u64; <span class="number">7</span>]&gt;::from_raw(our_builtincosts_ptr.cast_mut().cast());
+        };
+    }
+
+    <span class="attr">#[cfg(feature = <span class="string">"with-mem-tracing"</span>)]
+    </span><span class="kw">crate</span>::utils::mem_tracing::report_stats();
+
     <span class="prelude-val">Ok</span>(ExecutionResult {
         remaining_gas,
         return_value,
@@ -1022,7 +1118,7 @@
     <span class="attr">#[cfg(target_arch = <span class="string">"x86_64"</span>)] </span><span class="kw-2">mut </span>ret_registers: [u64; <span class="number">2</span>],
     <span class="attr">#[cfg(target_arch = <span class="string">"aarch64"</span>)] </span><span class="kw-2">mut </span>ret_registers: [u64; <span class="number">4</span>],
 ) -&gt; <span class="prelude-ty">Result</span>&lt;Value, Error&gt; {
-    <span class="kw">let </span>type_info = registry.get_type(type_id).unwrap();
+    <span class="kw">let </span>type_info = registry.get_type(type_id)<span class="question-mark">?</span>;
     <span class="kw">let </span>debug_name = type_info.info().long_id.to_string();
 
     <span class="comment">// Align the pointer to the actual return value.
@@ -1035,22 +1131,29 @@
 
         <span class="kw-2">*</span>return_ptr = <span class="kw">unsafe </span>{
             NonNull::new(return_ptr.cast::&lt;u8&gt;().as_ptr().add(align_offset))
-                .expect(<span class="string">"nonnull is null"</span>)
-                .cast()
+                .to_native_assert_error(<span class="string">"return pointer should not be null"</span>)<span class="question-mark">?
+                </span>.cast()
         };
     }
 
     <span class="kw">match </span>type_info {
-        CoreTypeConcrete::Array(<span class="kw">_</span>) =&gt; <span class="prelude-val">Ok</span>(Value::from_jit(return_ptr.unwrap(), type_id, registry)<span class="question-mark">?</span>),
+        CoreTypeConcrete::Array(<span class="kw">_</span>) =&gt; <span class="prelude-val">Ok</span>(Value::from_ptr(
+            return_ptr.to_native_assert_error(<span class="string">"return pointer should be valid"</span>)<span class="question-mark">?</span>,
+            type_id,
+            registry,
+        )<span class="question-mark">?</span>),
         CoreTypeConcrete::Box(info) =&gt; <span class="kw">unsafe </span>{
-            <span class="kw">let </span>ptr = return_ptr.unwrap_or(NonNull::new_unchecked(ret_registers[<span class="number">0</span>] <span class="kw">as </span><span class="kw-2">*mut </span>()));
-            <span class="kw">let </span>value = Value::from_jit(ptr, <span class="kw-2">&amp;</span>info.ty, registry)<span class="question-mark">?</span>;
-            libc::free(ptr.cast().as_ptr());
+            <span class="kw">let </span>ptr =
+                return_ptr.unwrap_or_else(|| NonNull::new_unchecked(ret_registers[<span class="number">0</span>] <span class="kw">as </span><span class="kw-2">*mut </span>()));
+            <span class="kw">let </span>value = Value::from_ptr(ptr, <span class="kw-2">&amp;</span>info.ty, registry)<span class="question-mark">?</span>;
+            libc_free(ptr.cast().as_ptr());
             <span class="prelude-val">Ok</span>(value)
         },
-        CoreTypeConcrete::EcPoint(<span class="kw">_</span>) | CoreTypeConcrete::EcState(<span class="kw">_</span>) =&gt; {
-            <span class="prelude-val">Ok</span>(Value::from_jit(return_ptr.unwrap(), type_id, registry)<span class="question-mark">?</span>)
-        }
+        CoreTypeConcrete::EcPoint(<span class="kw">_</span>) | CoreTypeConcrete::EcState(<span class="kw">_</span>) =&gt; <span class="prelude-val">Ok</span>(Value::from_ptr(
+            return_ptr.to_native_assert_error(<span class="string">"return pointer should be valid"</span>)<span class="question-mark">?</span>,
+            type_id,
+            registry,
+        )<span class="question-mark">?</span>),
         CoreTypeConcrete::Felt252(<span class="kw">_</span>)
         | CoreTypeConcrete::StarkNet(
             StarkNetTypeConcrete::ClassHash(<span class="kw">_</span>)
@@ -1058,7 +1161,7 @@
             | StarkNetTypeConcrete::StorageAddress(<span class="kw">_</span>)
             | StarkNetTypeConcrete::StorageBaseAddress(<span class="kw">_</span>),
         ) =&gt; <span class="kw">match </span>return_ptr {
-            <span class="prelude-val">Some</span>(return_ptr) =&gt; <span class="prelude-val">Ok</span>(Value::from_jit(return_ptr, type_id, registry)<span class="question-mark">?</span>),
+            <span class="prelude-val">Some</span>(return_ptr) =&gt; <span class="prelude-val">Ok</span>(Value::from_ptr(return_ptr, type_id, registry)<span class="question-mark">?</span>),
             <span class="prelude-val">None </span>=&gt; {
                 <span class="attr">#[cfg(target_arch = <span class="string">"x86_64"</span>)]
                 </span><span class="comment">// Since x86_64's return values hold at most two different 64bit registers,
@@ -1067,15 +1170,17 @@
                 </span><span class="kw">return </span><span class="prelude-val">Err</span>(Error::ParseAttributeError);
 
                 <span class="attr">#[cfg(target_arch = <span class="string">"aarch64"</span>)]
-                </span><span class="prelude-val">Ok</span>(Value::Felt252(
-                    starknet_types_core::felt::Felt::from_bytes_le(<span class="kw">unsafe </span>{
-                        std::mem::transmute::&lt;<span class="kw-2">&amp;</span>[u64; <span class="number">4</span>], <span class="kw-2">&amp;</span>[u8; <span class="number">32</span>]&gt;(<span class="kw-2">&amp;</span>ret_registers)
-                    }),
-                ))
+                </span><span class="prelude-val">Ok</span>(Value::Felt252({
+                    <span class="kw">let </span>data = <span class="kw">unsafe </span>{
+                        std::mem::transmute::&lt;<span class="kw-2">&amp;mut </span>[u64; <span class="number">4</span>], <span class="kw-2">&amp;mut </span>[u8; <span class="number">32</span>]&gt;(<span class="kw-2">&amp;mut </span>ret_registers)
+                    };
+                    data[<span class="number">31</span>] &amp;= <span class="number">0x0F</span>; <span class="comment">// Filter out first 4 bits (they're outside an i252).
+                    </span>starknet_types_core::felt::Felt::from_bytes_le(data)
+                }))
             }
         },
         CoreTypeConcrete::Bytes31(<span class="kw">_</span>) =&gt; <span class="kw">match </span>return_ptr {
-            <span class="prelude-val">Some</span>(return_ptr) =&gt; <span class="prelude-val">Ok</span>(Value::from_jit(return_ptr, type_id, registry)<span class="question-mark">?</span>),
+            <span class="prelude-val">Some</span>(return_ptr) =&gt; <span class="prelude-val">Ok</span>(Value::from_ptr(return_ptr, type_id, registry)<span class="question-mark">?</span>),
             <span class="prelude-val">None </span>=&gt; {
                 <span class="attr">#[cfg(target_arch = <span class="string">"x86_64"</span>)]
                 </span><span class="comment">// Since x86_64's return values hold at most two different 64bit registers,
@@ -1090,7 +1195,7 @@
             }
         },
         CoreTypeConcrete::BoundedInt(info) =&gt; <span class="kw">match </span>return_ptr {
-            <span class="prelude-val">Some</span>(return_ptr) =&gt; <span class="prelude-val">Ok</span>(Value::from_jit(return_ptr, type_id, registry)<span class="question-mark">?</span>),
+            <span class="prelude-val">Some</span>(return_ptr) =&gt; <span class="prelude-val">Ok</span>(Value::from_ptr(return_ptr, type_id, registry)<span class="question-mark">?</span>),
             <span class="prelude-val">None </span>=&gt; {
                 <span class="kw">let </span><span class="kw-2">mut </span>data = <span class="kw">if </span>info.range.offset_bit_width() &lt;= <span class="number">64 </span>{
                     BigInt::from(ret_registers[<span class="number">0</span>])
@@ -1162,8 +1267,8 @@
                 <span class="prelude-val">Ok</span>(Value::Null)
             } <span class="kw">else </span>{
                 <span class="kw">let </span>ptr = NonNull::new_unchecked(ptr);
-                <span class="kw">let </span>value = Value::from_jit(ptr, <span class="kw-2">&amp;</span>info.ty, registry)<span class="question-mark">?</span>;
-                libc::free(ptr.as_ptr().cast());
+                <span class="kw">let </span>value = Value::from_ptr(ptr, <span class="kw-2">&amp;</span>info.ty, registry)<span class="question-mark">?</span>;
+                libc_free(ptr.as_ptr().cast());
                 <span class="prelude-val">Ok</span>(value)
             }
         },
@@ -1172,7 +1277,7 @@
                 <span class="kw">crate</span>::types::r#enum::get_layout_for_variants(registry, <span class="kw-2">&amp;</span>info.variants)<span class="question-mark">?</span>;
 
             <span class="kw">let </span>(tag, ptr) = <span class="kw">if </span>type_info.is_memory_allocated(registry)<span class="question-mark">? </span>|| return_ptr.is_some() {
-                <span class="kw">let </span>ptr = return_ptr.unwrap();
+                <span class="kw">let </span>ptr = return_ptr.to_native_assert_error(<span class="string">"return pointer should be valid"</span>)<span class="question-mark">?</span>;
 
                 <span class="kw">let </span>tag = <span class="kw">unsafe </span>{
                     <span class="kw">match </span>tag_layout.size() {
@@ -1184,6 +1289,12 @@
                         <span class="kw">_ </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(Error::ParseAttributeError),
                     }
                 };
+
+                <span class="comment">// Filter out bits that are not part of the enum's tag.
+                </span><span class="kw">let </span>tag = tag
+                    &amp; <span class="number">1usize
+                        </span>.wrapping_shl(info.variants.len().next_power_of_two().trailing_zeros())
+                        .wrapping_sub(<span class="number">1</span>);
 
                 (
                     tag,
@@ -1212,7 +1323,7 @@
                 }
             };
             <span class="kw">let </span>value = <span class="kw">match </span>ptr {
-                <span class="prelude-val">Ok</span>(ptr) =&gt; Box::new(Value::from_jit(ptr, <span class="kw-2">&amp;</span>info.variants[tag], registry)<span class="question-mark">?</span>),
+                <span class="prelude-val">Ok</span>(ptr) =&gt; Box::new(Value::from_ptr(ptr, <span class="kw-2">&amp;</span>info.variants[tag], registry)<span class="question-mark">?</span>),
                 <span class="prelude-val">Err</span>(offset) =&gt; {
                     ret_registers.copy_within(offset.., <span class="number">0</span>);
                     Box::new(parse_result(
@@ -1237,14 +1348,17 @@
                     debug_name: <span class="prelude-val">Some</span>(debug_name),
                 })
             } <span class="kw">else </span>{
-                <span class="prelude-val">Ok</span>(Value::from_jit(return_ptr.unwrap(), type_id, registry)<span class="question-mark">?</span>)
+                <span class="prelude-val">Ok</span>(Value::from_ptr(
+                    return_ptr.to_native_assert_error(<span class="string">"return pointer should be valid"</span>)<span class="question-mark">?</span>,
+                    type_id,
+                    registry,
+                )<span class="question-mark">?</span>)
             }
         }
         CoreTypeConcrete::Felt252Dict(<span class="kw">_</span>) | CoreTypeConcrete::SquashedFelt252Dict(<span class="kw">_</span>) =&gt; <span class="kw">unsafe </span>{
-            <span class="kw">let </span>ptr = return_ptr.unwrap_or(NonNull::new_unchecked(
-                <span class="macro">addr_of_mut!</span>(ret_registers[<span class="number">0</span>]) <span class="kw">as </span><span class="kw-2">*mut </span>()
-            ));
-            <span class="prelude-val">Ok</span>(Value::from_jit(ptr, type_id, registry)<span class="question-mark">?</span>)
+            <span class="kw">let </span>ptr = return_ptr
+                .unwrap_or_else(|| NonNull::new_unchecked((<span class="kw-2">&amp;</span>raw <span class="kw-2">mut </span>ret_registers[<span class="number">0</span>]) <span class="kw">as </span><span class="kw-2">*mut </span>()));
+            <span class="prelude-val">Ok</span>(Value::from_ptr(ptr, type_id, registry)<span class="question-mark">?</span>)
         },
 
         CoreTypeConcrete::Snapshot(info) =&gt; {
@@ -1262,7 +1376,9 @@
         | CoreTypeConcrete::Pedersen(<span class="kw">_</span>)
         | CoreTypeConcrete::Poseidon(<span class="kw">_</span>)
         | CoreTypeConcrete::SegmentArena(<span class="kw">_</span>)
-        | CoreTypeConcrete::StarkNet(StarkNetTypeConcrete::System(<span class="kw">_</span>)) =&gt; <span class="macro">unreachable!</span>(),
+        | CoreTypeConcrete::StarkNet(StarkNetTypeConcrete::System(<span class="kw">_</span>)) =&gt; {
+            <span class="macro">native_panic!</span>(<span class="string">"builtins should have been handled before"</span>)
+        }
 
         CoreTypeConcrete::Felt252DictEntry(<span class="kw">_</span>)
         | CoreTypeConcrete::Span(<span class="kw">_</span>)
@@ -1272,6 +1388,8 @@
         | CoreTypeConcrete::Uint128MulGuarantee(<span class="kw">_</span>)
         | CoreTypeConcrete::Circuit(<span class="kw">_</span>)
         | CoreTypeConcrete::RangeCheck96(<span class="kw">_</span>) =&gt; <span class="macro">todo!</span>(),
+        <span class="comment">// 2.9.0
+        </span>CoreTypeConcrete::IntRange(<span class="kw">_</span>) =&gt; <span class="macro">todo!</span>(),
     }
 }
 
@@ -1330,15 +1448,15 @@
     </span><span class="kw">fn </span>test_invoke_dynamic_aot_native_executor(program: Program) {
         <span class="kw">let </span>native_context = NativeContext::new();
         <span class="kw">let </span>module = native_context
-            .compile(<span class="kw-2">&amp;</span>program, <span class="bool-val">false</span>)
+            .compile(<span class="kw-2">&amp;</span>program, <span class="bool-val">false</span>, <span class="prelude-val">Some</span>(Default::default()))
             .expect(<span class="string">"failed to compile context"</span>);
-        <span class="kw">let </span>executor = AotNativeExecutor::from_native_module(module, OptLevel::default());
+        <span class="kw">let </span>executor = AotNativeExecutor::from_native_module(module, OptLevel::default()).unwrap();
 
         <span class="comment">// The first function in the program is `run_test`.
         </span><span class="kw">let </span>entrypoint_function_id = <span class="kw-2">&amp;</span>program.funcs.first().expect(<span class="string">"should have a function"</span>).id;
 
         <span class="kw">let </span>result = executor
-            .invoke_dynamic(entrypoint_function_id, <span class="kw-2">&amp;</span>[], <span class="prelude-val">Some</span>(u128::MAX))
+            .invoke_dynamic(entrypoint_function_id, <span class="kw-2">&amp;</span>[], <span class="prelude-val">Some</span>(u64::MAX))
             .unwrap();
 
         <span class="macro">assert_eq!</span>(result.return_value, Value::Felt252(Felt::from(<span class="number">42</span>)));
@@ -1348,15 +1466,15 @@
     </span><span class="kw">fn </span>test_invoke_dynamic_jit_native_executor(program: Program) {
         <span class="kw">let </span>native_context = NativeContext::new();
         <span class="kw">let </span>module = native_context
-            .compile(<span class="kw-2">&amp;</span>program, <span class="bool-val">false</span>)
+            .compile(<span class="kw-2">&amp;</span>program, <span class="bool-val">false</span>, <span class="prelude-val">None</span>)
             .expect(<span class="string">"failed to compile context"</span>);
-        <span class="kw">let </span>executor = JitNativeExecutor::from_native_module(module, OptLevel::default());
+        <span class="kw">let </span>executor = JitNativeExecutor::from_native_module(module, OptLevel::default()).unwrap();
 
         <span class="comment">// The first function in the program is `run_test`.
         </span><span class="kw">let </span>entrypoint_function_id = <span class="kw-2">&amp;</span>program.funcs.first().expect(<span class="string">"should have a function"</span>).id;
 
         <span class="kw">let </span>result = executor
-            .invoke_dynamic(entrypoint_function_id, <span class="kw-2">&amp;</span>[], <span class="prelude-val">Some</span>(u128::MAX))
+            .invoke_dynamic(entrypoint_function_id, <span class="kw-2">&amp;</span>[], <span class="prelude-val">Some</span>(u64::MAX))
             .unwrap();
 
         <span class="macro">assert_eq!</span>(result.return_value, Value::Felt252(Felt::from(<span class="number">42</span>)));
@@ -1366,9 +1484,9 @@
     </span><span class="kw">fn </span>test_invoke_contract_dynamic_aot(starknet_program: Program) {
         <span class="kw">let </span>native_context = NativeContext::new();
         <span class="kw">let </span>module = native_context
-            .compile(<span class="kw-2">&amp;</span>starknet_program, <span class="bool-val">false</span>)
+            .compile(<span class="kw-2">&amp;</span>starknet_program, <span class="bool-val">false</span>, <span class="prelude-val">Some</span>(Default::default()))
             .expect(<span class="string">"failed to compile context"</span>);
-        <span class="kw">let </span>executor = AotNativeExecutor::from_native_module(module, OptLevel::default());
+        <span class="kw">let </span>executor = AotNativeExecutor::from_native_module(module, OptLevel::default()).unwrap();
 
         <span class="comment">// The last function in the program is the `get` wrapper function.
         </span><span class="kw">let </span>entrypoint_function_id = <span class="kw-2">&amp;</span>starknet_program
@@ -1381,7 +1499,7 @@
             .invoke_contract_dynamic(
                 entrypoint_function_id,
                 <span class="kw-2">&amp;</span>[],
-                <span class="prelude-val">Some</span>(u128::MAX),
+                <span class="prelude-val">Some</span>(u64::MAX),
                 <span class="kw-2">&amp;mut </span>StubSyscallHandler::default(),
             )
             .unwrap();
@@ -1393,9 +1511,9 @@
     </span><span class="kw">fn </span>test_invoke_contract_dynamic_jit(starknet_program: Program) {
         <span class="kw">let </span>native_context = NativeContext::new();
         <span class="kw">let </span>module = native_context
-            .compile(<span class="kw-2">&amp;</span>starknet_program, <span class="bool-val">false</span>)
+            .compile(<span class="kw-2">&amp;</span>starknet_program, <span class="bool-val">false</span>, <span class="prelude-val">Some</span>(Default::default()))
             .expect(<span class="string">"failed to compile context"</span>);
-        <span class="kw">let </span>executor = JitNativeExecutor::from_native_module(module, OptLevel::default());
+        <span class="kw">let </span>executor = JitNativeExecutor::from_native_module(module, OptLevel::default()).unwrap();
 
         <span class="comment">// The last function in the program is the `get` wrapper function.
         </span><span class="kw">let </span>entrypoint_function_id = <span class="kw-2">&amp;</span>starknet_program
@@ -1408,7 +1526,7 @@
             .invoke_contract_dynamic(
                 entrypoint_function_id,
                 <span class="kw-2">&amp;</span>[],
-                <span class="prelude-val">Some</span>(u128::MAX),
+                <span class="prelude-val">Some</span>(u64::MAX),
                 <span class="kw-2">&amp;mut </span>StubSyscallHandler::default(),
             )
             .unwrap();

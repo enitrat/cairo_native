@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/arch.rs`."><title>arch.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-c5d6553a23f1e5a6.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="cairo_native" data-themes="" data-resource-suffix="" data-rustdoc-version="1.81.0 (eeb90cda1 2024-09-04)" data-channel="1.81.0" data-search-js="search-d234aafac6c221dd.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-118b08c4c78b968e.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-d2fab2bf619172d3.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-df360f571f6edeae.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/arch.rs`."><title>arch.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-492a78a4a87dcc01.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="cairo_native" data-themes="" data-resource-suffix="" data-rustdoc-version="1.82.0 (f6e511eec 2024-10-15)" data-channel="1.82.0" data-search-js="search-a99f1315e7cc5121.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-118b08c4c78b968e.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-921df33f47b8780c.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-3b12f09e550e0385.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -194,10 +194,14 @@
 <a href="#194" id="194">194</a>
 <a href="#195" id="195">195</a>
 <a href="#196" id="196">196</a>
+<a href="#197" id="197">197</a>
+<a href="#198" id="198">198</a>
 </pre></div><pre class="rust"><code><span class="kw">use crate</span>::{
-    error,
-    starknet::{ArrayAbi, U256},
+    error::Result,
+    native_panic,
+    starknet::{ArrayAbi, Secp256k1Point, Secp256r1Point},
     types::TypeBuilder,
+    utils::libc_malloc,
     values::Value,
 };
 <span class="kw">use </span>bumpalo::Bump;
@@ -218,12 +222,12 @@
 </span><span class="kw">pub trait </span>AbiArgument {
     <span class="doccomment">/// Serialize the argument into the buffer. This method should keep track of arch-dependent
     /// stuff like register vs stack allocation.
-    </span><span class="kw">fn </span>to_bytes(<span class="kw-2">&amp;</span><span class="self">self</span>, buffer: <span class="kw-2">&amp;mut </span>Vec&lt;u8&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;(), error::Error&gt;;
+    </span><span class="kw">fn </span>to_bytes(<span class="kw-2">&amp;</span><span class="self">self</span>, buffer: <span class="kw-2">&amp;mut </span>Vec&lt;u8&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt;;
 }
 
-<span class="doccomment">/// A wrapper that implements `AbiArgument` for `JitValue`s. It contains all the required stuff to
-/// serialize all possible `JitValue`s.
-</span><span class="kw">pub struct </span>JitValueWithInfoWrapper&lt;<span class="lifetime">'a</span>&gt; {
+<span class="doccomment">/// A wrapper that implements `AbiArgument` for `Value`s. It contains all the required stuff to
+/// serialize all possible `Value`s.
+</span><span class="kw">pub struct </span>ValueWithInfoWrapper&lt;<span class="lifetime">'a</span>&gt; {
     <span class="kw">pub </span>value: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>Value,
     <span class="kw">pub </span>type_id: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>ConcreteTypeId,
     <span class="kw">pub </span>info: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>CoreTypeConcrete,
@@ -232,12 +236,12 @@
     <span class="kw">pub </span>registry: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>ProgramRegistry&lt;CoreType, CoreLibfunc&gt;,
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; JitValueWithInfoWrapper&lt;<span class="lifetime">'a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; ValueWithInfoWrapper&lt;<span class="lifetime">'a</span>&gt; {
     <span class="kw">fn </span>map&lt;<span class="lifetime">'b</span>&gt;(
         <span class="kw-2">&amp;</span><span class="lifetime">'b </span><span class="self">self</span>,
         value: <span class="kw-2">&amp;</span><span class="lifetime">'b </span>Value,
         type_id: <span class="kw-2">&amp;</span><span class="lifetime">'b </span>ConcreteTypeId,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;JitValueWithInfoWrapper&lt;<span class="lifetime">'b</span>&gt;, error::Error&gt;
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;ValueWithInfoWrapper&lt;<span class="lifetime">'b</span>&gt;&gt;
     <span class="kw">where
         </span><span class="lifetime">'b</span>: <span class="lifetime">'a</span>,
     {
@@ -251,15 +255,15 @@
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; AbiArgument <span class="kw">for </span>JitValueWithInfoWrapper&lt;<span class="lifetime">'a</span>&gt; {
-    <span class="kw">fn </span>to_bytes(<span class="kw-2">&amp;</span><span class="self">self</span>, buffer: <span class="kw-2">&amp;mut </span>Vec&lt;u8&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;(), error::Error&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; AbiArgument <span class="kw">for </span>ValueWithInfoWrapper&lt;<span class="lifetime">'a</span>&gt; {
+    <span class="kw">fn </span>to_bytes(<span class="kw-2">&amp;</span><span class="self">self</span>, buffer: <span class="kw-2">&amp;mut </span>Vec&lt;u8&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">match </span>(<span class="self">self</span>.value, <span class="self">self</span>.info) {
             (value, CoreTypeConcrete::Box(info)) =&gt; {
-                <span class="kw">let </span>ptr = value.to_jit(<span class="self">self</span>.arena, <span class="self">self</span>.registry, <span class="self">self</span>.type_id)<span class="question-mark">?</span>;
+                <span class="kw">let </span>ptr = value.to_ptr(<span class="self">self</span>.arena, <span class="self">self</span>.registry, <span class="self">self</span>.type_id)<span class="question-mark">?</span>;
 
                 <span class="kw">let </span>layout = <span class="self">self</span>.registry.get_type(<span class="kw-2">&amp;</span>info.ty)<span class="question-mark">?</span>.layout(<span class="self">self</span>.registry)<span class="question-mark">?</span>;
                 <span class="kw">let </span>heap_ptr = <span class="kw">unsafe </span>{
-                    <span class="kw">let </span>heap_ptr = libc::malloc(layout.size());
+                    <span class="kw">let </span>heap_ptr = libc_malloc(layout.size());
                     libc::memcpy(heap_ptr, ptr.as_ptr().cast(), layout.size());
                     heap_ptr
                 };
@@ -270,11 +274,11 @@
                 <span class="kw">if </span><span class="macro">matches!</span>(value, Value::Null) {
                     null::&lt;()&gt;().to_bytes(buffer)<span class="question-mark">?</span>;
                 } <span class="kw">else </span>{
-                    <span class="kw">let </span>ptr = value.to_jit(<span class="self">self</span>.arena, <span class="self">self</span>.registry, <span class="self">self</span>.type_id)<span class="question-mark">?</span>;
+                    <span class="kw">let </span>ptr = value.to_ptr(<span class="self">self</span>.arena, <span class="self">self</span>.registry, <span class="self">self</span>.type_id)<span class="question-mark">?</span>;
 
                     <span class="kw">let </span>layout = <span class="self">self</span>.registry.get_type(<span class="kw-2">&amp;</span>info.ty)<span class="question-mark">?</span>.layout(<span class="self">self</span>.registry)<span class="question-mark">?</span>;
                     <span class="kw">let </span>heap_ptr = <span class="kw">unsafe </span>{
-                        <span class="kw">let </span>heap_ptr = libc::malloc(layout.size());
+                        <span class="kw">let </span>heap_ptr = libc_malloc(layout.size());
                         libc::memcpy(heap_ptr, ptr.as_ptr().cast(), layout.size());
                         heap_ptr
                     };
@@ -289,7 +293,7 @@
             (Value::Array(<span class="kw">_</span>), CoreTypeConcrete::Array(<span class="kw">_</span>)) =&gt; {
                 <span class="comment">// TODO: Assert that `info.ty` matches all the values' types.
 
-                </span><span class="kw">let </span>abi_ptr = <span class="self">self</span>.value.to_jit(<span class="self">self</span>.arena, <span class="self">self</span>.registry, <span class="self">self</span>.type_id)<span class="question-mark">?</span>;
+                </span><span class="kw">let </span>abi_ptr = <span class="self">self</span>.value.to_ptr(<span class="self">self</span>.arena, <span class="self">self</span>.registry, <span class="self">self</span>.type_id)<span class="question-mark">?</span>;
                 <span class="kw">let </span>abi = <span class="kw">unsafe </span>{ abi_ptr.cast::&lt;ArrayAbi&lt;()&gt;&gt;().as_ref() };
 
                 abi.ptr.to_bytes(buffer)<span class="question-mark">?</span>;
@@ -297,7 +301,9 @@
                 abi.until.to_bytes(buffer)<span class="question-mark">?</span>;
                 abi.capacity.to_bytes(buffer)<span class="question-mark">?</span>;
             }
-            (Value::BoundedInt { .. }, CoreTypeConcrete::BoundedInt(<span class="kw">_</span>)) =&gt; <span class="macro">todo!</span>(),
+            (Value::BoundedInt { .. }, CoreTypeConcrete::BoundedInt(<span class="kw">_</span>)) =&gt; {
+                <span class="macro">native_panic!</span>(<span class="string">"todo: implement AbiArgument for Value::BoundedInt case"</span>)
+            }
             (Value::Bytes31(value), CoreTypeConcrete::Bytes31(<span class="kw">_</span>)) =&gt; value.to_bytes(buffer)<span class="question-mark">?</span>,
             (Value::EcPoint(x, y), CoreTypeConcrete::EcPoint(<span class="kw">_</span>)) =&gt; {
                 x.to_bytes(buffer)<span class="question-mark">?</span>;
@@ -311,7 +317,7 @@
             }
             (Value::Enum { tag, value, .. }, CoreTypeConcrete::Enum(info)) =&gt; {
                 <span class="kw">if </span><span class="self">self</span>.info.is_memory_allocated(<span class="self">self</span>.registry)<span class="question-mark">? </span>{
-                    <span class="kw">let </span>abi_ptr = <span class="self">self</span>.value.to_jit(<span class="self">self</span>.arena, <span class="self">self</span>.registry, <span class="self">self</span>.type_id)<span class="question-mark">?</span>;
+                    <span class="kw">let </span>abi_ptr = <span class="self">self</span>.value.to_ptr(<span class="self">self</span>.arena, <span class="self">self</span>.registry, <span class="self">self</span>.type_id)<span class="question-mark">?</span>;
 
                     <span class="kw">let </span>abi_ptr = <span class="kw">unsafe </span>{ <span class="kw-2">*</span>abi_ptr.cast::&lt;NonNull&lt;()&gt;&gt;().as_ref() };
                     abi_ptr.as_ptr().to_bytes(buffer)<span class="question-mark">?</span>;
@@ -336,32 +342,30 @@
             ) =&gt; value.to_bytes(buffer)<span class="question-mark">?</span>,
             (Value::Felt252Dict { .. }, CoreTypeConcrete::Felt252Dict(<span class="kw">_</span>)) =&gt; {
                 <span class="attr">#[cfg(not(feature = <span class="string">"with-runtime"</span>))]
-                </span><span class="macro">unimplemented!</span>(<span class="string">"enable the `with-runtime` feature to use felt252 dicts"</span>);
+                </span><span class="macro">native_panic!</span>(<span class="string">"enable the `with-runtime` feature to use felt252 dicts"</span>);
 
                 <span class="comment">// TODO: Assert that `info.ty` matches all the values' types.
 
                 </span><span class="self">self</span>.value
-                    .to_jit(<span class="self">self</span>.arena, <span class="self">self</span>.registry, <span class="self">self</span>.type_id)<span class="question-mark">?
+                    .to_ptr(<span class="self">self</span>.arena, <span class="self">self</span>.registry, <span class="self">self</span>.type_id)<span class="question-mark">?
                     </span>.as_ptr()
                     .to_bytes(buffer)<span class="question-mark">?
             </span>}
             (
-                Value::Secp256K1Point { x, y },
+                Value::Secp256K1Point(Secp256k1Point { x, y, is_infinity }),
                 CoreTypeConcrete::StarkNet(StarkNetTypeConcrete::Secp256Point(
                     Secp256PointTypeConcrete::K1(<span class="kw">_</span>),
                 )),
             )
             | (
-                Value::Secp256R1Point { x, y },
+                Value::Secp256R1Point(Secp256r1Point { x, y, is_infinity }),
                 CoreTypeConcrete::StarkNet(StarkNetTypeConcrete::Secp256Point(
                     Secp256PointTypeConcrete::R1(<span class="kw">_</span>),
                 )),
             ) =&gt; {
-                <span class="kw">let </span>x = U256 { lo: x.<span class="number">0</span>, hi: x.<span class="number">1 </span>};
-                <span class="kw">let </span>y = U256 { lo: y.<span class="number">0</span>, hi: y.<span class="number">1 </span>};
-
                 x.to_bytes(buffer)<span class="question-mark">?</span>;
                 y.to_bytes(buffer)<span class="question-mark">?</span>;
+                is_infinity.to_bytes(buffer)<span class="question-mark">?</span>;
             }
             (Value::Sint128(value), CoreTypeConcrete::Sint128(<span class="kw">_</span>)) =&gt; value.to_bytes(buffer)<span class="question-mark">?</span>,
             (Value::Sint16(value), CoreTypeConcrete::Sint16(<span class="kw">_</span>)) =&gt; value.to_bytes(buffer)<span class="question-mark">?</span>,
@@ -380,8 +384,8 @@
             (Value::Uint32(value), CoreTypeConcrete::Uint32(<span class="kw">_</span>)) =&gt; value.to_bytes(buffer)<span class="question-mark">?</span>,
             (Value::Uint64(value), CoreTypeConcrete::Uint64(<span class="kw">_</span>)) =&gt; value.to_bytes(buffer)<span class="question-mark">?</span>,
             (Value::Uint8(value), CoreTypeConcrete::Uint8(<span class="kw">_</span>)) =&gt; value.to_bytes(buffer)<span class="question-mark">?</span>,
-            <span class="kw">_ </span>=&gt; <span class="macro">todo!</span>(
-                <span class="string">"abi argument unimplemented for ({:?}, {:?})"</span>,
+            <span class="kw">_ </span>=&gt; <span class="macro">native_panic!</span>(
+                <span class="string">"todo: abi argument unimplemented for ({:?}, {:?})"</span>,
                 <span class="self">self</span>.value,
                 <span class="self">self</span>.type_id
             ),

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/libfuncs/array.rs`."><title>array.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-c5d6553a23f1e5a6.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="cairo_native" data-themes="" data-resource-suffix="" data-rustdoc-version="1.81.0 (eeb90cda1 2024-09-04)" data-channel="1.81.0" data-search-js="search-d234aafac6c221dd.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-118b08c4c78b968e.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-d2fab2bf619172d3.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-df360f571f6edeae.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/libfuncs/array.rs`."><title>array.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-492a78a4a87dcc01.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="cairo_native" data-themes="" data-resource-suffix="" data-rustdoc-version="1.82.0 (f6e511eec 2024-10-15)" data-channel="1.82.0" data-search-js="search-a99f1315e7cc5121.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-118b08c4c78b968e.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-921df33f47b8780c.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-3b12f09e550e0385.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -2348,24 +2348,190 @@
 <a href="#2348" id="2348">2348</a>
 <a href="#2349" id="2349">2349</a>
 <a href="#2350" id="2350">2350</a>
+<a href="#2351" id="2351">2351</a>
+<a href="#2352" id="2352">2352</a>
+<a href="#2353" id="2353">2353</a>
+<a href="#2354" id="2354">2354</a>
+<a href="#2355" id="2355">2355</a>
+<a href="#2356" id="2356">2356</a>
+<a href="#2357" id="2357">2357</a>
+<a href="#2358" id="2358">2358</a>
+<a href="#2359" id="2359">2359</a>
+<a href="#2360" id="2360">2360</a>
+<a href="#2361" id="2361">2361</a>
+<a href="#2362" id="2362">2362</a>
+<a href="#2363" id="2363">2363</a>
+<a href="#2364" id="2364">2364</a>
+<a href="#2365" id="2365">2365</a>
+<a href="#2366" id="2366">2366</a>
+<a href="#2367" id="2367">2367</a>
+<a href="#2368" id="2368">2368</a>
+<a href="#2369" id="2369">2369</a>
+<a href="#2370" id="2370">2370</a>
+<a href="#2371" id="2371">2371</a>
+<a href="#2372" id="2372">2372</a>
+<a href="#2373" id="2373">2373</a>
+<a href="#2374" id="2374">2374</a>
+<a href="#2375" id="2375">2375</a>
+<a href="#2376" id="2376">2376</a>
+<a href="#2377" id="2377">2377</a>
+<a href="#2378" id="2378">2378</a>
+<a href="#2379" id="2379">2379</a>
+<a href="#2380" id="2380">2380</a>
+<a href="#2381" id="2381">2381</a>
+<a href="#2382" id="2382">2382</a>
+<a href="#2383" id="2383">2383</a>
+<a href="#2384" id="2384">2384</a>
+<a href="#2385" id="2385">2385</a>
+<a href="#2386" id="2386">2386</a>
+<a href="#2387" id="2387">2387</a>
+<a href="#2388" id="2388">2388</a>
+<a href="#2389" id="2389">2389</a>
+<a href="#2390" id="2390">2390</a>
+<a href="#2391" id="2391">2391</a>
+<a href="#2392" id="2392">2392</a>
+<a href="#2393" id="2393">2393</a>
+<a href="#2394" id="2394">2394</a>
+<a href="#2395" id="2395">2395</a>
+<a href="#2396" id="2396">2396</a>
+<a href="#2397" id="2397">2397</a>
+<a href="#2398" id="2398">2398</a>
+<a href="#2399" id="2399">2399</a>
+<a href="#2400" id="2400">2400</a>
+<a href="#2401" id="2401">2401</a>
+<a href="#2402" id="2402">2402</a>
+<a href="#2403" id="2403">2403</a>
+<a href="#2404" id="2404">2404</a>
+<a href="#2405" id="2405">2405</a>
+<a href="#2406" id="2406">2406</a>
+<a href="#2407" id="2407">2407</a>
+<a href="#2408" id="2408">2408</a>
+<a href="#2409" id="2409">2409</a>
+<a href="#2410" id="2410">2410</a>
+<a href="#2411" id="2411">2411</a>
+<a href="#2412" id="2412">2412</a>
+<a href="#2413" id="2413">2413</a>
+<a href="#2414" id="2414">2414</a>
+<a href="#2415" id="2415">2415</a>
+<a href="#2416" id="2416">2416</a>
+<a href="#2417" id="2417">2417</a>
+<a href="#2418" id="2418">2418</a>
+<a href="#2419" id="2419">2419</a>
+<a href="#2420" id="2420">2420</a>
+<a href="#2421" id="2421">2421</a>
+<a href="#2422" id="2422">2422</a>
+<a href="#2423" id="2423">2423</a>
+<a href="#2424" id="2424">2424</a>
+<a href="#2425" id="2425">2425</a>
+<a href="#2426" id="2426">2426</a>
+<a href="#2427" id="2427">2427</a>
+<a href="#2428" id="2428">2428</a>
+<a href="#2429" id="2429">2429</a>
+<a href="#2430" id="2430">2430</a>
+<a href="#2431" id="2431">2431</a>
+<a href="#2432" id="2432">2432</a>
+<a href="#2433" id="2433">2433</a>
+<a href="#2434" id="2434">2434</a>
+<a href="#2435" id="2435">2435</a>
+<a href="#2436" id="2436">2436</a>
+<a href="#2437" id="2437">2437</a>
+<a href="#2438" id="2438">2438</a>
+<a href="#2439" id="2439">2439</a>
+<a href="#2440" id="2440">2440</a>
+<a href="#2441" id="2441">2441</a>
+<a href="#2442" id="2442">2442</a>
+<a href="#2443" id="2443">2443</a>
+<a href="#2444" id="2444">2444</a>
+<a href="#2445" id="2445">2445</a>
+<a href="#2446" id="2446">2446</a>
+<a href="#2447" id="2447">2447</a>
+<a href="#2448" id="2448">2448</a>
+<a href="#2449" id="2449">2449</a>
+<a href="#2450" id="2450">2450</a>
+<a href="#2451" id="2451">2451</a>
+<a href="#2452" id="2452">2452</a>
+<a href="#2453" id="2453">2453</a>
+<a href="#2454" id="2454">2454</a>
+<a href="#2455" id="2455">2455</a>
+<a href="#2456" id="2456">2456</a>
+<a href="#2457" id="2457">2457</a>
+<a href="#2458" id="2458">2458</a>
+<a href="#2459" id="2459">2459</a>
+<a href="#2460" id="2460">2460</a>
+<a href="#2461" id="2461">2461</a>
+<a href="#2462" id="2462">2462</a>
+<a href="#2463" id="2463">2463</a>
+<a href="#2464" id="2464">2464</a>
+<a href="#2465" id="2465">2465</a>
+<a href="#2466" id="2466">2466</a>
+<a href="#2467" id="2467">2467</a>
+<a href="#2468" id="2468">2468</a>
+<a href="#2469" id="2469">2469</a>
+<a href="#2470" id="2470">2470</a>
+<a href="#2471" id="2471">2471</a>
+<a href="#2472" id="2472">2472</a>
+<a href="#2473" id="2473">2473</a>
+<a href="#2474" id="2474">2474</a>
+<a href="#2475" id="2475">2475</a>
+<a href="#2476" id="2476">2476</a>
+<a href="#2477" id="2477">2477</a>
+<a href="#2478" id="2478">2478</a>
+<a href="#2479" id="2479">2479</a>
+<a href="#2480" id="2480">2480</a>
+<a href="#2481" id="2481">2481</a>
+<a href="#2482" id="2482">2482</a>
+<a href="#2483" id="2483">2483</a>
+<a href="#2484" id="2484">2484</a>
+<a href="#2485" id="2485">2485</a>
+<a href="#2486" id="2486">2486</a>
+<a href="#2487" id="2487">2487</a>
+<a href="#2488" id="2488">2488</a>
+<a href="#2489" id="2489">2489</a>
+<a href="#2490" id="2490">2490</a>
+<a href="#2491" id="2491">2491</a>
+<a href="#2492" id="2492">2492</a>
+<a href="#2493" id="2493">2493</a>
+<a href="#2494" id="2494">2494</a>
+<a href="#2495" id="2495">2495</a>
+<a href="#2496" id="2496">2496</a>
+<a href="#2497" id="2497">2497</a>
+<a href="#2498" id="2498">2498</a>
+<a href="#2499" id="2499">2499</a>
+<a href="#2500" id="2500">2500</a>
+<a href="#2501" id="2501">2501</a>
+<a href="#2502" id="2502">2502</a>
+<a href="#2503" id="2503">2503</a>
+<a href="#2504" id="2504">2504</a>
+<a href="#2505" id="2505">2505</a>
+<a href="#2506" id="2506">2506</a>
+<a href="#2507" id="2507">2507</a>
+<a href="#2508" id="2508">2508</a>
+<a href="#2509" id="2509">2509</a>
+<a href="#2510" id="2510">2510</a>
+<a href="#2511" id="2511">2511</a>
+<a href="#2512" id="2512">2512</a>
+<a href="#2513" id="2513">2513</a>
+<a href="#2514" id="2514">2514</a>
+<a href="#2515" id="2515">2515</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! # Array libfuncs
 
 </span><span class="comment">// TODO: A future possible improvement would be to put the array behind a double pointer and a
 //   reference counter, to avoid unnecessary clones.
 
-</span><span class="kw">use </span>std::ops::Deref;
-
-<span class="kw">use </span><span class="kw">super</span>::LibfuncHelper;
+</span><span class="kw">use </span><span class="kw">super</span>::LibfuncHelper;
 <span class="kw">use crate</span>::{
-    error::Result,
-    metadata::{realloc_bindings::ReallocBindingsMeta, MetadataStorage},
+    error::{panic::ToNativeAssertError, Error, <span class="prelude-ty">Result</span>},
+    metadata::{
+        drop_overrides::DropOverridesMeta, realloc_bindings::ReallocBindingsMeta, MetadataStorage,
+    },
+    native_assert, native_panic,
     types::TypeBuilder,
-    utils::{BlockExt, ProgramRegistryExt},
+    utils::{BlockExt, GepIndex, ProgramRegistryExt},
 };
 <span class="kw">use </span>cairo_lang_sierra::{
     extensions::{
         array::{ArrayConcreteLibfunc, ConcreteMultiPopLibfunc},
-        core::{CoreLibfunc, CoreType},
+        core::{CoreLibfunc, CoreType, CoreTypeConcrete},
         lib_func::{SignatureAndTypeConcreteLibfunc, SignatureOnlyConcreteLibfunc},
         ConcreteLibfunc,
     },
@@ -2510,17 +2676,16 @@
 
     <span class="kw">let </span>elem_stride = entry.const_int(context, location, elem_stride, <span class="number">64</span>)<span class="question-mark">?</span>;
 
-    <span class="kw">let </span>array_end = entry.extract_value(context, location, entry.argument(<span class="number">0</span>)<span class="question-mark">?</span>.into(), len_ty, <span class="number">2</span>)<span class="question-mark">?</span>;
-    <span class="kw">let </span>array_capacity =
-        entry.extract_value(context, location, entry.argument(<span class="number">0</span>)<span class="question-mark">?</span>.into(), len_ty, <span class="number">3</span>)<span class="question-mark">?</span>;
+    <span class="kw">let </span>array_end = entry.extract_value(context, location, entry.arg(<span class="number">0</span>)<span class="question-mark">?</span>, len_ty, <span class="number">2</span>)<span class="question-mark">?</span>;
+    <span class="kw">let </span>array_capacity = entry.extract_value(context, location, entry.arg(<span class="number">0</span>)<span class="question-mark">?</span>, len_ty, <span class="number">3</span>)<span class="question-mark">?</span>;
 
-    <span class="kw">let </span>has_tail_space = entry.append_op_result(arith::cmpi(
+    <span class="kw">let </span>has_tail_space = entry.cmpi(
         context,
         CmpiPredicate::Ult,
         array_end,
         array_capacity,
         location,
-    ))<span class="question-mark">?</span>;
+    )<span class="question-mark">?</span>;
 
     <span class="kw">let </span>handle_block = helper.append_block(Block::new(<span class="kw-2">&amp;</span>[]));
     <span class="kw">let </span>memmove_block = helper.append_block(Block::new(<span class="kw-2">&amp;</span>[]));
@@ -2532,7 +2697,7 @@
         has_tail_space,
         append_block,
         handle_block,
-        <span class="kw-2">&amp;</span>[entry.argument(<span class="number">0</span>)<span class="question-mark">?</span>.into()],
+        <span class="kw-2">&amp;</span>[entry.arg(<span class="number">0</span>)<span class="question-mark">?</span>],
         <span class="kw-2">&amp;</span>[],
         location,
     ));
@@ -2540,15 +2705,10 @@
     {
         <span class="kw">let </span>k0 = handle_block.const_int(context, location, <span class="number">0</span>, <span class="number">32</span>)<span class="question-mark">?</span>;
         <span class="kw">let </span>array_start =
-            handle_block.extract_value(context, location, entry.argument(<span class="number">0</span>)<span class="question-mark">?</span>.into(), len_ty, <span class="number">1</span>)<span class="question-mark">?</span>;
+            handle_block.extract_value(context, location, entry.arg(<span class="number">0</span>)<span class="question-mark">?</span>, len_ty, <span class="number">1</span>)<span class="question-mark">?</span>;
 
-        <span class="kw">let </span>has_head_space = handle_block.append_op_result(arith::cmpi(
-            context,
-            CmpiPredicate::Ne,
-            array_start,
-            k0,
-            location,
-        ))<span class="question-mark">?</span>;
+        <span class="kw">let </span>has_head_space =
+            handle_block.cmpi(context, CmpiPredicate::Ne, array_start, k0, location)<span class="question-mark">?</span>;
         handle_block.append_operation(cf::cond_br(
             context,
             has_head_space,
@@ -2562,18 +2722,13 @@
 
     {
         <span class="kw">let </span>array_start =
-            memmove_block.extract_value(context, location, entry.argument(<span class="number">0</span>)<span class="question-mark">?</span>.into(), len_ty, <span class="number">1</span>)<span class="question-mark">?</span>;
+            memmove_block.extract_value(context, location, entry.arg(<span class="number">0</span>)<span class="question-mark">?</span>, len_ty, <span class="number">1</span>)<span class="question-mark">?</span>;
 
-        <span class="kw">let </span>start_offset = memmove_block.append_op_result(arith::extui(
-            array_start,
-            IntegerType::new(context, <span class="number">64</span>).into(),
-            location,
-        ))<span class="question-mark">?</span>;
         <span class="kw">let </span>start_offset =
-            memmove_block.append_op_result(arith::muli(start_offset, elem_stride, location))<span class="question-mark">?</span>;
+            memmove_block.extui(array_start, IntegerType::new(context, <span class="number">64</span>).into(), location)<span class="question-mark">?</span>;
+        <span class="kw">let </span>start_offset = memmove_block.muli(start_offset, elem_stride, location)<span class="question-mark">?</span>;
 
-        <span class="kw">let </span>dst_ptr =
-            memmove_block.extract_value(context, location, entry.argument(<span class="number">0</span>)<span class="question-mark">?</span>.into(), ptr_ty, <span class="number">0</span>)<span class="question-mark">?</span>;
+        <span class="kw">let </span>dst_ptr = memmove_block.extract_value(context, location, entry.arg(<span class="number">0</span>)<span class="question-mark">?</span>, ptr_ty, <span class="number">0</span>)<span class="question-mark">?</span>;
         <span class="kw">let </span>src_ptr = memmove_block.append_op_result(llvm::get_element_ptr_dynamic(
             context,
             dst_ptr,
@@ -2585,14 +2740,10 @@
 
         <span class="kw">let </span>array_len =
             memmove_block.append_op_result(arith::subi(array_end, array_start, location))<span class="question-mark">?</span>;
-        <span class="kw">let </span>memmove_len = memmove_block.append_op_result(arith::extui(
-            array_len,
-            IntegerType::new(context, <span class="number">64</span>).into(),
-            location,
-        ))<span class="question-mark">?</span>;
-
         <span class="kw">let </span>memmove_len =
-            memmove_block.append_op_result(arith::muli(memmove_len, elem_stride, location))<span class="question-mark">?</span>;
+            memmove_block.extui(array_len, IntegerType::new(context, <span class="number">64</span>).into(), location)<span class="question-mark">?</span>;
+
+        <span class="kw">let </span>memmove_len = memmove_block.muli(memmove_len, elem_stride, location)<span class="question-mark">?</span>;
         memmove_block.append_operation(
             ods::llvm::intr_memmove(
                 context,
@@ -2606,8 +2757,7 @@
         );
 
         <span class="kw">let </span>k0 = memmove_block.const_int_from_type(context, location, <span class="number">0</span>, len_ty)<span class="question-mark">?</span>;
-        <span class="kw">let </span>value =
-            memmove_block.insert_value(context, location, entry.argument(<span class="number">0</span>)<span class="question-mark">?</span>.into(), k0, <span class="number">1</span>)<span class="question-mark">?</span>;
+        <span class="kw">let </span>value = memmove_block.insert_value(context, location, entry.arg(<span class="number">0</span>)<span class="question-mark">?</span>, k0, <span class="number">1</span>)<span class="question-mark">?</span>;
         <span class="kw">let </span>value = memmove_block.insert_value(context, location, value, array_len, <span class="number">2</span>)<span class="question-mark">?</span>;
 
         memmove_block.append_operation(cf::br(append_block, <span class="kw-2">&amp;</span>[value], location));
@@ -2619,64 +2769,47 @@
 
         <span class="comment">// Array allocation growth formula:
         //   new_len = max(8, old_len + min(1024, 2 * old_len));
-        </span><span class="kw">let </span>new_capacity = realloc_block.append_op_result(arith::shli(array_end, k1, location))<span class="question-mark">?</span>;
+        </span><span class="kw">let </span>new_capacity = realloc_block.shli(array_end, k1, location)<span class="question-mark">?</span>;
         <span class="kw">let </span>new_capacity =
             realloc_block.append_op_result(arith::minui(new_capacity, k1024, location))<span class="question-mark">?</span>;
-        <span class="kw">let </span>new_capacity =
-            realloc_block.append_op_result(arith::addi(new_capacity, array_end, location))<span class="question-mark">?</span>;
+        <span class="kw">let </span>new_capacity = realloc_block.addi(new_capacity, array_end, location)<span class="question-mark">?</span>;
         <span class="kw">let </span>new_capacity =
             realloc_block.append_op_result(arith::maxui(new_capacity, k8, location))<span class="question-mark">?</span>;
 
         <span class="kw">let </span>realloc_size = {
-            <span class="kw">let </span>new_capacity = realloc_block.append_op_result(arith::extui(
+            <span class="kw">let </span>new_capacity = realloc_block.extui(
                 new_capacity,
                 IntegerType::new(context, <span class="number">64</span>).into(),
                 location,
-            ))<span class="question-mark">?</span>;
-            realloc_block.append_op_result(arith::muli(new_capacity, elem_stride, location))<span class="question-mark">?
+            )<span class="question-mark">?</span>;
+            realloc_block.muli(new_capacity, elem_stride, location)<span class="question-mark">?
         </span>};
 
-        <span class="kw">let </span>ptr =
-            realloc_block.extract_value(context, location, entry.argument(<span class="number">0</span>)<span class="question-mark">?</span>.into(), ptr_ty, <span class="number">0</span>)<span class="question-mark">?</span>;
+        <span class="kw">let </span>ptr = realloc_block.extract_value(context, location, entry.arg(<span class="number">0</span>)<span class="question-mark">?</span>, ptr_ty, <span class="number">0</span>)<span class="question-mark">?</span>;
         <span class="kw">let </span>ptr = realloc_block.append_op_result(ReallocBindingsMeta::realloc(
             context,
             ptr,
             realloc_size,
             location,
-        ))<span class="question-mark">?</span>;
+        )<span class="question-mark">?</span>)<span class="question-mark">?</span>;
 
         <span class="comment">// No need to memmove, guaranteed by the fact that if we needed to memmove we'd have gone
         // through the memmove block instead of reallocating.
 
-        </span><span class="kw">let </span>value =
-            realloc_block.insert_value(context, location, entry.argument(<span class="number">0</span>)<span class="question-mark">?</span>.into(), ptr, <span class="number">0</span>)<span class="question-mark">?</span>;
+        </span><span class="kw">let </span>value = realloc_block.insert_value(context, location, entry.arg(<span class="number">0</span>)<span class="question-mark">?</span>, ptr, <span class="number">0</span>)<span class="question-mark">?</span>;
         <span class="kw">let </span>value = realloc_block.insert_value(context, location, value, new_capacity, <span class="number">3</span>)<span class="question-mark">?</span>;
 
         realloc_block.append_operation(cf::br(append_block, <span class="kw-2">&amp;</span>[value], location));
     }
 
     {
-        <span class="kw">let </span>ptr = append_block.extract_value(
-            context,
-            location,
-            append_block.argument(<span class="number">0</span>)<span class="question-mark">?</span>.into(),
-            ptr_ty,
-            <span class="number">0</span>,
-        )<span class="question-mark">?</span>;
-        <span class="kw">let </span>array_end = append_block.extract_value(
-            context,
-            location,
-            append_block.argument(<span class="number">0</span>)<span class="question-mark">?</span>.into(),
-            len_ty,
-            <span class="number">2</span>,
-        )<span class="question-mark">?</span>;
+        <span class="kw">let </span>ptr = append_block.extract_value(context, location, append_block.arg(<span class="number">0</span>)<span class="question-mark">?</span>, ptr_ty, <span class="number">0</span>)<span class="question-mark">?</span>;
+        <span class="kw">let </span>array_end =
+            append_block.extract_value(context, location, append_block.arg(<span class="number">0</span>)<span class="question-mark">?</span>, len_ty, <span class="number">2</span>)<span class="question-mark">?</span>;
 
-        <span class="kw">let </span>offset = append_block.append_op_result(arith::extui(
-            array_end,
-            IntegerType::new(context, <span class="number">64</span>).into(),
-            location,
-        ))<span class="question-mark">?</span>;
-        <span class="kw">let </span>offset = append_block.append_op_result(arith::muli(offset, elem_stride, location))<span class="question-mark">?</span>;
+        <span class="kw">let </span>offset =
+            append_block.extui(array_end, IntegerType::new(context, <span class="number">64</span>).into(), location)<span class="question-mark">?</span>;
+        <span class="kw">let </span>offset = append_block.muli(offset, elem_stride, location)<span class="question-mark">?</span>;
         <span class="kw">let </span>ptr = append_block.append_op_result(llvm::get_element_ptr_dynamic(
             context,
             ptr,
@@ -2686,16 +2819,11 @@
             location,
         ))<span class="question-mark">?</span>;
 
-        append_block.store(context, location, ptr, entry.argument(<span class="number">1</span>)<span class="question-mark">?</span>.into())<span class="question-mark">?</span>;
+        append_block.store(context, location, ptr, entry.arg(<span class="number">1</span>)<span class="question-mark">?</span>)<span class="question-mark">?</span>;
 
-        <span class="kw">let </span>array_len = append_block.append_op_result(arith::addi(array_end, k1, location))<span class="question-mark">?</span>;
-        <span class="kw">let </span>value = append_block.insert_value(
-            context,
-            location,
-            append_block.argument(<span class="number">0</span>)<span class="question-mark">?</span>.into(),
-            array_len,
-            <span class="number">2</span>,
-        )<span class="question-mark">?</span>;
+        <span class="kw">let </span>array_len = append_block.addi(array_end, k1, location)<span class="question-mark">?</span>;
+        <span class="kw">let </span>value =
+            append_block.insert_value(context, location, append_block.arg(<span class="number">0</span>)<span class="question-mark">?</span>, array_len, <span class="number">2</span>)<span class="question-mark">?</span>;
 
         append_block.append_operation(helper.br(<span class="number">0</span>, <span class="kw-2">&amp;</span>[value], location));
     }
@@ -2722,12 +2850,27 @@
     )<span class="question-mark">?</span>;
 
     <span class="kw">let </span>len_ty = <span class="kw">crate</span>::ffi::get_struct_field_type_at(<span class="kw-2">&amp;</span>array_ty, <span class="number">1</span>);
-    <span class="kw">let </span>array_value = entry.argument(<span class="number">0</span>)<span class="question-mark">?</span>.into();
+    <span class="kw">let </span>array_value = entry.arg(<span class="number">0</span>)<span class="question-mark">?</span>;
 
     <span class="kw">let </span>array_start = entry.extract_value(context, location, array_value, len_ty, <span class="number">1</span>)<span class="question-mark">?</span>;
     <span class="kw">let </span>array_end = entry.extract_value(context, location, array_value, len_ty, <span class="number">2</span>)<span class="question-mark">?</span>;
 
     <span class="kw">let </span>array_len = entry.append_op_result(arith::subi(array_end, array_start, location))<span class="question-mark">?</span>;
+
+    <span class="kw">match </span>metadata.get::&lt;DropOverridesMeta&gt;() {
+        <span class="prelude-val">Some</span>(drop_overrides_meta)
+            <span class="kw">if </span>drop_overrides_meta.is_overriden(<span class="kw-2">&amp;</span>info.signature.param_signatures[<span class="number">0</span>].ty) =&gt;
+        {
+            drop_overrides_meta.invoke_override(
+                context,
+                entry,
+                location,
+                <span class="kw-2">&amp;</span>info.signature.param_signatures[<span class="number">0</span>].ty,
+                entry.arg(<span class="number">0</span>)<span class="question-mark">?</span>,
+            )<span class="question-mark">?</span>;
+        }
+        <span class="kw">_ </span>=&gt; {}
+    }
 
     entry.append_operation(helper.br(<span class="number">0</span>, <span class="kw-2">&amp;</span>[array_len], location));
     <span class="prelude-val">Ok</span>(())
@@ -2747,8 +2890,7 @@
         metadata.insert(ReallocBindingsMeta::new(context, helper));
     }
 
-    <span class="kw">let </span>range_check =
-        <span class="kw">super</span>::increment_builtin_counter(context, entry, location, entry.argument(<span class="number">0</span>)<span class="question-mark">?</span>.into())<span class="question-mark">?</span>;
+    <span class="kw">let </span>range_check = <span class="kw">super</span>::increment_builtin_counter(context, entry, location, entry.arg(<span class="number">0</span>)<span class="question-mark">?</span>)<span class="question-mark">?</span>;
 
     <span class="kw">let </span>array_ty = registry.build_type(
         context,
@@ -2761,24 +2903,19 @@
     <span class="kw">let </span>elem_ty = registry.get_type(<span class="kw-2">&amp;</span>info.ty)<span class="question-mark">?</span>;
     <span class="kw">let </span>elem_layout = elem_ty.layout(registry)<span class="question-mark">?</span>;
     <span class="kw">let </span>elem_stride = elem_layout.pad_to_align().size();
+    <span class="kw">let </span>elem_ty = elem_ty.build(context, helper, registry, metadata, <span class="kw-2">&amp;</span>info.ty)<span class="question-mark">?</span>;
 
     <span class="kw">let </span>ptr_ty = <span class="kw">crate</span>::ffi::get_struct_field_type_at(<span class="kw-2">&amp;</span>array_ty, <span class="number">0</span>);
     <span class="kw">let </span>len_ty = <span class="kw">crate</span>::ffi::get_struct_field_type_at(<span class="kw-2">&amp;</span>array_ty, <span class="number">1</span>);
 
-    <span class="kw">let </span>value = entry.argument(<span class="number">1</span>)<span class="question-mark">?</span>.into();
-    <span class="kw">let </span>index = entry.argument(<span class="number">2</span>)<span class="question-mark">?</span>.into();
+    <span class="kw">let </span>value = entry.arg(<span class="number">1</span>)<span class="question-mark">?</span>;
+    <span class="kw">let </span>index = entry.arg(<span class="number">2</span>)<span class="question-mark">?</span>;
 
     <span class="kw">let </span>array_start = entry.extract_value(context, location, value, len_ty, <span class="number">1</span>)<span class="question-mark">?</span>;
     <span class="kw">let </span>array_end = entry.extract_value(context, location, value, len_ty, <span class="number">2</span>)<span class="question-mark">?</span>;
 
     <span class="kw">let </span>array_len = entry.append_op_result(arith::subi(array_end, array_start, location))<span class="question-mark">?</span>;
-    <span class="kw">let </span>is_valid = entry.append_op_result(arith::cmpi(
-        context,
-        CmpiPredicate::Ult,
-        index,
-        array_len,
-        location,
-    ))<span class="question-mark">?</span>;
+    <span class="kw">let </span>is_valid = entry.cmpi(context, CmpiPredicate::Ult, index, array_len, location)<span class="question-mark">?</span>;
 
     <span class="kw">let </span>valid_block = helper.append_block(Block::new(<span class="kw-2">&amp;</span>[]));
     <span class="kw">let </span>error_block = helper.append_block(Block::new(<span class="kw-2">&amp;</span>[]));
@@ -2795,32 +2932,23 @@
     {
         <span class="kw">let </span>ptr = valid_block.extract_value(context, location, value, ptr_ty, <span class="number">0</span>)<span class="question-mark">?</span>;
 
+        <span class="kw">let </span>array_start =
+            valid_block.extui(array_start, IntegerType::new(context, <span class="number">64</span>).into(), location)<span class="question-mark">?</span>;
         <span class="kw">let </span>index = {
-            <span class="kw">let </span>array_start = valid_block.append_op_result(arith::extui(
-                array_start,
-                IntegerType::new(context, <span class="number">64</span>).into(),
-                location,
-            ))<span class="question-mark">?</span>;
-            <span class="kw">let </span>index = valid_block.append_op_result(arith::extui(
-                index,
-                IntegerType::new(context, <span class="number">64</span>).into(),
-                location,
-            ))<span class="question-mark">?</span>;
-            valid_block.append_op_result(arith::addi(array_start, index, location))<span class="question-mark">?
+            <span class="kw">let </span>index = valid_block.extui(index, IntegerType::new(context, <span class="number">64</span>).into(), location)<span class="question-mark">?</span>;
+            valid_block.addi(array_start, index, location)<span class="question-mark">?
         </span>};
 
         <span class="kw">let </span>elem_stride = valid_block.const_int(context, location, elem_stride, <span class="number">64</span>)<span class="question-mark">?</span>;
-        <span class="kw">let </span>elem_offset =
-            valid_block.append_op_result(arith::muli(elem_stride, index, location))<span class="question-mark">?</span>;
+        <span class="kw">let </span>elem_offset = valid_block.muli(elem_stride, index, location)<span class="question-mark">?</span>;
 
-        <span class="kw">let </span>elem_ptr = valid_block.append_op_result(llvm::get_element_ptr_dynamic(
+        <span class="kw">let </span>elem_ptr = valid_block.gep(
             context,
-            ptr,
-            <span class="kw-2">&amp;</span>[elem_offset],
-            IntegerType::new(context, <span class="number">8</span>).into(),
-            llvm::r#type::pointer(context, <span class="number">0</span>),
             location,
-        ))<span class="question-mark">?</span>;
+            ptr,
+            <span class="kw-2">&amp;</span>[GepIndex::Value(elem_offset)],
+            IntegerType::new(context, <span class="number">8</span>).into(),
+        )<span class="question-mark">?</span>;
 
         <span class="kw">let </span>elem_size = valid_block.const_int(context, location, elem_layout.size(), <span class="number">64</span>)<span class="question-mark">?</span>;
 
@@ -2829,7 +2957,7 @@
         )<span class="question-mark">?</span>;
         <span class="kw">let </span>target_ptr = valid_block.append_op_result(ReallocBindingsMeta::realloc(
             context, target_ptr, elem_size, location,
-        ))<span class="question-mark">?</span>;
+        )<span class="question-mark">?</span>)<span class="question-mark">?</span>;
         assert_nonnull(
             context,
             valid_block,
@@ -2838,13 +2966,98 @@
             <span class="string">"realloc returned nullptr"</span>,
         )<span class="question-mark">?</span>;
 
-        <span class="comment">// TODO: Support clone-only types (those that are not copy).
+        <span class="comment">// There's no need to clone it since we're moving it out of the array.
         </span>valid_block.memcpy(context, location, elem_ptr, target_ptr, elem_size);
+
+        <span class="kw">match </span>metadata.get::&lt;DropOverridesMeta&gt;() {
+            <span class="prelude-val">Some</span>(drop_overrides_meta) <span class="kw">if </span>drop_overrides_meta.is_overriden(<span class="kw-2">&amp;</span>info.ty) =&gt; {
+                <span class="kw">let </span>array_end =
+                    valid_block.extui(array_end, IntegerType::new(context, <span class="number">64</span>).into(), location)<span class="question-mark">?</span>;
+
+                <span class="kw">let </span>array_start = valid_block.muli(array_start, elem_stride, location)<span class="question-mark">?</span>;
+                <span class="kw">let </span>array_end = valid_block.muli(array_end, elem_stride, location)<span class="question-mark">?</span>;
+
+                valid_block.append_operation(scf::r#for(
+                    array_start,
+                    array_end,
+                    elem_stride,
+                    {
+                        <span class="kw">let </span>region = Region::new();
+                        <span class="kw">let </span>block = region.append_block(Block::new(<span class="kw-2">&amp;</span>[(
+                            IntegerType::new(context, <span class="number">64</span>).into(),
+                            location,
+                        )]));
+
+                        <span class="kw">let </span>value_ptr = block.append_op_result(llvm::get_element_ptr_dynamic(
+                            context,
+                            ptr,
+                            <span class="kw-2">&amp;</span>[block.arg(<span class="number">0</span>)<span class="question-mark">?</span>],
+                            IntegerType::new(context, <span class="number">8</span>).into(),
+                            llvm::r#type::pointer(context, <span class="number">0</span>),
+                            location,
+                        ))<span class="question-mark">?</span>;
+
+                        <span class="kw">let </span>is_target_element = block.append_op_result(
+                            ods::llvm::icmp(
+                                context,
+                                IntegerType::new(context, <span class="number">1</span>).into(),
+                                value_ptr,
+                                elem_ptr,
+                                IntegerAttribute::new(IntegerType::new(context, <span class="number">64</span>).into(), <span class="number">0</span>)
+                                    .into(),
+                                location,
+                            )
+                            .into(),
+                        )<span class="question-mark">?</span>;
+                        block.append_operation(scf::r#if(
+                            is_target_element,
+                            <span class="kw-2">&amp;</span>[],
+                            {
+                                <span class="kw">let </span>region = Region::new();
+                                <span class="kw">let </span>block = region.append_block(Block::new(<span class="kw-2">&amp;</span>[]));
+
+                                block.append_operation(scf::r#yield(<span class="kw-2">&amp;</span>[], location));
+                                region
+                            },
+                            {
+                                <span class="kw">let </span>region = Region::new();
+                                <span class="kw">let </span>block = region.append_block(Block::new(<span class="kw-2">&amp;</span>[]));
+
+                                <span class="kw">let </span>value = block.load(context, location, value_ptr, elem_ty)<span class="question-mark">?</span>;
+                                drop_overrides_meta
+                                    .invoke_override(context, <span class="kw-2">&amp;</span>block, location, <span class="kw-2">&amp;</span>info.ty, value)<span class="question-mark">?</span>;
+
+                                block.append_operation(scf::r#yield(<span class="kw-2">&amp;</span>[], location));
+                                region
+                            },
+                            location,
+                        ));
+
+                        block.append_operation(scf::r#yield(<span class="kw-2">&amp;</span>[], location));
+                        region
+                    },
+                    location,
+                ));
+            }
+            <span class="kw">_ </span>=&gt; {}
+        }
+        valid_block.append_operation(ReallocBindingsMeta::free(context, ptr, location)<span class="question-mark">?</span>);
 
         valid_block.append_operation(helper.br(<span class="number">0</span>, <span class="kw-2">&amp;</span>[range_check, target_ptr], location));
     }
 
+    metadata
+        .get::&lt;DropOverridesMeta&gt;()
+        .ok_or(Error::MissingMetadata)<span class="question-mark">?
+        </span>.invoke_override(
+            context,
+            error_block,
+            location,
+            <span class="kw-2">&amp;</span>info.param_signatures()[<span class="number">1</span>].ty,
+            value,
+        )<span class="question-mark">?</span>;
     error_block.append_operation(helper.br(<span class="number">1</span>, <span class="kw-2">&amp;</span>[range_check], location));
+
     <span class="prelude-val">Ok</span>(())
 }
 
@@ -2876,18 +3089,12 @@
     <span class="kw">let </span>ptr_ty = <span class="kw">crate</span>::ffi::get_struct_field_type_at(<span class="kw-2">&amp;</span>array_ty, <span class="number">0</span>);
     <span class="kw">let </span>len_ty = <span class="kw">crate</span>::ffi::get_struct_field_type_at(<span class="kw-2">&amp;</span>array_ty, <span class="number">1</span>);
 
-    <span class="kw">let </span>value = entry.argument(<span class="number">0</span>)<span class="question-mark">?</span>.into();
+    <span class="kw">let </span>value = entry.arg(<span class="number">0</span>)<span class="question-mark">?</span>;
 
     <span class="kw">let </span>array_start = entry.extract_value(context, location, value, len_ty, <span class="number">1</span>)<span class="question-mark">?</span>;
     <span class="kw">let </span>array_end = entry.extract_value(context, location, value, len_ty, <span class="number">2</span>)<span class="question-mark">?</span>;
 
-    <span class="kw">let </span>is_empty = entry.append_op_result(arith::cmpi(
-        context,
-        CmpiPredicate::Eq,
-        array_start,
-        array_end,
-        location,
-    ))<span class="question-mark">?</span>;
+    <span class="kw">let </span>is_empty = entry.cmpi(context, CmpiPredicate::Eq, array_start, array_end, location)<span class="question-mark">?</span>;
 
     <span class="kw">let </span>valid_block = helper.append_block(Block::new(<span class="kw-2">&amp;</span>[]));
     <span class="kw">let </span>empty_block = helper.append_block(Block::new(<span class="kw-2">&amp;</span>[]));
@@ -2905,13 +3112,9 @@
         <span class="kw">let </span>ptr = valid_block.extract_value(context, location, value, ptr_ty, <span class="number">0</span>)<span class="question-mark">?</span>;
 
         <span class="kw">let </span>elem_size = valid_block.const_int(context, location, elem_layout.size(), <span class="number">64</span>)<span class="question-mark">?</span>;
-        <span class="kw">let </span>elem_offset = valid_block.append_op_result(arith::extui(
-            array_start,
-            IntegerType::new(context, <span class="number">64</span>).into(),
-            location,
-        ))<span class="question-mark">?</span>;
         <span class="kw">let </span>elem_offset =
-            valid_block.append_op_result(arith::muli(elem_offset, elem_size, location))<span class="question-mark">?</span>;
+            valid_block.extui(array_start, IntegerType::new(context, <span class="number">64</span>).into(), location)<span class="question-mark">?</span>;
+        <span class="kw">let </span>elem_offset = valid_block.muli(elem_offset, elem_size, location)<span class="question-mark">?</span>;
         <span class="kw">let </span>ptr = valid_block.append_op_result(llvm::get_element_ptr_dynamic(
             context,
             ptr,
@@ -2926,7 +3129,7 @@
         )<span class="question-mark">?</span>;
         <span class="kw">let </span>target_ptr = valid_block.append_op_result(ReallocBindingsMeta::realloc(
             context, target_ptr, elem_size, location,
-        ))<span class="question-mark">?</span>;
+        )<span class="question-mark">?</span>)<span class="question-mark">?</span>;
         assert_nonnull(
             context,
             valid_block,
@@ -2938,7 +3141,7 @@
         valid_block.memcpy(context, location, ptr, target_ptr, elem_size);
 
         <span class="kw">let </span>k1 = valid_block.const_int(context, location, <span class="number">1</span>, <span class="number">32</span>)<span class="question-mark">?</span>;
-        <span class="kw">let </span>new_start = valid_block.append_op_result(arith::addi(array_start, k1, location))<span class="question-mark">?</span>;
+        <span class="kw">let </span>new_start = valid_block.addi(array_start, k1, location)<span class="question-mark">?</span>;
         <span class="kw">let </span>value = valid_block.insert_value(context, location, value, new_start, <span class="number">1</span>)<span class="question-mark">?</span>;
 
         valid_block.append_operation(helper.br(<span class="number">0</span>, <span class="kw-2">&amp;</span>[value, target_ptr], location));
@@ -2958,8 +3161,95 @@
     metadata: <span class="kw-2">&amp;mut </span>MetadataStorage,
     info: <span class="kw-2">&amp;</span>SignatureAndTypeConcreteLibfunc,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
-    <span class="comment">// Equivalent to `array_pop_front_consume` for our purposes.
-    </span>build_pop_front(context, registry, entry, location, helper, metadata, info)
+    <span class="kw">if </span>metadata.get::&lt;ReallocBindingsMeta&gt;().is_none() {
+        metadata.insert(ReallocBindingsMeta::new(context, helper));
+    }
+
+    <span class="kw">let </span>array_ty = registry.build_type(
+        context,
+        helper,
+        registry,
+        metadata,
+        <span class="kw-2">&amp;</span>info.param_signatures()[<span class="number">0</span>].ty,
+    )<span class="question-mark">?</span>;
+
+    <span class="kw">let </span>elem_ty = registry.get_type(<span class="kw-2">&amp;</span>info.ty)<span class="question-mark">?</span>;
+    <span class="kw">let </span>elem_layout = elem_ty.layout(registry)<span class="question-mark">?</span>;
+
+    <span class="kw">let </span>ptr_ty = <span class="kw">crate</span>::ffi::get_struct_field_type_at(<span class="kw-2">&amp;</span>array_ty, <span class="number">0</span>);
+    <span class="kw">let </span>len_ty = <span class="kw">crate</span>::ffi::get_struct_field_type_at(<span class="kw-2">&amp;</span>array_ty, <span class="number">1</span>);
+
+    <span class="kw">let </span>value = entry.arg(<span class="number">0</span>)<span class="question-mark">?</span>;
+
+    <span class="kw">let </span>array_start = entry.extract_value(context, location, value, len_ty, <span class="number">1</span>)<span class="question-mark">?</span>;
+    <span class="kw">let </span>array_end = entry.extract_value(context, location, value, len_ty, <span class="number">2</span>)<span class="question-mark">?</span>;
+
+    <span class="kw">let </span>is_empty = entry.cmpi(context, CmpiPredicate::Eq, array_start, array_end, location)<span class="question-mark">?</span>;
+
+    <span class="kw">let </span>valid_block = helper.append_block(Block::new(<span class="kw-2">&amp;</span>[]));
+    <span class="kw">let </span>empty_block = helper.append_block(Block::new(<span class="kw-2">&amp;</span>[]));
+    entry.append_operation(cf::cond_br(
+        context,
+        is_empty,
+        empty_block,
+        valid_block,
+        <span class="kw-2">&amp;</span>[],
+        <span class="kw-2">&amp;</span>[],
+        location,
+    ));
+
+    {
+        <span class="kw">let </span>ptr = valid_block.extract_value(context, location, value, ptr_ty, <span class="number">0</span>)<span class="question-mark">?</span>;
+
+        <span class="kw">let </span>elem_size = valid_block.const_int(context, location, elem_layout.size(), <span class="number">64</span>)<span class="question-mark">?</span>;
+        <span class="kw">let </span>elem_offset =
+            valid_block.extui(array_start, IntegerType::new(context, <span class="number">64</span>).into(), location)<span class="question-mark">?</span>;
+        <span class="kw">let </span>elem_offset = valid_block.muli(elem_offset, elem_size, location)<span class="question-mark">?</span>;
+        <span class="kw">let </span>ptr = valid_block.append_op_result(llvm::get_element_ptr_dynamic(
+            context,
+            ptr,
+            <span class="kw-2">&amp;</span>[elem_offset],
+            IntegerType::new(context, <span class="number">8</span>).into(),
+            llvm::r#type::pointer(context, <span class="number">0</span>),
+            location,
+        ))<span class="question-mark">?</span>;
+
+        <span class="kw">let </span>target_ptr = valid_block.append_op_result(
+            ods::llvm::mlir_zero(context, pointer(context, <span class="number">0</span>), location).into(),
+        )<span class="question-mark">?</span>;
+        <span class="kw">let </span>target_ptr = valid_block.append_op_result(ReallocBindingsMeta::realloc(
+            context, target_ptr, elem_size, location,
+        )<span class="question-mark">?</span>)<span class="question-mark">?</span>;
+        assert_nonnull(
+            context,
+            valid_block,
+            location,
+            target_ptr,
+            <span class="string">"realloc returned nullptr"</span>,
+        )<span class="question-mark">?</span>;
+
+        valid_block.memcpy(context, location, ptr, target_ptr, elem_size);
+
+        <span class="kw">let </span>k1 = valid_block.const_int(context, location, <span class="number">1</span>, <span class="number">32</span>)<span class="question-mark">?</span>;
+        <span class="kw">let </span>new_start = valid_block.addi(array_start, k1, location)<span class="question-mark">?</span>;
+        <span class="kw">let </span>value = valid_block.insert_value(context, location, value, new_start, <span class="number">1</span>)<span class="question-mark">?</span>;
+
+        valid_block.append_operation(helper.br(<span class="number">0</span>, <span class="kw-2">&amp;</span>[value, target_ptr], location));
+    }
+
+    metadata
+        .get::&lt;DropOverridesMeta&gt;()
+        .ok_or(Error::MissingMetadata)<span class="question-mark">?
+        </span>.invoke_override(
+            context,
+            empty_block,
+            location,
+            <span class="kw-2">&amp;</span>info.param_signatures()[<span class="number">0</span>].ty,
+            value,
+        )<span class="question-mark">?</span>;
+    empty_block.append_operation(helper.br(<span class="number">1</span>, <span class="kw-2">&amp;</span>[], location));
+
+    <span class="prelude-val">Ok</span>(())
 }
 
 <span class="doccomment">/// Generate MLIR operations for the `array_snapshot_pop_front` libfunc.
@@ -3003,17 +3293,11 @@
     <span class="kw">let </span>ptr_ty = <span class="kw">crate</span>::ffi::get_struct_field_type_at(<span class="kw-2">&amp;</span>array_ty, <span class="number">0</span>);
     <span class="kw">let </span>len_ty = <span class="kw">crate</span>::ffi::get_struct_field_type_at(<span class="kw-2">&amp;</span>array_ty, <span class="number">1</span>);
 
-    <span class="kw">let </span>value = entry.argument(<span class="number">0</span>)<span class="question-mark">?</span>.into();
+    <span class="kw">let </span>value = entry.arg(<span class="number">0</span>)<span class="question-mark">?</span>;
 
     <span class="kw">let </span>array_start = entry.extract_value(context, location, value, len_ty, <span class="number">1</span>)<span class="question-mark">?</span>;
     <span class="kw">let </span>array_end = entry.extract_value(context, location, value, len_ty, <span class="number">2</span>)<span class="question-mark">?</span>;
-    <span class="kw">let </span>is_empty = entry.append_op_result(arith::cmpi(
-        context,
-        CmpiPredicate::Eq,
-        array_start,
-        array_end,
-        location,
-    ))<span class="question-mark">?</span>;
+    <span class="kw">let </span>is_empty = entry.cmpi(context, CmpiPredicate::Eq, array_start, array_end, location)<span class="question-mark">?</span>;
 
     <span class="kw">let </span>valid_block = helper.append_block(Block::new(<span class="kw-2">&amp;</span>[]));
     <span class="kw">let </span>empty_block = helper.append_block(Block::new(<span class="kw-2">&amp;</span>[]));
@@ -3034,13 +3318,9 @@
         <span class="kw">let </span>ptr = valid_block.extract_value(context, location, value, ptr_ty, <span class="number">0</span>)<span class="question-mark">?</span>;
 
         <span class="kw">let </span>elem_size = valid_block.const_int(context, location, elem_layout.size(), <span class="number">64</span>)<span class="question-mark">?</span>;
-        <span class="kw">let </span>elem_offset = valid_block.append_op_result(arith::extui(
-            new_end,
-            IntegerType::new(context, <span class="number">64</span>).into(),
-            location,
-        ))<span class="question-mark">?</span>;
         <span class="kw">let </span>elem_offset =
-            valid_block.append_op_result(arith::muli(elem_offset, elem_size, location))<span class="question-mark">?</span>;
+            valid_block.extui(new_end, IntegerType::new(context, <span class="number">64</span>).into(), location)<span class="question-mark">?</span>;
+        <span class="kw">let </span>elem_offset = valid_block.muli(elem_offset, elem_size, location)<span class="question-mark">?</span>;
         <span class="kw">let </span>ptr = valid_block.append_op_result(llvm::get_element_ptr_dynamic(
             context,
             ptr,
@@ -3055,7 +3335,7 @@
         )<span class="question-mark">?</span>;
         <span class="kw">let </span>target_ptr = valid_block.append_op_result(ReallocBindingsMeta::realloc(
             context, target_ptr, elem_size, location,
-        ))<span class="question-mark">?</span>;
+        )<span class="question-mark">?</span>)<span class="question-mark">?</span>;
         assert_nonnull(
             context,
             valid_block,
@@ -3088,7 +3368,7 @@
         metadata.insert(ReallocBindingsMeta::new(context, helper));
     }
 
-    <span class="kw">let </span>range_check = entry.argument(<span class="number">0</span>)<span class="question-mark">?</span>.into();
+    <span class="kw">let </span>range_check = entry.arg(<span class="number">0</span>)<span class="question-mark">?</span>;
 
     <span class="comment">// Get type information
 
@@ -3115,7 +3395,7 @@
 
     <span class="comment">// Get array information
 
-    </span><span class="kw">let </span>array = entry.argument(<span class="number">1</span>)<span class="question-mark">?</span>.into();
+    </span><span class="kw">let </span>array = entry.arg(<span class="number">1</span>)<span class="question-mark">?</span>;
     <span class="kw">let </span>array_ptr = entry.extract_value(context, location, array, array_ptr_ty, <span class="number">0</span>)<span class="question-mark">?</span>;
     <span class="kw">let </span>array_start = entry.extract_value(context, location, array, array_start_ty, <span class="number">1</span>)<span class="question-mark">?</span>;
     <span class="kw">let </span>array_end = entry.extract_value(context, location, array, array_end_ty, <span class="number">2</span>)<span class="question-mark">?</span>;
@@ -3127,13 +3407,13 @@
 
     </span><span class="kw">let </span>array_len = entry.append_op_result(arith::subi(array_end, array_start, location))<span class="question-mark">?</span>;
     <span class="kw">let </span>popped_len_value = entry.const_int(context, location, popped_len, <span class="number">32</span>)<span class="question-mark">?</span>;
-    <span class="kw">let </span>is_valid = entry.append_op_result(arith::cmpi(
+    <span class="kw">let </span>is_valid = entry.cmpi(
         context,
         CmpiPredicate::Uge,
         array_len,
         popped_len_value,
         location,
-    ))<span class="question-mark">?</span>;
+    )<span class="question-mark">?</span>;
 
     <span class="kw">let </span>valid_block = helper.append_block(Block::new(<span class="kw-2">&amp;</span>[]));
     <span class="kw">let </span>invalid_block = helper.append_block(Block::new(<span class="kw-2">&amp;</span>[]));
@@ -3176,7 +3456,7 @@
                 null_ptr,
                 popped_size_value,
                 location,
-            ))<span class="question-mark">?
+            )<span class="question-mark">?</span>)<span class="question-mark">?
         </span>};
 
         valid_block.memcpy(context, location, popped_ptr, return_ptr, popped_size_value);
@@ -3184,11 +3464,7 @@
         <span class="comment">// Update array start (removing popped elements)
 
         </span><span class="kw">let </span>array = {
-            <span class="kw">let </span>new_array_start = valid_block.append_op_result(arith::addi(
-                array_start,
-                popped_len_value,
-                location,
-            ))<span class="question-mark">?</span>;
+            <span class="kw">let </span>new_array_start = valid_block.addi(array_start, popped_len_value, location)<span class="question-mark">?</span>;
 
             valid_block.insert_value(context, location, array, new_array_start, <span class="number">1</span>)<span class="question-mark">?
         </span>};
@@ -3214,7 +3490,7 @@
         metadata.insert(ReallocBindingsMeta::new(context, helper));
     }
 
-    <span class="kw">let </span>range_check = entry.argument(<span class="number">0</span>)<span class="question-mark">?</span>.into();
+    <span class="kw">let </span>range_check = entry.arg(<span class="number">0</span>)<span class="question-mark">?</span>;
 
     <span class="comment">// Get type information
 
@@ -3241,7 +3517,7 @@
 
     <span class="comment">// Get array information
 
-    </span><span class="kw">let </span>array = entry.argument(<span class="number">1</span>)<span class="question-mark">?</span>.into();
+    </span><span class="kw">let </span>array = entry.arg(<span class="number">1</span>)<span class="question-mark">?</span>;
     <span class="kw">let </span>array_ptr = entry.extract_value(context, location, array, array_ptr_ty, <span class="number">0</span>)<span class="question-mark">?</span>;
     <span class="kw">let </span>array_start = entry.extract_value(context, location, array, array_start_ty, <span class="number">1</span>)<span class="question-mark">?</span>;
     <span class="kw">let </span>array_end = entry.extract_value(context, location, array, array_end_ty, <span class="number">2</span>)<span class="question-mark">?</span>;
@@ -3253,13 +3529,13 @@
 
     </span><span class="kw">let </span>array_len = entry.append_op_result(arith::subi(array_end, array_start, location))<span class="question-mark">?</span>;
     <span class="kw">let </span>popped_len_value = entry.const_int(context, location, popped_len, <span class="number">32</span>)<span class="question-mark">?</span>;
-    <span class="kw">let </span>is_valid = entry.append_op_result(arith::cmpi(
+    <span class="kw">let </span>is_valid = entry.cmpi(
         context,
         CmpiPredicate::Uge,
         array_len,
         popped_len_value,
         location,
-    ))<span class="question-mark">?</span>;
+    )<span class="question-mark">?</span>;
 
     <span class="kw">let </span>valid_block = helper.append_block(Block::new(<span class="kw-2">&amp;</span>[]));
     <span class="kw">let </span>invalid_block = helper.append_block(Block::new(<span class="kw-2">&amp;</span>[]));
@@ -3305,7 +3581,7 @@
                 null_ptr,
                 popped_size_value,
                 location,
-            ))<span class="question-mark">?
+            )<span class="question-mark">?</span>)<span class="question-mark">?
         </span>};
 
         valid_block.memcpy(context, location, popped_ptr, return_ptr, popped_size_value);
@@ -3337,60 +3613,38 @@
     metadata: <span class="kw-2">&amp;mut </span>MetadataStorage,
     info: <span class="kw-2">&amp;</span>SignatureAndTypeConcreteLibfunc,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
-    <span class="kw">if </span>metadata.get::&lt;ReallocBindingsMeta&gt;().is_none() {
-        metadata.insert(ReallocBindingsMeta::new(context, helper));
-    }
+    <span class="kw">let </span>range_check = <span class="kw">super</span>::increment_builtin_counter(context, entry, location, entry.arg(<span class="number">0</span>)<span class="question-mark">?</span>)<span class="question-mark">?</span>;
 
-    <span class="kw">let </span>range_check =
-        <span class="kw">super</span>::increment_builtin_counter(context, entry, location, entry.argument(<span class="number">0</span>)<span class="question-mark">?</span>.into())<span class="question-mark">?</span>;
-
-    <span class="kw">let </span>array_ty = registry.build_type(
-        context,
-        helper,
-        registry,
-        metadata,
-        <span class="kw-2">&amp;</span>info.param_signatures()[<span class="number">1</span>].ty,
-    )<span class="question-mark">?</span>;
-
-    <span class="kw">let </span>len_ty = <span class="kw">crate</span>::ffi::get_struct_field_type_at(<span class="kw-2">&amp;</span>array_ty, <span class="number">1</span>);
+    <span class="kw">let </span>len_ty = IntegerType::new(context, <span class="number">32</span>).into();
 
     <span class="kw">let </span>elem_ty = registry.get_type(<span class="kw-2">&amp;</span>info.ty)<span class="question-mark">?</span>;
     <span class="kw">let </span>elem_layout = elem_ty.layout(registry)<span class="question-mark">?</span>;
 
-    <span class="kw">let </span>slice_since = entry.argument(<span class="number">2</span>)<span class="question-mark">?</span>.into();
-    <span class="kw">let </span>slice_length = entry.argument(<span class="number">3</span>)<span class="question-mark">?</span>.into();
+    <span class="kw">let </span>array_start = entry.extract_value(context, location, entry.arg(<span class="number">1</span>)<span class="question-mark">?</span>, len_ty, <span class="number">1</span>)<span class="question-mark">?</span>;
+    <span class="kw">let </span>array_end = entry.extract_value(context, location, entry.arg(<span class="number">1</span>)<span class="question-mark">?</span>, len_ty, <span class="number">2</span>)<span class="question-mark">?</span>;
 
-    <span class="kw">let </span>slice_until = entry.append_op_result(arith::addi(slice_since, slice_length, location))<span class="question-mark">?</span>;
+    <span class="kw">let </span>slice_start = entry.arg(<span class="number">2</span>)<span class="question-mark">?</span>;
+    <span class="kw">let </span>slice_len = entry.arg(<span class="number">3</span>)<span class="question-mark">?</span>;
+    <span class="kw">let </span>slice_end = entry.addi(slice_start, slice_len, location)<span class="question-mark">?</span>;
 
-    <span class="kw">let </span>array_start =
-        entry.extract_value(context, location, entry.argument(<span class="number">1</span>)<span class="question-mark">?</span>.into(), len_ty, <span class="number">1</span>)<span class="question-mark">?</span>;
-    <span class="kw">let </span>array_end = entry.extract_value(context, location, entry.argument(<span class="number">1</span>)<span class="question-mark">?</span>.into(), len_ty, <span class="number">2</span>)<span class="question-mark">?</span>;
-
-    <span class="kw">let </span>slice_since = entry.append_op_result(arith::addi(slice_since, array_start, location))<span class="question-mark">?</span>;
-    <span class="kw">let </span>slice_until = entry.append_op_result(arith::addi(slice_until, array_start, location))<span class="question-mark">?</span>;
-
-    <span class="kw">let </span>lhs_bound = entry.append_op_result(arith::cmpi(
+    <span class="kw">let </span>slice_start = entry.addi(array_start, slice_start, location)<span class="question-mark">?</span>;
+    <span class="kw">let </span>slice_end = entry.addi(array_start, slice_end, location)<span class="question-mark">?</span>;
+    <span class="kw">let </span>lhs_bound = entry.cmpi(
         context,
         CmpiPredicate::Uge,
-        slice_since,
+        slice_start,
         array_start,
         location,
-    ))<span class="question-mark">?</span>;
-    <span class="kw">let </span>rhs_bound = entry.append_op_result(arith::cmpi(
-        context,
-        CmpiPredicate::Ule,
-        slice_until,
-        array_end,
-        location,
-    ))<span class="question-mark">?</span>;
+    )<span class="question-mark">?</span>;
+    <span class="kw">let </span>rhs_bound = entry.cmpi(context, CmpiPredicate::Ule, slice_end, array_end, location)<span class="question-mark">?</span>;
 
-    <span class="kw">let </span>is_fully_contained = entry.append_op_result(arith::andi(lhs_bound, rhs_bound, location))<span class="question-mark">?</span>;
+    <span class="kw">let </span>is_valid = entry.append_op_result(arith::andi(lhs_bound, rhs_bound, location))<span class="question-mark">?</span>;
 
     <span class="kw">let </span>slice_block = helper.append_block(Block::new(<span class="kw-2">&amp;</span>[]));
     <span class="kw">let </span>error_block = helper.append_block(Block::new(<span class="kw-2">&amp;</span>[]));
     entry.append_operation(cf::cond_br(
         context,
-        is_fully_contained,
+        is_valid,
         slice_block,
         error_block,
         <span class="kw-2">&amp;</span>[],
@@ -3399,65 +3653,102 @@
     ));
 
     {
-        <span class="kw">let </span>elem_size =
+        <span class="kw">let </span>elem_ty = elem_ty.build(context, helper, registry, metadata, <span class="kw-2">&amp;</span>info.ty)<span class="question-mark">?</span>;
+
+        <span class="kw">let </span>value = entry.arg(<span class="number">1</span>)<span class="question-mark">?</span>;
+        <span class="kw">let </span>value = slice_block.insert_value(context, location, value, slice_start, <span class="number">1</span>)<span class="question-mark">?</span>;
+        <span class="kw">let </span>value = slice_block.insert_value(context, location, value, slice_end, <span class="number">2</span>)<span class="question-mark">?</span>;
+
+        <span class="kw">let </span>elem_stride =
             slice_block.const_int(context, location, elem_layout.pad_to_align().size(), <span class="number">64</span>)<span class="question-mark">?</span>;
-        <span class="kw">let </span>dst_size = slice_block.append_op_result(arith::extui(
-            slice_length,
-            IntegerType::new(context, <span class="number">64</span>).into(),
+        <span class="kw">let </span>prepare = |value| {
+            <span class="kw">let </span>value = slice_block.extui(value, IntegerType::new(context, <span class="number">64</span>).into(), location)<span class="question-mark">?</span>;
+            slice_block.muli(value, elem_stride, location)
+        };
+
+        <span class="kw">let </span>ptr = slice_block.extract_value(
+            context,
             location,
-        ))<span class="question-mark">?</span>;
-        <span class="kw">let </span>dst_size = slice_block.append_op_result(arith::muli(dst_size, elem_size, location))<span class="question-mark">?</span>;
-
-        <span class="kw">let </span>dst_ptr = slice_block.append_op_result(
-            ods::llvm::mlir_zero(context, pointer(context, <span class="number">0</span>), location).into(),
+            entry.arg(<span class="number">1</span>)<span class="question-mark">?</span>,
+            llvm::r#type::pointer(context, <span class="number">0</span>),
+            <span class="number">0</span>,
         )<span class="question-mark">?</span>;
-        <span class="kw">let </span>dst_ptr = slice_block.append_op_result(ReallocBindingsMeta::realloc(
-            context, dst_ptr, dst_size, location,
-        ))<span class="question-mark">?</span>;
-
-        <span class="comment">// TODO: Find out if we need to clone stuff using the snapshot clone meta.
-        </span><span class="kw">let </span>src_offset = {
-            <span class="kw">let </span>slice_since = slice_block.append_op_result(arith::extui(
-                slice_since,
+        <span class="kw">let </span>make_region = |drop_overrides_meta: <span class="kw-2">&amp;</span>DropOverridesMeta| {
+            <span class="kw">let </span>region = Region::new();
+            <span class="kw">let </span>block = region.append_block(Block::new(<span class="kw-2">&amp;</span>[(
                 IntegerType::new(context, <span class="number">64</span>).into(),
+                location,
+            )]));
+
+            <span class="kw">let </span>value_ptr = block.append_op_result(llvm::get_element_ptr_dynamic(
+                context,
+                ptr,
+                <span class="kw-2">&amp;</span>[block.arg(<span class="number">0</span>)<span class="question-mark">?</span>],
+                IntegerType::new(context, <span class="number">8</span>).into(),
+                llvm::r#type::pointer(context, <span class="number">0</span>),
                 location,
             ))<span class="question-mark">?</span>;
 
-            slice_block.append_op_result(arith::muli(slice_since, elem_size, location))<span class="question-mark">?
-        </span>};
+            <span class="kw">let </span>value = block.load(context, location, value_ptr, elem_ty)<span class="question-mark">?</span>;
+            drop_overrides_meta.invoke_override(context, <span class="kw-2">&amp;</span>block, location, <span class="kw-2">&amp;</span>info.ty, value)<span class="question-mark">?</span>;
 
-        <span class="kw">let </span>src_ptr = slice_block.extract_value(
-            context,
-            location,
-            entry.argument(<span class="number">1</span>)<span class="question-mark">?</span>.into(),
-            pointer(context, <span class="number">0</span>),
-            <span class="number">0</span>,
-        )<span class="question-mark">?</span>;
-        <span class="kw">let </span>src_ptr = slice_block.append_op_result(llvm::get_element_ptr_dynamic(
-            context,
-            src_ptr,
-            <span class="kw-2">&amp;</span>[src_offset],
-            IntegerType::new(context, <span class="number">8</span>).into(),
-            llvm::r#type::pointer(context, <span class="number">0</span>),
-            location,
-        ))<span class="question-mark">?</span>;
+            block.append_operation(scf::r#yield(<span class="kw-2">&amp;</span>[], location));
+            Result::Ok(region)
+        };
 
-        slice_block.memcpy(context, location, src_ptr, dst_ptr, dst_size);
+        <span class="kw">let </span>array_start = prepare(array_start)<span class="question-mark">?</span>;
+        <span class="kw">let </span>array_end = prepare(array_end)<span class="question-mark">?</span>;
+        <span class="kw">let </span>slice_start = prepare(slice_start)<span class="question-mark">?</span>;
+        <span class="kw">let </span>slice_end = prepare(slice_end)<span class="question-mark">?</span>;
 
-        <span class="kw">let </span>k0 = slice_block.const_int_from_type(context, location, <span class="number">0</span>, len_ty)<span class="question-mark">?</span>;
-
-        <span class="kw">let </span>value = slice_block.append_op_result(llvm::undef(array_ty, location))<span class="question-mark">?</span>;
-        <span class="kw">let </span>value = slice_block.insert_values(
-            context,
-            location,
-            value,
-            <span class="kw-2">&amp;</span>[dst_ptr, k0, slice_length, slice_length],
-        )<span class="question-mark">?</span>;
+        <span class="kw">match </span>metadata.get::&lt;DropOverridesMeta&gt;() {
+            <span class="prelude-val">Some</span>(drop_overrides_meta) <span class="kw">if </span>drop_overrides_meta.is_overriden(<span class="kw-2">&amp;</span>info.ty) =&gt; {
+                slice_block.append_operation(scf::r#for(
+                    array_start,
+                    slice_start,
+                    elem_stride,
+                    make_region(drop_overrides_meta)<span class="question-mark">?</span>,
+                    location,
+                ));
+                slice_block.append_operation(scf::r#for(
+                    slice_end,
+                    array_end,
+                    elem_stride,
+                    make_region(drop_overrides_meta)<span class="question-mark">?</span>,
+                    location,
+                ));
+            }
+            <span class="kw">_ </span>=&gt; {}
+        };
 
         slice_block.append_operation(helper.br(<span class="number">0</span>, <span class="kw-2">&amp;</span>[range_check, value], location));
     }
 
-    error_block.append_operation(helper.br(<span class="number">1</span>, <span class="kw-2">&amp;</span>[range_check], location));
+    {
+        registry.build_type(
+            context,
+            helper,
+            registry,
+            metadata,
+            <span class="kw-2">&amp;</span>info.signature.param_signatures[<span class="number">1</span>].ty,
+        )<span class="question-mark">?</span>;
+
+        <span class="comment">// The metadata get will never fail because an array always has a drop implementation,
+        // which at this point is always inserted thanks to the `build_type()` just above.
+        </span>metadata
+            .get::&lt;DropOverridesMeta&gt;()
+            .ok_or(Error::MissingMetadata)<span class="question-mark">?
+            </span>.invoke_override(
+                context,
+                error_block,
+                location,
+                <span class="kw-2">&amp;</span>info.signature.param_signatures[<span class="number">1</span>].ty,
+                entry.arg(<span class="number">1</span>)<span class="question-mark">?</span>,
+            )<span class="question-mark">?</span>;
+
+        error_block.append_operation(helper.br(<span class="number">1</span>, <span class="kw-2">&amp;</span>[range_check], location));
+    }
+
     <span class="prelude-val">Ok</span>(())
 }
 
@@ -3472,7 +3763,6 @@
     info: <span class="kw-2">&amp;</span>SignatureAndTypeConcreteLibfunc,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
     <span class="comment">// tuple to array span (t,t,t) -&gt; &amp;[t,t,t]
-
     </span><span class="kw">if </span>metadata.get::&lt;ReallocBindingsMeta&gt;().is_none() {
         metadata.insert(ReallocBindingsMeta::new(context, helper));
     }
@@ -3483,8 +3773,10 @@
 
     <span class="kw">let </span>container: Value = {
         <span class="comment">// load box
-        </span>entry.load(context, location, entry.argument(<span class="number">0</span>)<span class="question-mark">?</span>.into(), struct_ty)<span class="question-mark">?
+        </span>entry.load(context, location, entry.arg(<span class="number">0</span>)<span class="question-mark">?</span>, struct_ty)<span class="question-mark">?
     </span>};
+    <span class="comment">// TODO: Maybe reuse the pointer?
+    </span>entry.append_operation(ReallocBindingsMeta::free(context, entry.arg(<span class="number">0</span>)<span class="question-mark">?</span>, location)<span class="question-mark">?</span>);
 
     <span class="kw">let </span>fields = struct_type_info.fields().expect(<span class="string">"should have fields"</span>);
     <span class="kw">let </span>(field_ty, field_layout) =
@@ -3516,14 +3808,12 @@
         .append_op_result(ods::llvm::mlir_zero(context, pointer(context, <span class="number">0</span>), location).into())<span class="question-mark">?</span>;
 
     <span class="kw">let </span>field_size: Value = entry.const_int(context, location, field_stride, <span class="number">64</span>)<span class="question-mark">?</span>;
-    <span class="kw">let </span>array_len_value_i64 =
-        entry.append_op_result(arith::extui(array_len_value, field_size.r#type(), location))<span class="question-mark">?</span>;
-    <span class="kw">let </span>total_size =
-        entry.append_op_result(arith::muli(field_size, array_len_value_i64, location))<span class="question-mark">?</span>;
+    <span class="kw">let </span>array_len_value_i64 = entry.extui(array_len_value, field_size.r#type(), location)<span class="question-mark">?</span>;
+    <span class="kw">let </span>total_size = entry.muli(field_size, array_len_value_i64, location)<span class="question-mark">?</span>;
 
     <span class="kw">let </span>ptr = entry.append_op_result(ReallocBindingsMeta::realloc(
         context, ptr, total_size, location,
-    ))<span class="question-mark">?</span>;
+    )<span class="question-mark">?</span>)<span class="question-mark">?</span>;
 
     <span class="kw">for </span>(i, <span class="kw">_</span>) <span class="kw">in </span>fields.iter().enumerate() {
         <span class="kw">let </span>value: Value = entry.extract_value(context, location, container, field_ty, i)<span class="question-mark">?</span>;
@@ -3582,56 +3872,72 @@
     metadata: <span class="kw-2">&amp;mut </span>MetadataStorage,
     info: <span class="kw-2">&amp;</span>SignatureAndTypeConcreteLibfunc,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
-    <span class="comment">// Libfunc Signature:
-    //
-    // (Snapshot&lt;Array&lt;felt252&gt;&gt;) -&gt; Box&lt;Tuple&lt;felt252, ...&gt;&gt;
+    <span class="comment">// Tasks:
+    //   - Check if sizes match.
+    //   - If they do not match, jump to branch [1].
+    //   - If they do match:
+    //     - If start == 0 &amp;&amp; capacity == len -&gt; reuse the pointer
+    //     - Otherwise, realloc + memcpy + free.
 
     </span><span class="kw">if </span>metadata.get::&lt;ReallocBindingsMeta&gt;().is_none() {
         metadata.insert(ReallocBindingsMeta::new(context, helper));
     }
 
-    <span class="comment">// Get type information
+    <span class="kw">let </span>array_ty = registry.get_type(<span class="kw-2">&amp;</span>info.signature.param_signatures[<span class="number">0</span>].ty)<span class="question-mark">?</span>;
+    <span class="kw">let </span>(elem_id, elem_ty) = <span class="kw">match </span>array_ty {
+        CoreTypeConcrete::Array(info) =&gt; (<span class="kw-2">&amp;</span>info.ty, registry.get_type(<span class="kw-2">&amp;</span>info.ty)<span class="question-mark">?</span>),
+        CoreTypeConcrete::Snapshot(info) =&gt; <span class="kw">match </span>registry.get_type(<span class="kw-2">&amp;</span>info.ty)<span class="question-mark">? </span>{
+            CoreTypeConcrete::Array(info) =&gt; (<span class="kw-2">&amp;</span>info.ty, registry.get_type(<span class="kw-2">&amp;</span>info.ty)<span class="question-mark">?</span>),
+            <span class="kw">_ </span>=&gt; <span class="macro">native_panic!</span>(
+                <span class="string">"matched an unexpected CoreTypeConcrete that is not a Array or Snapshot"
+            </span>),
+        },
+        <span class="kw">_ </span>=&gt; {
+            <span class="macro">native_panic!</span>(<span class="string">"matched an unexpected CoreTypeConcrete that is not a Array or Snapshot"</span>)
+        }
+    };
+    <span class="kw">let </span>elem_layout = elem_ty.layout(registry)<span class="question-mark">?</span>;
 
-    </span><span class="kw">let </span>elem_core_ty = registry.get_type(<span class="kw-2">&amp;</span>info.signature.param_signatures[<span class="number">0</span>].ty)<span class="question-mark">?</span>;
-    <span class="kw">let </span>elem_layout = elem_core_ty.layout(registry)<span class="question-mark">?</span>;
-    <span class="kw">let </span>elem_stride = elem_layout.pad_to_align().size();
-    <span class="kw">let </span>tuple_len = registry
-        .get_type(<span class="kw-2">&amp;</span>info.ty)<span class="question-mark">?
-        </span>.fields()
-        .expect(<span class="string">"should be a struct (ergo, has fields)"</span>)
-        .len();
-
-    <span class="kw">let </span>u32_ty = IntegerType::new(context, <span class="number">32</span>).into();
-
-    <span class="comment">// Get array information
-
-    </span><span class="kw">let </span>array_value = entry.argument(<span class="number">0</span>)<span class="question-mark">?</span>.into();
-    <span class="kw">let </span>array_ptr = entry.extract_value(context, location, array_value, pointer(context, <span class="number">0</span>), <span class="number">0</span>)<span class="question-mark">?</span>;
-    <span class="kw">let </span>array_start = entry.extract_value(context, location, array_value, u32_ty, <span class="number">1</span>)<span class="question-mark">?</span>;
-    <span class="kw">let </span>array_end = entry.extract_value(context, location, array_value, u32_ty, <span class="number">2</span>)<span class="question-mark">?</span>;
-    <span class="kw">let </span>array_capacity = entry.extract_value(context, location, array_value, u32_ty, <span class="number">3</span>)<span class="question-mark">?</span>;
-
-    <span class="comment">// Check if conversion is valid
-    //
-    // if array.end - array.start != tuple_len {
-    //     return err;
-    // }
-
-    </span><span class="kw">let </span>array_len = entry.append_op_result(arith::subi(array_end, array_start, location))<span class="question-mark">?</span>;
-    <span class="kw">let </span>tuple_len_value = entry.const_int(context, location, tuple_len, <span class="number">32</span>)<span class="question-mark">?</span>;
-    <span class="kw">let </span>array_len_matches = entry.append_op_result(arith::cmpi(
+    <span class="kw">let </span>array_start = entry.extract_value(
         context,
-        CmpiPredicate::Eq,
-        array_len,
-        tuple_len_value,
         location,
-    ))<span class="question-mark">?</span>;
+        entry.arg(<span class="number">0</span>)<span class="question-mark">?</span>,
+        IntegerType::new(context, <span class="number">32</span>).into(),
+        <span class="number">1</span>,
+    )<span class="question-mark">?</span>;
+    <span class="kw">let </span>array_end = entry.extract_value(
+        context,
+        location,
+        entry.arg(<span class="number">0</span>)<span class="question-mark">?</span>,
+        IntegerType::new(context, <span class="number">32</span>).into(),
+        <span class="number">2</span>,
+    )<span class="question-mark">?</span>;
+
+    <span class="kw">let </span>array_len = entry.append_op_result(arith::subi(array_end, array_start, location))<span class="question-mark">?</span>;
+    <span class="kw">let </span>(tuple_len, tuple_len_val) = {
+        <span class="kw">let </span>fields = registry
+            .get_type(<span class="kw-2">&amp;</span>info.ty)<span class="question-mark">?
+            </span>.fields()
+            .to_native_assert_error(<span class="string">"missing field"</span>)<span class="question-mark">?</span>;
+
+        <span class="macro">native_assert!</span>(
+            fields.iter().all(|f| f.id == elem_id.id),
+            <span class="string">"all the elements of the array must have the same type"
+        </span>);
+
+        (
+            entry.const_int(context, location, fields.len(), <span class="number">32</span>)<span class="question-mark">?</span>,
+            fields.len(),
+        )
+    };
+
+    <span class="kw">let </span>len_matches = entry.cmpi(context, CmpiPredicate::Eq, array_len, tuple_len, location)<span class="question-mark">?</span>;
 
     <span class="kw">let </span>block_ok = helper.append_block(Block::new(<span class="kw-2">&amp;</span>[]));
     <span class="kw">let </span>block_err = helper.append_block(Block::new(<span class="kw-2">&amp;</span>[]));
     entry.append_operation(cf::cond_br(
         context,
-        array_len_matches,
+        len_matches,
         block_ok,
         block_err,
         <span class="kw-2">&amp;</span>[],
@@ -3639,108 +3945,114 @@
         location,
     ));
 
-    <span class="comment">// Check if pointer can be passed through, that is
-    // if array.start == 0 &amp;&amp; array.capacity == tuple_len
-
-    </span><span class="kw">let </span>is_pointer_passthrough = {
+    {
         <span class="kw">let </span>k0 = block_ok.const_int(context, location, <span class="number">0</span>, <span class="number">32</span>)<span class="question-mark">?</span>;
-        <span class="kw">let </span>array_since_is_zero = block_ok.append_op_result(arith::cmpi(
+        <span class="kw">let </span>starts_at_zero =
+            block_ok.cmpi(context, CmpiPredicate::Eq, array_start, k0, location)<span class="question-mark">?</span>;
+
+        <span class="kw">let </span>array_cap = block_ok.extract_value(
             context,
-            CmpiPredicate::Eq,
-            array_start,
-            k0,
             location,
-        ))<span class="question-mark">?</span>;
-        <span class="kw">let </span>array_cap_matches = block_ok.append_op_result(arith::cmpi(
+            entry.arg(<span class="number">0</span>)<span class="question-mark">?</span>,
+            IntegerType::new(context, <span class="number">32</span>).into(),
+            <span class="number">3</span>,
+        )<span class="question-mark">?</span>;
+        <span class="kw">let </span>capacity_matches =
+            block_ok.cmpi(context, CmpiPredicate::Eq, array_cap, tuple_len, location)<span class="question-mark">?</span>;
+
+        <span class="kw">let </span>array_ptr = block_ok.extract_value(
             context,
-            CmpiPredicate::Eq,
-            array_capacity,
-            tuple_len_value,
             location,
-        ))<span class="question-mark">?</span>;
+            entry.arg(<span class="number">0</span>)<span class="question-mark">?</span>,
+            llvm::r#type::pointer(context, <span class="number">0</span>),
+            <span class="number">0</span>,
+        )<span class="question-mark">?</span>;
+        <span class="kw">let </span>should_forward_pointer =
+            block_ok.append_op_result(arith::andi(starts_at_zero, capacity_matches, location))<span class="question-mark">?</span>;
 
-        block_ok.append_op_result(arith::andi(
-            array_since_is_zero,
-            array_cap_matches,
+        <span class="kw">let </span>block_clone = helper.append_block(Block::new(<span class="kw-2">&amp;</span>[]));
+        <span class="kw">let </span>block_forward = helper.append_block(Block::new(<span class="kw-2">&amp;</span>[]));
+        block_ok.append_operation(cf::cond_br(
+            context,
+            should_forward_pointer,
+            block_forward,
+            block_clone,
+            <span class="kw-2">&amp;</span>[],
+            <span class="kw-2">&amp;</span>[],
             location,
-        ))<span class="question-mark">?
-    </span>};
+        ));
 
-    <span class="kw">let </span>box_ptr = block_ok.append_op_result(scf::r#if(
-        is_pointer_passthrough,
-        <span class="kw-2">&amp;</span>[llvm::r#type::pointer(context, <span class="number">0</span>)],
         {
-            <span class="kw">let </span>region = Region::new();
-            <span class="kw">let </span>block = region.append_block(Block::new(<span class="kw-2">&amp;</span>[]));
+            <span class="kw">let </span>elem_stride =
+                block_clone.const_int(context, location, elem_layout.pad_to_align().size(), <span class="number">64</span>)<span class="question-mark">?</span>;
+            <span class="kw">let </span>tuple_len =
+                block_clone.extui(tuple_len, IntegerType::new(context, <span class="number">64</span>).into(), location)<span class="question-mark">?</span>;
+            <span class="kw">let </span>tuple_len = block_clone.muli(tuple_len, elem_stride, location)<span class="question-mark">?</span>;
 
-            <span class="comment">// If can be passed through, just return the array ptr
+            <span class="kw">let </span>box_ptr = block_clone
+                .append_op_result(llvm::zero(llvm::r#type::pointer(context, <span class="number">0</span>), location))<span class="question-mark">?</span>;
+            <span class="kw">let </span>box_ptr = block_clone.append_op_result(ReallocBindingsMeta::realloc(
+                context, box_ptr, tuple_len, location,
+            )<span class="question-mark">?</span>)<span class="question-mark">?</span>;
 
-            </span>block.append_operation(scf::r#yield(<span class="kw-2">&amp;</span>[array_ptr], location));
-
-            region
-        },
-        {
-            <span class="kw">let </span>region = Region::new();
-            <span class="kw">let </span>block = region.append_block(Block::new(<span class="kw-2">&amp;</span>[]));
-
-            <span class="comment">// Otherwise, alloc memory for the returned tuple and clone it
-
-            </span><span class="kw">let </span>tuple_len_value = block.const_int(context, location, tuple_len, <span class="number">64</span>)<span class="question-mark">?</span>;
-            <span class="kw">let </span>elem_stride_value = block.const_int(context, location, elem_stride, <span class="number">64</span>)<span class="question-mark">?</span>;
-            <span class="kw">let </span>tuple_len_bytes = block.append_op_result(arith::muli(
-                tuple_len_value,
-                elem_stride_value,
-                location,
-            ))<span class="question-mark">?</span>;
-
-            <span class="kw">let </span>tuple_ptr = {
-                <span class="kw">let </span>null_ptr = block
-                    .append_op_result(llvm::zero(llvm::r#type::pointer(context, <span class="number">0</span>), location))<span class="question-mark">?</span>;
-                <span class="kw">let </span>tuple_ptr = block.append_op_result(ReallocBindingsMeta::realloc(
-                    context,
-                    null_ptr,
-                    tuple_len_bytes,
-                    location,
-                ))<span class="question-mark">?</span>;
-
-                assert_nonnull(
-                    context,
-                    block.deref(),
-                    location,
-                    tuple_ptr,
-                    <span class="string">"realloc returned null"</span>,
-                )<span class="question-mark">?</span>;
-
-                tuple_ptr
-            };
-
-            <span class="kw">let </span>array_start = block.append_op_result(arith::extui(
-                array_start,
-                IntegerType::new(context, <span class="number">64</span>).into(),
-                location,
-            ))<span class="question-mark">?</span>;
-            <span class="kw">let </span>array_start_offset =
-                block.append_op_result(arith::muli(elem_stride_value, array_start, location))<span class="question-mark">?</span>;
-
-            <span class="kw">let </span>src_ptr = block.append_op_result(llvm::get_element_ptr_dynamic(
+            <span class="kw">let </span>elem_offset =
+                block_clone.extui(array_start, IntegerType::new(context, <span class="number">64</span>).into(), location)<span class="question-mark">?</span>;
+            <span class="kw">let </span>elem_offset = block_clone.muli(elem_offset, elem_stride, location)<span class="question-mark">?</span>;
+            <span class="kw">let </span>elem_ptr = block_clone.append_op_result(llvm::get_element_ptr_dynamic(
                 context,
                 array_ptr,
-                <span class="kw-2">&amp;</span>[array_start_offset],
+                <span class="kw-2">&amp;</span>[elem_offset],
                 IntegerType::new(context, <span class="number">8</span>).into(),
                 llvm::r#type::pointer(context, <span class="number">0</span>),
                 location,
             ))<span class="question-mark">?</span>;
-            block.memcpy(context, location, src_ptr, tuple_ptr, tuple_len_bytes);
 
-            block.append_operation(scf::r#yield(<span class="kw-2">&amp;</span>[tuple_ptr], location));
+            block_clone.append_operation(
+                ods::llvm::intr_memcpy_inline(
+                    context,
+                    box_ptr,
+                    elem_ptr,
+                    IntegerAttribute::new(
+                        IntegerType::new(context, <span class="number">64</span>).into(),
+                        (tuple_len_val * elem_layout.pad_to_align().size()) <span class="kw">as </span>i64,
+                    ),
+                    IntegerAttribute::new(IntegerType::new(context, <span class="number">1</span>).into(), <span class="number">0</span>),
+                    location,
+                )
+                .into(),
+            );
 
-            region
-        },
-        location,
-    ))<span class="question-mark">?</span>;
+            block_clone.append_operation(ReallocBindingsMeta::free(context, array_ptr, location)<span class="question-mark">?</span>);
+            block_clone.append_operation(helper.br(<span class="number">0</span>, <span class="kw-2">&amp;</span>[box_ptr], location));
+        }
 
-    block_ok.append_operation(helper.br(<span class="number">0</span>, <span class="kw-2">&amp;</span>[box_ptr], location));
-    block_err.append_operation(helper.br(<span class="number">1</span>, <span class="kw-2">&amp;</span>[], location));
+        block_forward.append_operation(helper.br(<span class="number">0</span>, <span class="kw-2">&amp;</span>[array_ptr], location));
+    }
+
+    {
+        registry.build_type(
+            context,
+            helper,
+            registry,
+            metadata,
+            <span class="kw-2">&amp;</span>info.signature.param_signatures[<span class="number">0</span>].ty,
+        )<span class="question-mark">?</span>;
+
+        <span class="comment">// The metadata get will never fail because an array always has a drop implementation,
+        // which at this point is always inserted thanks to the `build_type()` just above.
+        </span>metadata
+            .get::&lt;DropOverridesMeta&gt;()
+            .ok_or(Error::MissingMetadata)<span class="question-mark">?
+            </span>.invoke_override(
+                context,
+                block_err,
+                location,
+                <span class="kw-2">&amp;</span>info.signature.param_signatures[<span class="number">0</span>].ty,
+                entry.arg(<span class="number">0</span>)<span class="question-mark">?</span>,
+            )<span class="question-mark">?</span>;
+
+        block_err.append_operation(helper.br(<span class="number">1</span>, <span class="kw-2">&amp;</span>[], location));
+    }
 
     <span class="prelude-val">Ok</span>(())
 }
@@ -4011,19 +4323,19 @@
             <span class="kw">use box</span>::BoxTrait;
 
             <span class="kw">fn </span>run_test() -&gt; u32 {
-                <span class="kw">let </span><span class="kw-2">mut </span>data: Array&lt;u32&gt; = ArrayTrait::new();
-                data.append(<span class="number">1_u32</span>);
+                <span class="kw">let </span><span class="kw-2">mut </span>data: Array&lt;u32&gt; = ArrayTrait::new(); <span class="comment">// Alloca (freed).
+                </span>data.append(<span class="number">1_u32</span>);
                 data.append(<span class="number">2_u32</span>);
                 data.append(<span class="number">3_u32</span>);
                 data.append(<span class="number">4_u32</span>);
-                <span class="kw">let </span>sp = data.span();
-                <span class="kw">let </span>slice = sp.slice(<span class="number">1</span>, <span class="number">2</span>);
+                <span class="kw">let </span>sp = data.span(); <span class="comment">// Alloca (leaked).
+                </span><span class="kw">let </span>slice = sp.slice(<span class="number">1</span>, <span class="number">2</span>);
                 data.append(<span class="number">5_u32</span>);
                 data.append(<span class="number">5_u32</span>);
                 data.append(<span class="number">5_u32</span>);
                 data.append(<span class="number">5_u32</span>);
-                data.append(<span class="number">5_u32</span>);
-                data.append(<span class="number">5_u32</span>);
+                data.append(<span class="number">5_u32</span>); <span class="comment">// Realloc (freed).
+                </span>data.append(<span class="number">5_u32</span>);
                 <span class="kw-2">*</span>slice.get(<span class="number">1</span>).unwrap().unbox()
             }
 
@@ -4696,6 +5008,24 @@
                 )
             )
         );
+    }
+
+    <span class="doccomment">/// Test to ensure that the returned element in `array_get` does NOT get dropped.
+    </span><span class="attr">#[test]
+    </span><span class="kw">fn </span>array_get_avoid_dropping_element() {
+        <span class="kw">let </span>program = <span class="macro">load_cairo!</span> {
+            <span class="kw">use </span>core::{array::{array_append, array_at, array_new}, <span class="kw">box</span>::{into_box, unbox}};
+
+            <span class="kw">fn </span>run_test() -&gt; @Box&lt;felt252&gt; {
+                <span class="kw">let </span><span class="kw-2">mut </span>x: Array&lt;Box&lt;felt252&gt;&gt; = array_new();
+                array_append(<span class="kw-2">ref </span>x, into_box(<span class="number">42</span>));
+
+                unbox(array_at(@x, <span class="number">0</span>))
+            }
+        };
+        <span class="kw">let </span>result = run_program(<span class="kw-2">&amp;</span>program, <span class="string">"run_test"</span>, <span class="kw-2">&amp;</span>[]).return_value;
+
+        <span class="macro">assert_eq!</span>(result, <span class="macro">jit_enum!</span>(<span class="number">0</span>, <span class="macro">jit_struct!</span>(Value::Felt252(<span class="number">42</span>.into()))));
     }
 }
 </code></pre></div></section></main></body></html>

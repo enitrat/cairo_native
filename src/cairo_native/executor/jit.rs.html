@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/executor/jit.rs`."><title>jit.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-c5d6553a23f1e5a6.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="cairo_native" data-themes="" data-resource-suffix="" data-rustdoc-version="1.81.0 (eeb90cda1 2024-09-04)" data-channel="1.81.0" data-search-js="search-d234aafac6c221dd.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-118b08c4c78b968e.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-d2fab2bf619172d3.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-df360f571f6edeae.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/executor/jit.rs`."><title>jit.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-492a78a4a87dcc01.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="cairo_native" data-themes="" data-resource-suffix="" data-rustdoc-version="1.82.0 (f6e511eec 2024-10-15)" data-channel="1.82.0" data-search-js="search-a99f1315e7cc5121.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-118b08c4c78b968e.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-921df33f47b8780c.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-3b12f09e550e0385.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -152,6 +152,33 @@
 <a href="#152" id="152">152</a>
 <a href="#153" id="153">153</a>
 <a href="#154" id="154">154</a>
+<a href="#155" id="155">155</a>
+<a href="#156" id="156">156</a>
+<a href="#157" id="157">157</a>
+<a href="#158" id="158">158</a>
+<a href="#159" id="159">159</a>
+<a href="#160" id="160">160</a>
+<a href="#161" id="161">161</a>
+<a href="#162" id="162">162</a>
+<a href="#163" id="163">163</a>
+<a href="#164" id="164">164</a>
+<a href="#165" id="165">165</a>
+<a href="#166" id="166">166</a>
+<a href="#167" id="167">167</a>
+<a href="#168" id="168">168</a>
+<a href="#169" id="169">169</a>
+<a href="#170" id="170">170</a>
+<a href="#171" id="171">171</a>
+<a href="#172" id="172">172</a>
+<a href="#173" id="173">173</a>
+<a href="#174" id="174">174</a>
+<a href="#175" id="175">175</a>
+<a href="#176" id="176">176</a>
+<a href="#177" id="177">177</a>
+<a href="#178" id="178">178</a>
+<a href="#179" id="179">179</a>
+<a href="#180" id="180">180</a>
+<a href="#181" id="181">181</a>
 </pre></div><pre class="rust"><code><span class="kw">use crate</span>::{
     error::Error,
     execution_result::{ContractExecutionResult, ExecutionResult},
@@ -195,26 +222,32 @@
 }
 
 <span class="kw">impl</span>&lt;<span class="lifetime">'m</span>&gt; JitNativeExecutor&lt;<span class="lifetime">'m</span>&gt; {
-    <span class="kw">pub fn </span>from_native_module(native_module: NativeModule&lt;<span class="lifetime">'m</span>&gt;, opt_level: OptLevel) -&gt; <span class="self">Self </span>{
+    <span class="kw">pub fn </span>from_native_module(
+        native_module: NativeModule&lt;<span class="lifetime">'m</span>&gt;,
+        opt_level: OptLevel,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, Error&gt; {
         <span class="kw">let </span>NativeModule {
             module,
             registry,
             metadata,
         } = native_module;
 
-        <span class="self">Self </span>{
+        <span class="prelude-val">Ok</span>(<span class="self">Self </span>{
             engine: create_engine(<span class="kw-2">&amp;</span>module, <span class="kw-2">&amp;</span>metadata, opt_level),
             module,
             registry,
-            gas_metadata: metadata.get::&lt;GasMetadata&gt;().cloned().unwrap(),
-        }
+            gas_metadata: metadata
+                .get::&lt;GasMetadata&gt;()
+                .cloned()
+                .ok_or(Error::MissingMetadata)<span class="question-mark">?</span>,
+        })
     }
 
-    <span class="kw">pub fn </span>program_registry(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>ProgramRegistry&lt;CoreType, CoreLibfunc&gt; {
+    <span class="kw">pub const fn </span>program_registry(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>ProgramRegistry&lt;CoreType, CoreLibfunc&gt; {
         <span class="kw-2">&amp;</span><span class="self">self</span>.registry
     }
 
-    <span class="kw">pub fn </span>module(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>Module&lt;<span class="lifetime">'m</span>&gt; {
+    <span class="kw">pub const fn </span>module(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>Module&lt;<span class="lifetime">'m</span>&gt; {
         <span class="kw-2">&amp;</span><span class="self">self</span>.module
     }
 
@@ -223,17 +256,21 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         function_id: <span class="kw-2">&amp;</span>FunctionId,
         args: <span class="kw-2">&amp;</span>[Value],
-        gas: <span class="prelude-ty">Option</span>&lt;u128&gt;,
+        gas: <span class="prelude-ty">Option</span>&lt;u64&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;ExecutionResult, Error&gt; {
         <span class="kw">let </span>available_gas = <span class="self">self
             </span>.gas_metadata
             .get_initial_available_gas(function_id, gas)
             .map_err(<span class="kw">crate</span>::error::Error::GasMetadataError)<span class="question-mark">?</span>;
 
+        <span class="kw">let </span>set_builtin_costs_fnptr: <span class="kw">extern </span><span class="string">"C" </span><span class="kw">fn</span>(<span class="kw-2">*const </span>u64) -&gt; <span class="kw-2">*const </span>u64 =
+            <span class="kw">unsafe </span>{ std::mem::transmute(<span class="self">self</span>.engine.lookup(<span class="string">"cairo_native__set_costs_builtin"</span>)) };
+
         <span class="kw">super</span>::invoke_dynamic(
             <span class="kw-2">&amp;</span><span class="self">self</span>.registry,
             <span class="self">self</span>.find_function_ptr(function_id),
-            <span class="self">self</span>.extract_signature(function_id).unwrap(),
+            set_builtin_costs_fnptr,
+            <span class="self">self</span>.extract_signature(function_id)<span class="question-mark">?</span>,
             args,
             available_gas,
             <span class="prelude-ty">Option</span>::&lt;DummySyscallHandler&gt;::None,
@@ -245,7 +282,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         function_id: <span class="kw-2">&amp;</span>FunctionId,
         args: <span class="kw-2">&amp;</span>[Value],
-        gas: <span class="prelude-ty">Option</span>&lt;u128&gt;,
+        gas: <span class="prelude-ty">Option</span>&lt;u64&gt;,
         syscall_handler: <span class="kw">impl </span>StarknetSyscallHandler,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;ExecutionResult, Error&gt; {
         <span class="kw">let </span>available_gas = <span class="self">self
@@ -253,10 +290,14 @@
             .get_initial_available_gas(function_id, gas)
             .map_err(<span class="kw">crate</span>::error::Error::GasMetadataError)<span class="question-mark">?</span>;
 
+        <span class="kw">let </span>set_builtin_costs_fnptr: <span class="kw">extern </span><span class="string">"C" </span><span class="kw">fn</span>(<span class="kw-2">*const </span>u64) -&gt; <span class="kw-2">*const </span>u64 =
+            <span class="kw">unsafe </span>{ std::mem::transmute(<span class="self">self</span>.engine.lookup(<span class="string">"cairo_native__set_costs_builtin"</span>)) };
+
         <span class="kw">super</span>::invoke_dynamic(
             <span class="kw-2">&amp;</span><span class="self">self</span>.registry,
             <span class="self">self</span>.find_function_ptr(function_id),
-            <span class="self">self</span>.extract_signature(function_id).unwrap(),
+            set_builtin_costs_fnptr,
+            <span class="self">self</span>.extract_signature(function_id)<span class="question-mark">?</span>,
             args,
             available_gas,
             <span class="prelude-val">Some</span>(syscall_handler),
@@ -267,24 +308,27 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         function_id: <span class="kw-2">&amp;</span>FunctionId,
         args: <span class="kw-2">&amp;</span>[Felt],
-        gas: <span class="prelude-ty">Option</span>&lt;u128&gt;,
+        gas: <span class="prelude-ty">Option</span>&lt;u64&gt;,
         syscall_handler: <span class="kw">impl </span>StarknetSyscallHandler,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;ContractExecutionResult, Error&gt; {
         <span class="kw">let </span>available_gas = <span class="self">self
             </span>.gas_metadata
             .get_initial_available_gas(function_id, gas)
             .map_err(<span class="kw">crate</span>::error::Error::GasMetadataError)<span class="question-mark">?</span>;
-        <span class="comment">// TODO: Check signature for contract interface.
-        </span>ContractExecutionResult::from_execution_result(<span class="kw">super</span>::invoke_dynamic(
+
+        <span class="kw">let </span>set_builtin_costs_fnptr: <span class="kw">extern </span><span class="string">"C" </span><span class="kw">fn</span>(<span class="kw-2">*const </span>u64) -&gt; <span class="kw-2">*const </span>u64 =
+            <span class="kw">unsafe </span>{ std::mem::transmute(<span class="self">self</span>.engine.lookup(<span class="string">"cairo_native__set_costs_builtin"</span>)) };
+
+        ContractExecutionResult::from_execution_result(<span class="kw">super</span>::invoke_dynamic(
             <span class="kw-2">&amp;</span><span class="self">self</span>.registry,
             <span class="self">self</span>.find_function_ptr(function_id),
-            <span class="self">self</span>.extract_signature(function_id).unwrap(),
+            set_builtin_costs_fnptr,
+            <span class="self">self</span>.extract_signature(function_id)<span class="question-mark">?</span>,
             <span class="kw-2">&amp;</span>[Value::Struct {
                 fields: <span class="macro">vec!</span>[Value::Array(
                     args.iter().cloned().map(Value::Felt252).collect(),
                 )],
-                <span class="comment">// TODO: Populate `debug_name`.
-                </span>debug_name: <span class="prelude-val">None</span>,
+                debug_name: <span class="prelude-val">None</span>,
             }],
             available_gas,
             <span class="prelude-val">Some</span>(syscall_handler),
@@ -299,11 +343,21 @@
         </span><span class="self">self</span>.engine.lookup(<span class="kw-2">&amp;</span>function_name) <span class="kw">as </span><span class="kw-2">*mut </span>c_void
     }
 
-    <span class="kw">fn </span>extract_signature(<span class="kw-2">&amp;</span><span class="self">self</span>, function_id: <span class="kw-2">&amp;</span>FunctionId) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>FunctionSignature&gt; {
-        <span class="self">self</span>.program_registry()
+    <span class="kw">pub fn </span>find_symbol_ptr(<span class="kw-2">&amp;</span><span class="self">self</span>, name: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">*mut </span>c_void&gt; {
+        <span class="kw">let </span>ptr = <span class="self">self</span>.engine.lookup(name) <span class="kw">as </span><span class="kw-2">*mut </span>c_void;
+
+        <span class="kw">if </span>ptr.is_null() {
+            <span class="prelude-val">None
+        </span>} <span class="kw">else </span>{
+            <span class="prelude-val">Some</span>(ptr)
+        }
+    }
+
+    <span class="kw">fn </span>extract_signature(<span class="kw-2">&amp;</span><span class="self">self</span>, function_id: <span class="kw-2">&amp;</span>FunctionId) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="kw-2">&amp;</span>FunctionSignature, Error&gt; {
+        <span class="prelude-val">Ok</span>(<span class="self">self
+            </span>.program_registry()
             .get_function(function_id)
-            .ok()
-            .map(|func| <span class="kw-2">&amp;</span>func.signature)
+            .map(|func| <span class="kw-2">&amp;</span>func.signature)<span class="question-mark">?</span>)
     }
 }
 </code></pre></div></section></main></body></html>

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/context.rs`."><title>context.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-c5d6553a23f1e5a6.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="cairo_native" data-themes="" data-resource-suffix="" data-rustdoc-version="1.81.0 (eeb90cda1 2024-09-04)" data-channel="1.81.0" data-search-js="search-d234aafac6c221dd.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-118b08c4c78b968e.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-d2fab2bf619172d3.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-df360f571f6edeae.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/context.rs`."><title>context.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-492a78a4a87dcc01.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="cairo_native" data-themes="" data-resource-suffix="" data-rustdoc-version="1.82.0 (f6e511eec 2024-10-15)" data-channel="1.82.0" data-search-js="search-a99f1315e7cc5121.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-118b08c4c78b968e.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-921df33f47b8780c.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-3b12f09e550e0385.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -244,19 +244,17 @@
 <a href="#244" id="244">244</a>
 <a href="#245" id="245">245</a>
 <a href="#246" id="246">246</a>
+<a href="#247" id="247">247</a>
 </pre></div><pre class="rust"><code><span class="kw">use crate</span>::{
-    error::Error,
-    ffi::{
-        get_data_layout_rep, get_target_triple, mlirLLVMDICompileUnitAttrGet,
-        mlirLLVMDIFileAttrGet, mlirLLVMDIModuleAttrGet, mlirLLVMDistinctAttrCreate,
-        mlirModuleCleanup,
-    },
+    error::{panic::ToNativeAssertError, Error},
+    ffi::{get_data_layout_rep, get_target_triple},
     metadata::{
         gas::{GasMetadata, MetadataComputationConfig},
         runtime_bindings::RuntimeBindingsMeta,
         MetadataStorage,
     },
     module::NativeModule,
+    native_assert,
     utils::run_pass_manager,
 };
 <span class="kw">use </span>cairo_lang_sierra::{
@@ -278,7 +276,13 @@
     utility::{register_all_dialects, register_all_llvm_translations, register_all_passes},
     Context,
 };
-<span class="kw">use </span>std::sync::OnceLock;
+<span class="kw">use </span>mlir_sys::{
+    mlirDisctinctAttrCreate, mlirLLVMDICompileUnitAttrGet, mlirLLVMDIFileAttrGet,
+    mlirLLVMDIModuleAttrGet, MlirLLVMDIEmissionKind_MlirLLVMDIEmissionKindFull,
+    MlirLLVMDINameTableKind_MlirLLVMDINameTableKindDefault,
+};
+<span class="kw">use </span>std::{sync::OnceLock, time::Instant};
+<span class="kw">use </span>tracing::trace;
 
 <span class="doccomment">/// Context of IRs, dialects and passes for Cairo programs compilation.
 </span><span class="attr">#[derive(Debug, Eq, PartialEq)]
@@ -301,7 +305,7 @@
         <span class="self">Self </span>{ context }
     }
 
-    <span class="kw">pub fn </span>context(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>Context {
+    <span class="kw">pub const fn </span>context(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>Context {
         <span class="kw-2">&amp;</span><span class="self">self</span>.context
     }
 
@@ -314,7 +318,11 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         program: <span class="kw-2">&amp;</span>Program,
         ignore_debug_names: bool,
+        gas_metadata_config: <span class="prelude-ty">Option</span>&lt;MetadataComputationConfig&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;NativeModule, Error&gt; {
+        <span class="macro">trace!</span>(<span class="string">"starting sierra to mlir compilation"</span>);
+        <span class="kw">let </span>pre_sierra_compilation_instant = Instant::now();
+
         <span class="kw">static </span>INITIALIZED: OnceLock&lt;()&gt; = OnceLock::new();
         INITIALIZED.get_or_init(|| <span class="kw">unsafe </span>{
             LLVM_InitializeAllTargets();
@@ -332,7 +340,7 @@
 
         <span class="kw">let </span>di_unit_id = <span class="kw">unsafe </span>{
             <span class="kw">let </span>id = StringAttribute::new(<span class="kw-2">&amp;</span><span class="self">self</span>.context, <span class="string">"compile_unit_id"</span>).to_raw();
-            mlirLLVMDistinctAttrCreate(id)
+            mlirDisctinctAttrCreate(id)
         };
 
         <span class="kw">let </span>op = OperationBuilder::new(
@@ -356,7 +364,8 @@
                             </span>file_attr.to_raw(),
                             StringAttribute::new(<span class="kw-2">&amp;</span><span class="self">self</span>.context, <span class="string">"cairo-native"</span>).to_raw(),
                             <span class="bool-val">false</span>,
-                            <span class="kw">crate</span>::ffi::DiEmissionKind::Full,
+                            MlirLLVMDIEmissionKind_MlirLLVMDIEmissionKindFull,
+                            MlirLLVMDINameTableKind_MlirLLVMDINameTableKindDefault,
                         );
 
                         <span class="kw">let </span>context = <span class="kw-2">&amp;</span><span class="self">self</span>.context;
@@ -390,24 +399,17 @@
         ])
         .add_regions([module_region])
         .build()<span class="question-mark">?</span>;
-        <span class="macro">assert!</span>(op.verify(), <span class="string">"module operation is not valid"</span>);
 
-        <span class="kw">let </span><span class="kw-2">mut </span>module = Module::from_operation(op).expect(<span class="string">"module failed to create"</span>);
+        <span class="macro">native_assert!</span>(op.verify(), <span class="string">"module operation should be valid"</span>);
 
-        <span class="kw">let </span>has_gas_builtin = program
-            .type_declarations
-            .iter()
-            .any(|decl| decl.long_id.generic_id.<span class="number">0</span>.as_str() == <span class="string">"GasBuiltin"</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>module = Module::from_operation(op)
+            .to_native_assert_error(<span class="string">"value should be module operation"</span>)<span class="question-mark">?</span>;
 
         <span class="kw">let </span><span class="kw-2">mut </span>metadata = MetadataStorage::new();
         <span class="comment">// Make the runtime library available.
         </span>metadata.insert(RuntimeBindingsMeta::default());
         <span class="comment">// We assume that GasMetadata will be always present when the program uses the gas builtin.
-        </span><span class="kw">let </span>gas_metadata = <span class="kw">if </span>has_gas_builtin {
-            GasMetadata::new(program, <span class="prelude-val">Some</span>(MetadataComputationConfig::default()))
-        } <span class="kw">else </span>{
-            GasMetadata::new(program, <span class="prelude-val">None</span>)
-        }<span class="question-mark">?</span>;
+        </span><span class="kw">let </span>gas_metadata = GasMetadata::new(program, gas_metadata_config)<span class="question-mark">?</span>;
         <span class="comment">// Unwrapping here is not necessary since the insertion will only fail if there was
         // already some metadata of the same type.
         </span>metadata.insert(gas_metadata);
@@ -425,51 +427,51 @@
             ignore_debug_names,
         )<span class="question-mark">?</span>;
 
+        <span class="kw">let </span>sierra_compilation_time = pre_sierra_compilation_instant.elapsed().as_millis();
+        <span class="macro">trace!</span>(
+            time = sierra_compilation_time,
+            <span class="string">"sierra to mlir compilation finished"
+        </span>);
+
         <span class="kw">if let </span><span class="prelude-val">Ok</span>(x) = std::env::var(<span class="string">"NATIVE_DEBUG_DUMP"</span>) {
             <span class="kw">if </span>x == <span class="string">"1" </span>|| x == <span class="string">"true" </span>{
-                std::fs::write(<span class="string">"dump-prepass.mlir"</span>, module.as_operation().to_string())
-                    .expect(<span class="string">"should work"</span>);
+                std::fs::write(<span class="string">"dump-prepass.mlir"</span>, module.as_operation().to_string())<span class="question-mark">?</span>;
                 std::fs::write(
                     <span class="string">"dump-prepass-debug-valid.mlir"</span>,
                     module.as_operation().to_string_with_flags(
                         OperationPrintingFlags::new().enable_debug_info(<span class="bool-val">true</span>, <span class="bool-val">false</span>),
                     )<span class="question-mark">?</span>,
-                )
-                .expect(<span class="string">"failed to write dump-prepass-debug-valid.mlir"</span>);
+                )<span class="question-mark">?</span>;
                 std::fs::write(
                     <span class="string">"dump-prepass-debug-pretty.mlir"</span>,
                     module.as_operation().to_string_with_flags(
                         OperationPrintingFlags::new().enable_debug_info(<span class="bool-val">true</span>, <span class="bool-val">false</span>),
                     )<span class="question-mark">?</span>,
-                )
-                .expect(<span class="string">"failed to writedump-prepass-debug-pretty.mlir"</span>);
+                )<span class="question-mark">?</span>;
             }
         }
 
+        <span class="macro">trace!</span>(<span class="string">"starting mlir passes"</span>);
+        <span class="kw">let </span>pre_passes_instant = Instant::now();
         run_pass_manager(<span class="kw-2">&amp;</span><span class="self">self</span>.context, <span class="kw-2">&amp;mut </span>module)<span class="question-mark">?</span>;
-
-        <span class="kw">unsafe </span>{
-            mlirModuleCleanup(module.to_raw());
-        }
+        <span class="kw">let </span>passes_time = pre_passes_instant.elapsed().as_millis();
+        <span class="macro">trace!</span>(time = passes_time, <span class="string">"mlir passes finished"</span>);
 
         <span class="kw">if let </span><span class="prelude-val">Ok</span>(x) = std::env::var(<span class="string">"NATIVE_DEBUG_DUMP"</span>) {
             <span class="kw">if </span>x == <span class="string">"1" </span>|| x == <span class="string">"true" </span>{
-                std::fs::write(<span class="string">"dump.mlir"</span>, module.as_operation().to_string())
-                    .expect(<span class="string">"should work"</span>);
+                std::fs::write(<span class="string">"dump.mlir"</span>, module.as_operation().to_string())<span class="question-mark">?</span>;
                 std::fs::write(
                     <span class="string">"dump-debug-pretty.mlir"</span>,
                     module.as_operation().to_string_with_flags(
                         OperationPrintingFlags::new().enable_debug_info(<span class="bool-val">true</span>, <span class="bool-val">false</span>),
                     )<span class="question-mark">?</span>,
-                )
-                .expect(<span class="string">"failed to write dump-debug-pretty.mlir"</span>);
+                )<span class="question-mark">?</span>;
                 std::fs::write(
                     <span class="string">"dump-debug.mlir"</span>,
                     module.as_operation().to_string_with_flags(
                         OperationPrintingFlags::new().enable_debug_info(<span class="bool-val">true</span>, <span class="bool-val">false</span>),
                     )<span class="question-mark">?</span>,
-                )
-                .expect(<span class="string">"failed to write dump-debug.mlir"</span>);
+                )<span class="question-mark">?</span>;
             }
         }
 

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/utils.rs`."><title>utils.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-c5d6553a23f1e5a6.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="cairo_native" data-themes="" data-resource-suffix="" data-rustdoc-version="1.81.0 (eeb90cda1 2024-09-04)" data-channel="1.81.0" data-search-js="search-d234aafac6c221dd.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-118b08c4c78b968e.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-d2fab2bf619172d3.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-df360f571f6edeae.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/utils.rs`."><title>utils.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-492a78a4a87dcc01.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="cairo_native" data-themes="" data-resource-suffix="" data-rustdoc-version="1.82.0 (f6e511eec 2024-10-15)" data-channel="1.82.0" data-search-js="search-a99f1315e7cc5121.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-118b08c4c78b968e.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-921df33f47b8780c.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-3b12f09e550e0385.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1019,14 +1019,125 @@
 <a href="#1019" id="1019">1019</a>
 <a href="#1020" id="1020">1020</a>
 <a href="#1021" id="1021">1021</a>
+<a href="#1022" id="1022">1022</a>
+<a href="#1023" id="1023">1023</a>
+<a href="#1024" id="1024">1024</a>
+<a href="#1025" id="1025">1025</a>
+<a href="#1026" id="1026">1026</a>
+<a href="#1027" id="1027">1027</a>
+<a href="#1028" id="1028">1028</a>
+<a href="#1029" id="1029">1029</a>
+<a href="#1030" id="1030">1030</a>
+<a href="#1031" id="1031">1031</a>
+<a href="#1032" id="1032">1032</a>
+<a href="#1033" id="1033">1033</a>
+<a href="#1034" id="1034">1034</a>
+<a href="#1035" id="1035">1035</a>
+<a href="#1036" id="1036">1036</a>
+<a href="#1037" id="1037">1037</a>
+<a href="#1038" id="1038">1038</a>
+<a href="#1039" id="1039">1039</a>
+<a href="#1040" id="1040">1040</a>
+<a href="#1041" id="1041">1041</a>
+<a href="#1042" id="1042">1042</a>
+<a href="#1043" id="1043">1043</a>
+<a href="#1044" id="1044">1044</a>
+<a href="#1045" id="1045">1045</a>
+<a href="#1046" id="1046">1046</a>
+<a href="#1047" id="1047">1047</a>
+<a href="#1048" id="1048">1048</a>
+<a href="#1049" id="1049">1049</a>
+<a href="#1050" id="1050">1050</a>
+<a href="#1051" id="1051">1051</a>
+<a href="#1052" id="1052">1052</a>
+<a href="#1053" id="1053">1053</a>
+<a href="#1054" id="1054">1054</a>
+<a href="#1055" id="1055">1055</a>
+<a href="#1056" id="1056">1056</a>
+<a href="#1057" id="1057">1057</a>
+<a href="#1058" id="1058">1058</a>
+<a href="#1059" id="1059">1059</a>
+<a href="#1060" id="1060">1060</a>
+<a href="#1061" id="1061">1061</a>
+<a href="#1062" id="1062">1062</a>
+<a href="#1063" id="1063">1063</a>
+<a href="#1064" id="1064">1064</a>
+<a href="#1065" id="1065">1065</a>
+<a href="#1066" id="1066">1066</a>
+<a href="#1067" id="1067">1067</a>
+<a href="#1068" id="1068">1068</a>
+<a href="#1069" id="1069">1069</a>
+<a href="#1070" id="1070">1070</a>
+<a href="#1071" id="1071">1071</a>
+<a href="#1072" id="1072">1072</a>
+<a href="#1073" id="1073">1073</a>
+<a href="#1074" id="1074">1074</a>
+<a href="#1075" id="1075">1075</a>
+<a href="#1076" id="1076">1076</a>
+<a href="#1077" id="1077">1077</a>
+<a href="#1078" id="1078">1078</a>
+<a href="#1079" id="1079">1079</a>
+<a href="#1080" id="1080">1080</a>
+<a href="#1081" id="1081">1081</a>
+<a href="#1082" id="1082">1082</a>
+<a href="#1083" id="1083">1083</a>
+<a href="#1084" id="1084">1084</a>
+<a href="#1085" id="1085">1085</a>
+<a href="#1086" id="1086">1086</a>
+<a href="#1087" id="1087">1087</a>
+<a href="#1088" id="1088">1088</a>
+<a href="#1089" id="1089">1089</a>
+<a href="#1090" id="1090">1090</a>
+<a href="#1091" id="1091">1091</a>
+<a href="#1092" id="1092">1092</a>
+<a href="#1093" id="1093">1093</a>
+<a href="#1094" id="1094">1094</a>
+<a href="#1095" id="1095">1095</a>
+<a href="#1096" id="1096">1096</a>
+<a href="#1097" id="1097">1097</a>
+<a href="#1098" id="1098">1098</a>
+<a href="#1099" id="1099">1099</a>
+<a href="#1100" id="1100">1100</a>
+<a href="#1101" id="1101">1101</a>
+<a href="#1102" id="1102">1102</a>
+<a href="#1103" id="1103">1103</a>
+<a href="#1104" id="1104">1104</a>
+<a href="#1105" id="1105">1105</a>
+<a href="#1106" id="1106">1106</a>
+<a href="#1107" id="1107">1107</a>
+<a href="#1108" id="1108">1108</a>
+<a href="#1109" id="1109">1109</a>
+<a href="#1110" id="1110">1110</a>
+<a href="#1111" id="1111">1111</a>
+<a href="#1112" id="1112">1112</a>
+<a href="#1113" id="1113">1113</a>
+<a href="#1114" id="1114">1114</a>
+<a href="#1115" id="1115">1115</a>
+<a href="#1116" id="1116">1116</a>
+<a href="#1117" id="1117">1117</a>
+<a href="#1118" id="1118">1118</a>
+<a href="#1119" id="1119">1119</a>
+<a href="#1120" id="1120">1120</a>
+<a href="#1121" id="1121">1121</a>
+<a href="#1122" id="1122">1122</a>
+<a href="#1123" id="1123">1123</a>
+<a href="#1124" id="1124">1124</a>
+<a href="#1125" id="1125">1125</a>
+<a href="#1126" id="1126">1126</a>
+<a href="#1127" id="1127">1127</a>
+<a href="#1128" id="1128">1128</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! # Various utilities
 
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">use </span><span class="self">self</span>::{
-    block_ext::BlockExt, program_registry_ext::ProgramRegistryExt, range_ext::RangeExt,
+    block_ext::{BlockExt, GepIndex},
+    program_registry_ext::ProgramRegistryExt,
+    range_ext::RangeExt,
 };
 <span class="kw">use crate</span>::{metadata::MetadataStorage, OptLevel};
 <span class="kw">use </span>cairo_lang_compiler::CompilerConfig;
+<span class="kw">use </span>cairo_lang_runner::token_gas_cost;
 <span class="kw">use </span>cairo_lang_sierra::{
+    extensions::gas::CostTokenType,
     ids::FunctionId,
     program::{GenFunction, Program, StatementIdx},
 };
@@ -1036,20 +1147,19 @@
     Context, Error, ExecutionEngine,
 };
 <span class="kw">use </span>num_bigint::{BigInt, BigUint, Sign};
+<span class="kw">use </span>serde::{Deserialize, Serialize};
 <span class="kw">use </span>starknet_types_core::felt::Felt;
-<span class="kw">use </span>std::sync::LazyLock;
+<span class="kw">use </span>std::sync::{Arc, LazyLock};
 <span class="kw">use </span>std::{
     alloc::Layout,
     borrow::Cow,
     fmt::{<span class="self">self</span>, Display},
-    ops::Neg,
     path::Path,
-    ptr::NonNull,
-    sync::Arc,
 };
 <span class="kw">use </span>thiserror::Error;
 
 <span class="kw">mod </span>block_ext;
+<span class="kw">pub mod </span>mem_tracing;
 <span class="kw">mod </span>program_registry_ext;
 <span class="kw">mod </span>range_ext;
 
@@ -1062,13 +1172,63 @@
 </span><span class="kw">pub static </span>PRIME: LazyLock&lt;BigUint&gt; = LazyLock::new(|| {
     <span class="string">"3618502788666131213697322783095070105623107215331596699973092056135872020481"
         </span>.parse()
-        .unwrap()
+        .expect(<span class="string">"hardcoded prime constant should be valid"</span>)
 });
 <span class="kw">pub static </span>HALF_PRIME: LazyLock&lt;BigUint&gt; = LazyLock::new(|| {
     <span class="string">"1809251394333065606848661391547535052811553607665798349986546028067936010240"
         </span>.parse()
-        .unwrap()
+        .expect(<span class="string">"hardcoded half prime constant should be valid"</span>)
 });
+
+<span class="attr">#[derive(Debug, Clone, Copy, Deserialize, Serialize)]
+</span><span class="kw">pub struct </span>BuiltinCosts {
+    <span class="kw">pub </span>r#const: u64,
+    <span class="kw">pub </span>pedersen: u64,
+    <span class="kw">pub </span>bitwise: u64,
+    <span class="kw">pub </span>ecop: u64,
+    <span class="kw">pub </span>poseidon: u64,
+    <span class="kw">pub </span>add_mod: u64,
+    <span class="kw">pub </span>mul_mod: u64,
+}
+
+<span class="kw">impl </span>From&lt;BuiltinCosts&gt; <span class="kw">for </span>[u64; <span class="number">7</span>] {
+    <span class="comment">// Order matters, for the libfunc impl
+    // https://github.com/starkware-libs/sequencer/blob/1b7252f8a30244d39614d7666aa113b81291808e/crates/blockifier/src/execution/entry_point_execution.rs#L208
+    </span><span class="kw">fn </span>from(value: BuiltinCosts) -&gt; <span class="self">Self </span>{
+        [
+            value.r#const,
+            value.pedersen,
+            value.bitwise,
+            value.ecop,
+            value.poseidon,
+            value.add_mod,
+            value.mul_mod,
+        ]
+    }
+}
+
+<span class="kw">impl </span>Default <span class="kw">for </span>BuiltinCosts {
+    <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            r#const: token_gas_cost(CostTokenType::Const) <span class="kw">as </span>u64,
+            pedersen: token_gas_cost(CostTokenType::Pedersen) <span class="kw">as </span>u64,
+            bitwise: token_gas_cost(CostTokenType::Bitwise) <span class="kw">as </span>u64,
+            ecop: token_gas_cost(CostTokenType::EcOp) <span class="kw">as </span>u64,
+            poseidon: token_gas_cost(CostTokenType::Poseidon) <span class="kw">as </span>u64,
+            add_mod: token_gas_cost(CostTokenType::AddMod) <span class="kw">as </span>u64,
+            mul_mod: token_gas_cost(CostTokenType::MulMod) <span class="kw">as </span>u64,
+        }
+    }
+}
+
+<span class="attr">#[cfg(feature = <span class="string">"with-mem-tracing"</span>)]
+#[allow(unused_imports)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">use </span><span class="self">self</span>::mem_tracing::{
+    _wrapped_free <span class="kw">as </span>libc_free, _wrapped_malloc <span class="kw">as </span>libc_malloc, _wrapped_realloc <span class="kw">as </span>libc_realloc,
+};
+<span class="attr">#[cfg(not(feature = <span class="string">"with-mem-tracing"</span>))]
+#[allow(unused_imports)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">use </span>libc::{free <span class="kw">as </span>libc_free, malloc <span class="kw">as </span>libc_malloc, realloc <span class="kw">as </span>libc_realloc};
 
 <span class="doccomment">/// Generate a function name.
 ///
@@ -1129,12 +1289,13 @@
         Layout::new::&lt;u128&gt;()
     } <span class="kw">else </span>{
         <span class="comment">// According to the docs this should never return an error.
-        </span>Layout::from_size_align((width <span class="kw">as </span>usize).next_multiple_of(<span class="number">8</span>) &gt;&gt; <span class="number">3</span>, <span class="number">16</span>).unwrap()
+        </span>Layout::from_size_align((width <span class="kw">as </span>usize).next_multiple_of(<span class="number">8</span>) &gt;&gt; <span class="number">3</span>, <span class="number">16</span>)
+            .expect(<span class="string">"only fails if size is greater than ISIZE::MAX"</span>)
     }
 }
 
 <span class="doccomment">/// Compile a cairo program found at the given path to sierra.
-</span><span class="kw">pub fn </span>cairo_to_sierra(program: <span class="kw-2">&amp;</span>Path) -&gt; Arc&lt;Program&gt; {
+</span><span class="kw">pub fn </span>cairo_to_sierra(program: <span class="kw-2">&amp;</span>Path) -&gt; anyhow::Result&lt;Arc&lt;Program&gt;&gt; {
     <span class="kw">if </span>program
         .extension()
         .map(|x| {
@@ -1151,14 +1312,13 @@
                 ..Default::default()
             },
         )
-        .unwrap()
-        .into()
+        .map(Arc::new)
     } <span class="kw">else </span>{
-        <span class="kw">let </span>source = std::fs::read_to_string(program).unwrap();
+        <span class="kw">let </span>source = std::fs::read_to_string(program)<span class="question-mark">?</span>;
         cairo_lang_sierra::ProgramParser::new()
             .parse(<span class="kw-2">&amp;</span>source)
-            .unwrap()
-            .into()
+            .map_err(|err| anyhow::Error::msg(err.to_string()))
+            .map(Arc::new)
     }
 }
 
@@ -1200,9 +1360,10 @@
     <span class="kw">let </span>value = value
         .parse::&lt;BigInt&gt;()
         .expect(<span class="string">"value must be a digit number"</span>);
+
     <span class="kw">let </span>value = <span class="kw">match </span>value.sign() {
-        Sign::Minus =&gt; <span class="kw-2">&amp;*</span>PRIME - value.neg().to_biguint().unwrap(),
-        <span class="kw">_ </span>=&gt; value.to_biguint().unwrap(),
+        Sign::Minus =&gt; <span class="kw-2">&amp;*</span>PRIME - value.magnitude(),
+        <span class="kw">_ </span>=&gt; value.magnitude().clone(),
     };
 
     value.into()
@@ -1226,7 +1387,7 @@
         .filter_map(|c| c.is_ascii().then_some(c <span class="kw">as </span>u8))
         .collect();
 
-    <span class="macro">assert!</span>(values.len() &lt; <span class="number">32</span>);
+    <span class="macro">assert!</span>(values.len() &lt; <span class="number">32</span>, <span class="string">"A felt can't longer than 32 bytes"</span>);
     Felt::from_bytes_be_slice(<span class="kw-2">&amp;</span>values)
 }
 
@@ -1247,6 +1408,9 @@
         .get::&lt;<span class="kw">crate</span>::metadata::debug_utils::DebugUtils&gt;()
         .unwrap()
         .register_impls(<span class="kw-2">&amp;</span>engine);
+
+    <span class="attr">#[cfg(feature = <span class="string">"with-mem-tracing"</span>)]
+    </span><span class="self">self</span>::mem_tracing::register_bindings(<span class="kw-2">&amp;</span>engine);
 
     engine
 }
@@ -1323,24 +1487,24 @@
         );
 
         engine.register_symbol(
-            <span class="string">"cairo_native__alloc_dict"</span>,
-            cairo_native_runtime::cairo_native__alloc_dict <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">fn</span>() -&gt; <span class="kw-2">*mut </span>FeltDict
+            <span class="string">"cairo_native__dict_new"</span>,
+            cairo_native_runtime::cairo_native__dict_new <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">fn</span>() -&gt; <span class="kw-2">*mut </span>FeltDict <span class="kw">as </span><span class="kw-2">*mut </span>(),
+        );
+
+        engine.register_symbol(
+            <span class="string">"cairo_native__dict_drop"</span>,
+            cairo_native_runtime::cairo_native__dict_drop
+                <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">fn</span>(<span class="kw-2">*mut </span>FeltDict, <span class="prelude-ty">Option</span>&lt;<span class="kw">extern </span><span class="string">"C" </span><span class="kw">fn</span>(<span class="kw-2">*mut </span>std::ffi::c_void)&gt;) -&gt; ()
                 <span class="kw">as </span><span class="kw-2">*mut </span>(),
         );
 
         engine.register_symbol(
-            <span class="string">"cairo_native__dict_free"</span>,
-            cairo_native_runtime::cairo_native__dict_free <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">fn</span>(<span class="kw-2">*mut </span>FeltDict) -&gt; ()
-                <span class="kw">as </span><span class="kw-2">*mut </span>(),
-        );
-
-        engine.register_symbol(
-            <span class="string">"cairo_native__dict_values"</span>,
-            cairo_native_runtime::cairo_native__dict_values
+            <span class="string">"cairo_native__dict_dup"</span>,
+            cairo_native_runtime::cairo_native__dict_dup
                 <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">fn</span>(
                     <span class="kw-2">*mut </span>FeltDict,
-                    <span class="kw-2">*mut </span>u64,
-                ) -&gt; <span class="kw-2">*mut </span>([u8; <span class="number">32</span>], std::ptr::NonNull&lt;libc::c_void&gt;) <span class="kw">as </span><span class="kw-2">*mut </span>(),
+                    <span class="kw">extern </span><span class="string">"C" </span><span class="kw">fn</span>(<span class="kw-2">*mut </span>std::ffi::c_void) -&gt; <span class="kw-2">*mut </span>std::ffi::c_void,
+                ) -&gt; <span class="kw-2">*mut </span>FeltDict <span class="kw">as </span><span class="kw-2">*mut </span>(),
         );
 
         engine.register_symbol(
@@ -1351,19 +1515,20 @@
         );
 
         engine.register_symbol(
-            <span class="string">"cairo_native__dict_insert"</span>,
-            cairo_native_runtime::cairo_native__dict_insert
-                <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">fn</span>(
-                    <span class="kw-2">*mut </span>FeltDict,
-                    <span class="kw-2">&amp;</span>[u8; <span class="number">32</span>],
-                    NonNull&lt;std::ffi::c_void&gt;,
-                    usize,
-                ) -&gt; <span class="kw-2">*mut </span>std::ffi::c_void <span class="kw">as </span><span class="kw-2">*mut </span>(),
+            <span class="string">"cairo_native__dict_gas_refund"</span>,
+            cairo_native_runtime::cairo_native__dict_gas_refund <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">fn</span>(<span class="kw-2">*const </span>FeltDict) -&gt; u64
+                <span class="kw">as </span><span class="kw-2">*mut </span>(),
         );
 
         engine.register_symbol(
-            <span class="string">"cairo_native__dict_gas_refund"</span>,
-            cairo_native_runtime::cairo_native__dict_gas_refund <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">fn</span>(<span class="kw-2">*const </span>FeltDict) -&gt; u64
+            <span class="string">"cairo_native__set_costs_builtin"</span>,
+            cairo_native_runtime::cairo_native__set_costs_builtin <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">fn</span>(<span class="kw-2">*const </span>u64) -&gt; ()
+                <span class="kw">as </span><span class="kw-2">*mut </span>(),
+        );
+
+        engine.register_symbol(
+            <span class="string">"cairo_native__get_costs_builtin"</span>,
+            cairo_native_runtime::cairo_native__get_costs_builtin <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">fn</span>() -&gt; <span class="kw-2">*const </span>u64
                 <span class="kw">as </span><span class="kw-2">*mut </span>(),
         );
 
@@ -1493,7 +1658,8 @@
         program::Program,
         program::{FunctionSignature, GenFunction, StatementIdx},
     };
-    <span class="kw">use </span>cairo_lang_starknet::starknet_plugin_suite;
+    <span class="kw">use </span>cairo_lang_starknet::{compile::compile_contract_in_prepared_db, starknet_plugin_suite};
+    <span class="kw">use </span>cairo_lang_starknet_classes::contract_class::ContractClass;
     <span class="kw">use </span>pretty_assertions_sorted::assert_eq;
     <span class="kw">use </span>std::io::Write;
     <span class="kw">use </span>std::{env::var, fmt::Formatter, fs, path::Path};
@@ -1508,8 +1674,14 @@
             <span class="macro-nonterminal">$crate::utils::test::load_starknet_str</span>(<span class="macro">stringify!</span>($(<span class="macro-nonterminal">$program</span>)+))
         };
     }
+    <span class="macro">macro_rules!</span> load_starknet_contract {
+        ( $( <span class="macro-nonterminal">$program</span>:tt )+ ) =&gt; {
+            <span class="macro-nonterminal">$crate::utils::test::load_starknet_contract_str</span>(<span class="macro">stringify!</span>($(<span class="macro-nonterminal">$program</span>)+))
+        };
+    }
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">use </span>load_cairo;
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">use </span>load_starknet;
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">use </span>load_starknet_contract;
 
     <span class="comment">// Helper macros for faster testing.
     </span><span class="macro">macro_rules!</span> jit_struct {
@@ -1568,6 +1740,49 @@
         )
     }
 
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>load_starknet_contract_str(program_str: <span class="kw-2">&amp;</span>str) -&gt; (String, ContractClass) {
+        compile_contract(
+            program_str,
+            RootDatabase::builder()
+                .with_plugin_suite(starknet_plugin_suite())
+                .build()
+                .unwrap(),
+        )
+    }
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>compile_contract(
+        program_str: <span class="kw-2">&amp;</span>str,
+        <span class="kw-2">mut </span>db: RootDatabase,
+    ) -&gt; (String, ContractClass) {
+        <span class="kw">let </span><span class="kw-2">mut </span>program_file = tempfile::Builder::new()
+            .prefix(<span class="string">"test_"</span>)
+            .suffix(<span class="string">".cairo"</span>)
+            .tempfile()
+            .unwrap();
+        fs::write(<span class="kw-2">&amp;mut </span>program_file, program_str).unwrap();
+
+        init_dev_corelib(
+            <span class="kw-2">&amp;mut </span>db,
+            Path::new(<span class="kw-2">&amp;</span>var(<span class="string">"CARGO_MANIFEST_DIR"</span>).unwrap()).join(<span class="string">"corelib/src"</span>),
+        );
+        <span class="kw">let </span>main_crate_ids = setup_project(<span class="kw-2">&amp;mut </span>db, program_file.path()).unwrap();
+        <span class="kw">let </span>contract = compile_contract_in_prepared_db(
+            <span class="kw-2">&amp;</span>db,
+            <span class="prelude-val">None</span>,
+            main_crate_ids,
+            CompilerConfig {
+                diagnostics_reporter: DiagnosticsReporter::stderr(),
+                replace_ids: <span class="bool-val">true</span>,
+                ..Default::default()
+            },
+        )
+        .unwrap();
+
+        <span class="kw">let </span>module_name = program_file.path().with_extension(<span class="string">""</span>);
+        <span class="kw">let </span>module_name = module_name.file_name().unwrap().to_str().unwrap();
+        (module_name.to_string(), contract)
+    }
+
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>compile_program(program_str: <span class="kw-2">&amp;</span>str, <span class="kw-2">mut </span>db: RootDatabase) -&gt; (String, Program) {
         <span class="kw">let </span><span class="kw-2">mut </span>program_file = tempfile::Builder::new()
             .prefix(<span class="string">"test_"</span>)
@@ -1615,16 +1830,15 @@
         <span class="kw">let </span>context = NativeContext::new();
 
         <span class="kw">let </span>module = context
-            .compile(program, <span class="bool-val">false</span>)
+            .compile(program, <span class="bool-val">false</span>, <span class="prelude-val">Some</span>(Default::default()))
             .expect(<span class="string">"Could not compile test program to MLIR."</span>);
 
-        <span class="comment">// FIXME: There are some bugs with non-zero LLVM optimization levels.
-        </span><span class="kw">let </span>executor = JitNativeExecutor::from_native_module(module, OptLevel::None);
+        <span class="kw">let </span>executor = JitNativeExecutor::from_native_module(module, OptLevel::Less).unwrap();
         executor
             .invoke_dynamic_with_syscall_handler(
                 entry_point_id,
                 args,
-                <span class="prelude-val">Some</span>(u128::MAX),
+                <span class="prelude-val">Some</span>(u64::MAX),
                 <span class="kw-2">&amp;mut </span>StubSyscallHandler::default(),
             )
             .unwrap()
@@ -1999,7 +2213,7 @@
         <span class="comment">// Define the path to the cairo program.
         </span><span class="kw">let </span>program_path = Path::new(<span class="string">"programs/examples/hello.cairo"</span>);
         <span class="comment">// Compile the cairo program to sierra.
-        </span><span class="kw">let </span>sierra_program = cairo_to_sierra(program_path);
+        </span><span class="kw">let </span>sierra_program = cairo_to_sierra(program_path).unwrap();
 
         <span class="comment">// Define the entry point function for comparison.
         </span><span class="kw">let </span>entry_point = <span class="string">"hello::hello::greet"</span>;
@@ -2025,7 +2239,7 @@
         </span><span class="kw">let </span>file_path = file.path().to_path_buf();
 
         <span class="comment">// Compile the cairo program to sierra using the path of the temporary file.
-        </span><span class="kw">let </span>sierra_program = cairo_to_sierra(<span class="kw-2">&amp;</span>file_path);
+        </span><span class="kw">let </span>sierra_program = cairo_to_sierra(<span class="kw-2">&amp;</span>file_path).unwrap();
 
         <span class="comment">// Assert that the sierra program has no library function declarations, statements, or functions.
         </span><span class="macro">assert!</span>(sierra_program.libfunc_declarations.is_empty());

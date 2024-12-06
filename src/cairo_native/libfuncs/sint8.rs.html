@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/libfuncs/sint8.rs`."><title>sint8.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-c5d6553a23f1e5a6.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="cairo_native" data-themes="" data-resource-suffix="" data-rustdoc-version="1.81.0 (eeb90cda1 2024-09-04)" data-channel="1.81.0" data-search-js="search-d234aafac6c221dd.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-118b08c4c78b968e.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-d2fab2bf619172d3.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-df360f571f6edeae.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/libfuncs/sint8.rs`."><title>sint8.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-492a78a4a87dcc01.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="cairo_native" data-themes="" data-resource-suffix="" data-rustdoc-version="1.82.0 (f6e511eec 2024-10-15)" data-channel="1.82.0" data-search-js="search-a99f1315e7cc5121.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-118b08c4c78b968e.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-921df33f47b8780c.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-3b12f09e550e0385.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -766,6 +766,9 @@
 <a href="#766" id="766">766</a>
 <a href="#767" id="767">767</a>
 <a href="#768" id="768">768</a>
+<a href="#769" id="769">769</a>
+<a href="#770" id="770">770</a>
+<a href="#771" id="771">771</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! # `i8`-related libfuncs
 
 </span><span class="kw">use </span><span class="kw">super</span>::LibfuncHelper;
@@ -790,6 +793,7 @@
     dialect::{
         arith::{<span class="self">self</span>, CmpiPredicate},
         cf, llvm,
+        ods::math,
     },
     ir::{operation::OperationBuilder, r#type::IntegerType, Block, Location, Value, ValueLike},
     Context,
@@ -865,10 +869,10 @@
     info: <span class="kw-2">&amp;</span>IntOperationConcreteLibfunc,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
     <span class="kw">let </span>range_check: Value =
-        <span class="kw">super</span>::increment_builtin_counter(context, entry, location, entry.argument(<span class="number">0</span>)<span class="question-mark">?</span>.into())<span class="question-mark">?</span>;
+        <span class="kw">super</span>::increment_builtin_counter(context, entry, location, entry.arg(<span class="number">0</span>)<span class="question-mark">?</span>)<span class="question-mark">?</span>;
 
-    <span class="kw">let </span>lhs: Value = entry.argument(<span class="number">1</span>)<span class="question-mark">?</span>.into();
-    <span class="kw">let </span>rhs: Value = entry.argument(<span class="number">2</span>)<span class="question-mark">?</span>.into();
+    <span class="kw">let </span>lhs: Value = entry.arg(<span class="number">1</span>)<span class="question-mark">?</span>;
+    <span class="kw">let </span>rhs: Value = entry.arg(<span class="number">2</span>)<span class="question-mark">?</span>;
 
     <span class="kw">let </span>op_name = <span class="kw">match </span>info.operator {
         IntOperator::OverflowingAdd =&gt; <span class="string">"llvm.intr.sadd.with.overflow"</span>,
@@ -896,13 +900,7 @@
     </span><span class="kw">let </span>zero_const = entry.const_int_from_type(context, location, <span class="number">0</span>, values_type)<span class="question-mark">?</span>;
 
     <span class="comment">// Check if the result is positive
-    </span><span class="kw">let </span>is_positive = entry.append_op_result(arith::cmpi(
-        context,
-        CmpiPredicate::Sge,
-        op_result,
-        zero_const,
-        location,
-    ))<span class="question-mark">?</span>;
+    </span><span class="kw">let </span>is_positive = entry.cmpi(context, CmpiPredicate::Sge, op_result, zero_const, location)<span class="question-mark">?</span>;
 
     <span class="comment">// Check overflow flag
     </span><span class="kw">let </span>op_overflow = entry.extract_value(
@@ -949,8 +947,8 @@
     helper: <span class="kw-2">&amp;</span>LibfuncHelper&lt;<span class="lifetime">'ctx</span>, <span class="lifetime">'this</span>&gt;,
     _info: <span class="kw-2">&amp;</span>SignatureOnlyConcreteLibfunc,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
-    <span class="kw">let </span>arg0: Value = entry.argument(<span class="number">0</span>)<span class="question-mark">?</span>.into();
-    <span class="kw">let </span>arg1: Value = entry.argument(<span class="number">1</span>)<span class="question-mark">?</span>.into();
+    <span class="kw">let </span>arg0: Value = entry.arg(<span class="number">0</span>)<span class="question-mark">?</span>;
+    <span class="kw">let </span>arg1: Value = entry.arg(<span class="number">1</span>)<span class="question-mark">?</span>;
 
     <span class="kw">let </span>op0 = entry.append_operation(arith::cmpi(
         context,
@@ -980,17 +978,11 @@
     helper: <span class="kw-2">&amp;</span>LibfuncHelper&lt;<span class="lifetime">'ctx</span>, <span class="lifetime">'this</span>&gt;,
     _info: <span class="kw-2">&amp;</span>SignatureOnlyConcreteLibfunc,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
-    <span class="kw">let </span>arg0: Value = entry.argument(<span class="number">0</span>)<span class="question-mark">?</span>.into();
+    <span class="kw">let </span>arg0: Value = entry.arg(<span class="number">0</span>)<span class="question-mark">?</span>;
 
     <span class="kw">let </span>const_0 = entry.const_int_from_type(context, location, <span class="number">0</span>, arg0.r#type())<span class="question-mark">?</span>;
 
-    <span class="kw">let </span>condition = entry.append_op_result(arith::cmpi(
-        context,
-        CmpiPredicate::Eq,
-        arg0,
-        const_0,
-        location,
-    ))<span class="question-mark">?</span>;
+    <span class="kw">let </span>condition = entry.cmpi(context, CmpiPredicate::Eq, arg0, const_0, location)<span class="question-mark">?</span>;
 
     entry.append_operation(helper.cond_br(context, condition, [<span class="number">0</span>, <span class="number">1</span>], [<span class="kw-2">&amp;</span>[], <span class="kw-2">&amp;</span>[arg0]], location));
 
@@ -1014,13 +1006,13 @@
         metadata,
         <span class="kw-2">&amp;</span>info.output_types()[<span class="number">0</span>][<span class="number">0</span>],
     )<span class="question-mark">?</span>;
-    <span class="kw">let </span>lhs: Value = entry.argument(<span class="number">0</span>)<span class="question-mark">?</span>.into();
-    <span class="kw">let </span>rhs: Value = entry.argument(<span class="number">1</span>)<span class="question-mark">?</span>.into();
+    <span class="kw">let </span>lhs: Value = entry.arg(<span class="number">0</span>)<span class="question-mark">?</span>;
+    <span class="kw">let </span>rhs: Value = entry.arg(<span class="number">1</span>)<span class="question-mark">?</span>;
 
-    <span class="kw">let </span>lhs = entry.append_op_result(arith::extsi(lhs, target_type, location))<span class="question-mark">?</span>;
-    <span class="kw">let </span>rhs = entry.append_op_result(arith::extsi(rhs, target_type, location))<span class="question-mark">?</span>;
+    <span class="kw">let </span>lhs = entry.extsi(lhs, target_type, location)<span class="question-mark">?</span>;
+    <span class="kw">let </span>rhs = entry.extsi(rhs, target_type, location)<span class="question-mark">?</span>;
 
-    <span class="kw">let </span>result = entry.append_op_result(arith::muli(lhs, rhs, location))<span class="question-mark">?</span>;
+    <span class="kw">let </span>result = entry.muli(lhs, rhs, location)<span class="question-mark">?</span>;
 
     entry.append_operation(helper.br(<span class="number">0</span>, <span class="kw-2">&amp;</span>[result], location));
     <span class="prelude-val">Ok</span>(())
@@ -1043,11 +1035,33 @@
         metadata,
         <span class="kw-2">&amp;</span>info.branch_signatures()[<span class="number">0</span>].vars[<span class="number">0</span>].ty,
     )<span class="question-mark">?</span>;
-    <span class="kw">let </span>value: Value = entry.argument(<span class="number">0</span>)<span class="question-mark">?</span>.into();
+    <span class="kw">let </span>prime = entry.const_int_from_type(context, location, PRIME.clone(), felt252_ty)<span class="question-mark">?</span>;
 
-    <span class="kw">let </span>result = entry.append_op_result(arith::extui(value, felt252_ty, location))<span class="question-mark">?</span>;
+    <span class="kw">let </span>value: Value = entry.arg(<span class="number">0</span>)<span class="question-mark">?</span>;
+    <span class="kw">let </span>value_type = value.r#type();
 
-    entry.append_operation(helper.br(<span class="number">0</span>, <span class="kw-2">&amp;</span>[result], location));
+    <span class="kw">let </span>is_negative = entry.cmpi(
+        context,
+        arith::CmpiPredicate::Slt,
+        value,
+        entry.const_int_from_type(context, location, <span class="number">0</span>, value_type)<span class="question-mark">?</span>,
+        location,
+    )<span class="question-mark">?</span>;
+
+    <span class="kw">let </span>value_abs = entry.append_op_result(math::absi(context, value, location).into())<span class="question-mark">?</span>;
+
+    <span class="kw">let </span>result = entry.extui(value_abs, felt252_ty, location)<span class="question-mark">?</span>;
+
+    <span class="kw">let </span>prime_minus_result = entry.append_op_result(arith::subi(prime, result, location))<span class="question-mark">?</span>;
+
+    <span class="kw">let </span>final_result = entry.append_op_result(arith::select(
+        is_negative,
+        prime_minus_result,
+        result,
+        location,
+    ))<span class="question-mark">?</span>;
+
+    entry.append_operation(helper.br(<span class="number">0</span>, <span class="kw-2">&amp;</span>[final_result], location));
 
     <span class="prelude-val">Ok</span>(())
 }
@@ -1063,9 +1077,9 @@
     info: <span class="kw-2">&amp;</span>SignatureOnlyConcreteLibfunc,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
     <span class="kw">let </span>range_check: Value =
-        <span class="kw">super</span>::increment_builtin_counter(context, entry, location, entry.argument(<span class="number">0</span>)<span class="question-mark">?</span>.into())<span class="question-mark">?</span>;
+        <span class="kw">super</span>::increment_builtin_counter(context, entry, location, entry.arg(<span class="number">0</span>)<span class="question-mark">?</span>)<span class="question-mark">?</span>;
 
-    <span class="kw">let </span>value: Value = entry.argument(<span class="number">1</span>)<span class="question-mark">?</span>.into();
+    <span class="kw">let </span>value: Value = entry.arg(<span class="number">1</span>)<span class="question-mark">?</span>;
 
     <span class="kw">let </span>felt252_ty = registry.build_type(
         context,
@@ -1094,13 +1108,7 @@
         <span class="kw">let </span>half_prime =
             block.const_int_from_type(context, location, HALF_PRIME.clone(), felt252_ty)<span class="question-mark">?</span>;
 
-        <span class="kw">let </span>is_felt_neg = block.append_op_result(arith::cmpi(
-            context,
-            CmpiPredicate::Ugt,
-            value,
-            half_prime,
-            location,
-        ))<span class="question-mark">?</span>;
+        <span class="kw">let </span>is_felt_neg = block.cmpi(context, CmpiPredicate::Ugt, value, half_prime, location)<span class="question-mark">?</span>;
 
         <span class="kw">let </span>is_neg_block = helper.append_block(Block::new(<span class="kw-2">&amp;</span>[]));
         <span class="kw">let </span>is_not_neg_block = helper.append_block(Block::new(<span class="kw-2">&amp;</span>[]));
@@ -1123,8 +1131,7 @@
                 is_neg_block.append_op_result(arith::subi(prime, value, location))<span class="question-mark">?</span>;
 
             <span class="kw">let </span>kneg1 = is_neg_block.const_int_from_type(context, location, -<span class="number">1</span>, felt252_ty)<span class="question-mark">?</span>;
-            src_value_is_neg =
-                is_neg_block.append_op_result(arith::muli(src_value_is_neg, kneg1, location))<span class="question-mark">?</span>;
+            src_value_is_neg = is_neg_block.muli(src_value_is_neg, kneg1, location)<span class="question-mark">?</span>;
 
             is_neg_block.append_operation(cf::br(final_block, <span class="kw-2">&amp;</span>[src_value_is_neg], location));
         }
@@ -1132,24 +1139,12 @@
         is_not_neg_block.append_operation(cf::br(final_block, <span class="kw-2">&amp;</span>[value], location));
 
         block = final_block;
-        block.argument(<span class="number">0</span>)<span class="question-mark">?</span>.into()
-    };
+        block.arg(<span class="number">0</span>)<span class="question-mark">?
+    </span>};
 
-    <span class="kw">let </span>is_smaller_eq = block.append_op_result(arith::cmpi(
-        context,
-        CmpiPredicate::Sle,
-        value,
-        const_max,
-        location,
-    ))<span class="question-mark">?</span>;
+    <span class="kw">let </span>is_smaller_eq = block.cmpi(context, CmpiPredicate::Sle, value, const_max, location)<span class="question-mark">?</span>;
 
-    <span class="kw">let </span>is_bigger_eq = block.append_op_result(arith::cmpi(
-        context,
-        CmpiPredicate::Sge,
-        value,
-        const_min,
-        location,
-    ))<span class="question-mark">?</span>;
+    <span class="kw">let </span>is_bigger_eq = block.cmpi(context, CmpiPredicate::Sge, value, const_min, location)<span class="question-mark">?</span>;
 
     <span class="kw">let </span>is_ok = block.append_op_result(arith::andi(is_smaller_eq, is_bigger_eq, location))<span class="question-mark">?</span>;
 
@@ -1166,7 +1161,7 @@
         location,
     ));
 
-    <span class="kw">let </span>value = block_success.append_op_result(arith::trunci(value, result_ty, location))<span class="question-mark">?</span>;
+    <span class="kw">let </span>value = block_success.trunci(value, result_ty, location)<span class="question-mark">?</span>;
 
     block_success.append_operation(helper.br(<span class="number">0</span>, <span class="kw-2">&amp;</span>[range_check, value], location));
     block_failure.append_operation(helper.br(<span class="number">1</span>, <span class="kw-2">&amp;</span>[range_check], location));
@@ -1184,14 +1179,13 @@
     _info: <span class="kw-2">&amp;</span>SignatureOnlyConcreteLibfunc,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
     <span class="kw">let </span>range_check: Value =
-        <span class="kw">super</span>::increment_builtin_counter(context, entry, location, entry.argument(<span class="number">0</span>)<span class="question-mark">?</span>.into())<span class="question-mark">?</span>;
+        <span class="kw">super</span>::increment_builtin_counter(context, entry, location, entry.arg(<span class="number">0</span>)<span class="question-mark">?</span>)<span class="question-mark">?</span>;
 
-    <span class="kw">let </span>lhs: Value = entry.argument(<span class="number">1</span>)<span class="question-mark">?</span>.into();
-    <span class="kw">let </span>rhs: Value = entry.argument(<span class="number">2</span>)<span class="question-mark">?</span>.into();
+    <span class="kw">let </span>lhs: Value = entry.arg(<span class="number">1</span>)<span class="question-mark">?</span>;
+    <span class="kw">let </span>rhs: Value = entry.arg(<span class="number">2</span>)<span class="question-mark">?</span>;
 
     <span class="comment">// Check if lhs &gt;= rhs
-    </span><span class="kw">let </span>is_ge =
-        entry.append_op_result(arith::cmpi(context, CmpiPredicate::Sge, lhs, rhs, location))<span class="question-mark">?</span>;
+    </span><span class="kw">let </span>is_ge = entry.cmpi(context, CmpiPredicate::Sge, lhs, rhs, location)<span class="question-mark">?</span>;
 
     <span class="kw">let </span>result = entry.append_op_result(arith::subi(lhs, rhs, location))<span class="question-mark">?</span>;
 
@@ -1274,7 +1268,7 @@
     }
 
     <span class="attr">#[test]
-    </span><span class="kw">fn </span>i8_to_felt252() {
+    </span><span class="kw">fn </span>pos_i8_to_felt252() {
         <span class="kw">let </span>program = <span class="macro">load_cairo!</span>(
             <span class="kw">use </span>traits::Into;
 
@@ -1284,6 +1278,18 @@
         );
 
         run_program_assert_output(<span class="kw-2">&amp;</span>program, <span class="string">"run_test"</span>, <span class="kw-2">&amp;</span>[], Felt::from(<span class="number">2</span>).into());
+    }
+
+    <span class="attr">#[test]
+    </span><span class="kw">fn </span>neg_i8_to_felt252() {
+        <span class="kw">let </span>program = <span class="macro">load_cairo!</span>(
+            <span class="kw">use </span>traits::Into;
+
+            <span class="kw">fn </span>run_test() -&gt; felt252 {
+                -<span class="number">255_i128</span>.into()
+            }
+        );
+        run_program_assert_output(<span class="kw-2">&amp;</span>program, <span class="string">"run_test"</span>, <span class="kw-2">&amp;</span>[], Felt::from(-<span class="number">255</span>).into());
     }
 
     <span class="attr">#[test]

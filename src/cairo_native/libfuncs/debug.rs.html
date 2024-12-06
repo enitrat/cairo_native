@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/libfuncs/debug.rs`."><title>debug.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-c5d6553a23f1e5a6.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="cairo_native" data-themes="" data-resource-suffix="" data-rustdoc-version="1.81.0 (eeb90cda1 2024-09-04)" data-channel="1.81.0" data-search-js="search-d234aafac6c221dd.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-118b08c4c78b968e.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-d2fab2bf619172d3.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-df360f571f6edeae.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/libfuncs/debug.rs`."><title>debug.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-492a78a4a87dcc01.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="cairo_native" data-themes="" data-resource-suffix="" data-rustdoc-version="1.82.0 (f6e511eec 2024-10-15)" data-channel="1.82.0" data-search-js="search-a99f1315e7cc5121.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-118b08c4c78b968e.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-921df33f47b8780c.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-3b12f09e550e0385.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -124,6 +124,7 @@
 <a href="#124" id="124">124</a>
 <a href="#125" id="125">125</a>
 <a href="#126" id="126">126</a>
+<a href="#127" id="127">127</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! # Debug libfuncs
 
 </span><span class="comment">// Printable: 9-13, 27, 32, 33-126
@@ -137,9 +138,11 @@
 
 </span><span class="kw">use </span><span class="kw">super</span>::LibfuncHelper;
 <span class="kw">use crate</span>::{
-    error::Result,
-    metadata::{runtime_bindings::RuntimeBindingsMeta, MetadataStorage},
-    utils::BlockExt,
+    error::{Error, <span class="prelude-ty">Result</span>},
+    metadata::{
+        drop_overrides::DropOverridesMeta, runtime_bindings::RuntimeBindingsMeta, MetadataStorage,
+    },
+    utils::{BlockExt, ProgramRegistryExt},
 };
 <span class="kw">use </span>cairo_lang_sierra::{
     extensions::{
@@ -173,33 +176,33 @@
 
 <span class="kw">pub fn </span>build_print&lt;<span class="lifetime">'ctx</span>&gt;(
     context: <span class="kw-2">&amp;</span><span class="lifetime">'ctx </span>Context,
-    _registry: <span class="kw-2">&amp;</span>ProgramRegistry&lt;CoreType, CoreLibfunc&gt;,
+    registry: <span class="kw-2">&amp;</span>ProgramRegistry&lt;CoreType, CoreLibfunc&gt;,
     entry: <span class="kw-2">&amp;</span>Block&lt;<span class="lifetime">'ctx</span>&gt;,
     location: Location&lt;<span class="lifetime">'ctx</span>&gt;,
     helper: <span class="kw-2">&amp;</span>LibfuncHelper&lt;<span class="lifetime">'ctx</span>, <span class="lifetime">'_</span>&gt;,
     metadata: <span class="kw-2">&amp;mut </span>MetadataStorage,
-    _info: <span class="kw-2">&amp;</span>SignatureOnlyConcreteLibfunc,
+    info: <span class="kw-2">&amp;</span>SignatureOnlyConcreteLibfunc,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
     <span class="kw">let </span>stdout_fd = entry.const_int(context, location, <span class="number">1</span>, <span class="number">32</span>)<span class="question-mark">?</span>;
 
     <span class="kw">let </span>values_ptr = entry.extract_value(
         context,
         location,
-        entry.argument(<span class="number">0</span>)<span class="question-mark">?</span>.into(),
+        entry.arg(<span class="number">0</span>)<span class="question-mark">?</span>,
         llvm::r#type::pointer(context, <span class="number">0</span>),
         <span class="number">0</span>,
     )<span class="question-mark">?</span>;
     <span class="kw">let </span>values_start = entry.extract_value(
         context,
         location,
-        entry.argument(<span class="number">0</span>)<span class="question-mark">?</span>.into(),
+        entry.arg(<span class="number">0</span>)<span class="question-mark">?</span>,
         IntegerType::new(context, <span class="number">32</span>).into(),
         <span class="number">1</span>,
     )<span class="question-mark">?</span>;
     <span class="kw">let </span>values_end = entry.extract_value(
         context,
         location,
-        entry.argument(<span class="number">0</span>)<span class="question-mark">?</span>.into(),
+        entry.arg(<span class="number">0</span>)<span class="question-mark">?</span>,
         IntegerType::new(context, <span class="number">32</span>).into(),
         <span class="number">2</span>,
     )<span class="question-mark">?</span>;
@@ -211,11 +214,8 @@
     <span class="kw">let </span>values_len = entry.append_op_result(arith::subi(values_end, values_start, location))<span class="question-mark">?</span>;
 
     <span class="kw">let </span>values_ptr = {
-        <span class="kw">let </span>values_start = entry.append_op_result(arith::extui(
-            values_start,
-            IntegerType::new(context, <span class="number">64</span>).into(),
-            location,
-        ))<span class="question-mark">?</span>;
+        <span class="kw">let </span>values_start =
+            entry.extui(values_start, IntegerType::new(context, <span class="number">64</span>).into(), location)<span class="question-mark">?</span>;
 
         entry.append_op_result(llvm::get_element_ptr_dynamic(
             context,
@@ -231,14 +231,16 @@
         context, helper, entry, stdout_fd, values_ptr, values_len, location,
     )<span class="question-mark">?</span>;
 
+    <span class="kw">let </span>input_ty = <span class="kw-2">&amp;</span>info.signature.param_signatures[<span class="number">0</span>].ty;
+    registry.build_type(context, helper, registry, metadata, input_ty)<span class="question-mark">?</span>;
+    metadata
+        .get::&lt;DropOverridesMeta&gt;()
+        .ok_or(Error::MissingMetadata)<span class="question-mark">?
+        </span>.invoke_override(context, entry, location, input_ty, entry.arg(<span class="number">0</span>)<span class="question-mark">?</span>)<span class="question-mark">?</span>;
+
     <span class="kw">let </span>k0 = entry.const_int(context, location, <span class="number">0</span>, <span class="number">32</span>)<span class="question-mark">?</span>;
-    <span class="kw">let </span>return_code_is_ok = entry.append_op_result(arith::cmpi(
-        context,
-        arith::CmpiPredicate::Eq,
-        return_code,
-        k0,
-        location,
-    ))<span class="question-mark">?</span>;
+    <span class="kw">let </span>return_code_is_ok =
+        entry.cmpi(context, arith::CmpiPredicate::Eq, return_code, k0, location)<span class="question-mark">?</span>;
     cf::assert(
         context,
         return_code_is_ok,

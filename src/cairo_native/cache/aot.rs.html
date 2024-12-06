@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/cache/aot.rs`."><title>aot.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-c5d6553a23f1e5a6.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="cairo_native" data-themes="" data-resource-suffix="" data-rustdoc-version="1.81.0 (eeb90cda1 2024-09-04)" data-channel="1.81.0" data-search-js="search-d234aafac6c221dd.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-118b08c4c78b968e.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-d2fab2bf619172d3.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-df360f571f6edeae.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/cache/aot.rs`."><title>aot.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-492a78a4a87dcc01.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="cairo_native" data-themes="" data-resource-suffix="" data-rustdoc-version="1.82.0 (f6e511eec 2024-10-15)" data-channel="1.82.0" data-search-js="search-a99f1315e7cc5121.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-118b08c4c78b968e.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-921df33f47b8780c.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-3b12f09e550e0385.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -111,7 +111,11 @@
 <a href="#111" id="111">111</a>
 <a href="#112" id="112">112</a>
 <a href="#113" id="113">113</a>
-</pre></div><pre class="rust"><code><span class="kw">use crate</span>::{
+<a href="#114" id="114">114</a>
+<a href="#115" id="115">115</a>
+<a href="#116" id="116">116</a>
+</pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::error::{Error, <span class="prelude-ty">Result</span>};
+<span class="kw">use crate</span>::{
     context::NativeContext, executor::AotNativeExecutor, metadata::gas::GasMetadata,
     module::NativeModule, utils::SHARED_LIBRARY_EXT, OptLevel,
 };
@@ -152,39 +156,40 @@
         key: K,
         program: <span class="kw-2">&amp;</span>Program,
         opt_level: OptLevel,
-    ) -&gt; Arc&lt;AotNativeExecutor&gt; {
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;Arc&lt;AotNativeExecutor&gt;&gt; {
         <span class="kw">let </span>NativeModule {
             module,
             registry,
             metadata,
         } = <span class="self">self
             </span>.context
-            .compile(program, <span class="bool-val">false</span>)
-            .expect(<span class="string">"should compile"</span>);
+            .compile(program, <span class="bool-val">false</span>, <span class="prelude-val">Some</span>(Default::default()))<span class="question-mark">?</span>;
 
         <span class="comment">// Compile module into an object.
-        </span><span class="kw">let </span>object_data = <span class="kw">crate</span>::ffi::module_to_object(<span class="kw-2">&amp;</span>module, opt_level).unwrap();
+        </span><span class="kw">let </span>object_data = <span class="kw">crate</span>::ffi::module_to_object(<span class="kw-2">&amp;</span>module, opt_level)<span class="question-mark">?</span>;
 
         <span class="comment">// Compile object into a shared library.
         </span><span class="kw">let </span>shared_library_path = tempfile::Builder::new()
             .prefix(<span class="string">"lib"</span>)
             .suffix(SHARED_LIBRARY_EXT)
-            .tempfile()
-            .unwrap()
-            .into_temp_path();
-        <span class="kw">crate</span>::ffi::object_to_shared_lib(<span class="kw-2">&amp;</span>object_data, <span class="kw-2">&amp;</span>shared_library_path).unwrap();
+            .tempfile()<span class="question-mark">?
+            </span>.into_temp_path();
+        <span class="kw">crate</span>::ffi::object_to_shared_lib(<span class="kw-2">&amp;</span>object_data, <span class="kw-2">&amp;</span>shared_library_path)<span class="question-mark">?</span>;
 
-        <span class="kw">let </span>shared_library = <span class="kw">unsafe </span>{ Library::new(shared_library_path).unwrap() };
+        <span class="kw">let </span>shared_library = <span class="kw">unsafe </span>{ Library::new(shared_library_path)<span class="question-mark">? </span>};
         <span class="kw">let </span>executor = AotNativeExecutor::new(
             shared_library,
             registry,
-            metadata.get::&lt;GasMetadata&gt;().cloned().unwrap(),
+            metadata
+                .get::&lt;GasMetadata&gt;()
+                .cloned()
+                .ok_or(Error::MissingMetadata)<span class="question-mark">?</span>,
         );
 
         <span class="kw">let </span>executor = Arc::new(executor);
         <span class="self">self</span>.cache.insert(key, executor.clone());
 
-        executor
+        <span class="prelude-val">Ok</span>(executor)
     }
 }
 
@@ -217,7 +222,8 @@
         <span class="kw">let </span>function_id = <span class="kw-2">&amp;</span>program.funcs.first().expect(<span class="string">"should have a function"</span>).id;
         <span class="kw">let </span>executor = cache.compile_and_insert((), <span class="kw-2">&amp;</span>program, OptLevel::default());
         <span class="kw">let </span>res = executor
-            .invoke_dynamic(function_id, <span class="kw-2">&amp;</span>[], <span class="prelude-val">Some</span>(u128::MAX))
+            .unwrap()
+            .invoke_dynamic(function_id, <span class="kw-2">&amp;</span>[], <span class="prelude-val">Some</span>(u64::MAX))
             .expect(<span class="string">"should run"</span>);
 
         <span class="comment">// After compiling and inserting the program, we should be able to run it.
