@@ -436,6 +436,11 @@
 <a href="#436" id="436">436</a>
 <a href="#437" id="437">437</a>
 <a href="#438" id="438">438</a>
+<a href="#439" id="439">439</a>
+<a href="#440" id="440">440</a>
+<a href="#441" id="441">441</a>
+<a href="#442" id="442">442</a>
+<a href="#443" id="443">443</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! # FFI Wrappers
 //!
 //! This is a "hotfix" for missing Rust interfaces to the C/C++ libraries we use, namely LLVM/MLIR
@@ -694,10 +699,15 @@
     <span class="kw">let </span>runtime_library_path = <span class="kw">if let </span><span class="prelude-val">Ok</span>(extra_dir) = std::env::var(<span class="string">"CAIRO_NATIVE_RUNTIME_LIBRARY"</span>)
     {
         <span class="kw">let </span>path = Path::new(<span class="kw-2">&amp;</span>extra_dir);
+        <span class="macro">println!</span>(<span class="string">"[DEBUG] Runtime library 'path': {}"</span>, extra_dir);
         <span class="kw">if </span>path.is_absolute() {
             extra_dir
         } <span class="kw">else </span>{
+            <span class="macro">println!</span>(<span class="string">"[DEBUG] Runtime library 'path' is not absolute, converting to absolute path"</span>);
+            <span class="macro">println!</span>(<span class="string">"[DEBUG] Current working directory: {:?}"</span>, env::current_dir()<span class="question-mark">?</span>);
+            <span class="macro">println!</span>(<span class="string">"[DEBUG] Joined path: {:?}"</span>, env::current_dir()<span class="question-mark">?</span>.join(path));
             <span class="kw">let </span>absolute_path = env::current_dir()<span class="question-mark">?</span>.join(path).canonicalize()<span class="question-mark">?</span>;
+            <span class="macro">println!</span>(<span class="string">"[DEBUG] Converted runtime library path to: {:?}"</span>, absolute_path);
             absolute_path
                 .to_str()
                 .to_native_assert_error(<span class="string">"absolute path should not contain non-utf8 characters"</span>)<span class="question-mark">?
